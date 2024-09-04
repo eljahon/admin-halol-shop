@@ -86,7 +86,7 @@ async function handleSubmitFrom(values) {
                         <ToggleSwitch v-model="is_common"></ToggleSwitch>
                     </div>
                     <div class="w-full flex">
-                        <ImageUpload :model-value="image.aws_path" @update:modelValue="onImageUpload" />
+                        <ImageUpload :folder="'crops'" :model-value="image.aws_path" @update:modelValue="onImageUpload" />
                     </div>
                 </template>
             </FormBuilder>

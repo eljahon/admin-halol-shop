@@ -121,7 +121,7 @@ export default function (param, isStoreAndMethods, url) {
         fullStore.actions[camelize(`get by id ${_param}`)] = function ({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 axios_init
-                    .get(`${param}/${payload.id}`, {params:payload.query})
+                    .get(`${url ?? param}/${payload.id}`, {params:payload.query})
                     .then((res) => {
                         resolve(res);
                     })
@@ -173,7 +173,7 @@ export default function (param, isStoreAndMethods, url) {
         };
     if (remove)
         fullStore['actions'][camelize(`delete ${_param}`)] = function ({ commit, dispatch }, payload) {
-            commit(_mutations.deleting, true);
+            // commit(_mutations.deleting, true);
             return new Promise((resolve, reject) => {
                 axios_init
                     .delete(`${url ?? param}/${payload}`)

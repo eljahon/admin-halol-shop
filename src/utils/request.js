@@ -28,6 +28,7 @@ request.interceptors.request.use(function (config) {
     if (localStorage.getItem('token')) {
         config.headers = {
             Authorization: 'Bearer ' + localStorage.getItem('token'),
+            'Content-Type': config.url === '/upload/custom_upload' ? 'multipart/form-data' : 'application/json'
         };
     }
     return config;

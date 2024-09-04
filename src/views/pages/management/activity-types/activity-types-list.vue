@@ -182,21 +182,21 @@ watch(() => route.query, (value) => {
                         </div>
                     </template>
                 </Column>
-                <Column :header="$t('image')" style="min-width: 8rem">
+                <Column :header="$t('image')" style="max-width: 8rem">
                     <template #body="{ data }">
-                        <ImageOnLoad width="90" :src="data?.main_image?.aws_path" />
+                        <ImageOnLoad width="90" :src="data?.icon?.aws_path" />
                     </template>
                 </Column>
-                <Column field="name" :header="$t('name')" style="min-width: 16rem"></Column>
+                <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
 
-                <Column field="price" :header="$t('biology_name')" style="min-width: 9rem">
+<!--                <Column field="price" :header="$t('biology_name')" style="min-width: 9rem">-->
+<!--                    <template #body="{ data }">-->
+<!--                        {{ data?.biology_name ?? '-' }}-->
+<!--                    </template>-->
+<!--                </Column>-->
+                <Column field="category" :header="$t('date')" style="min-width: 5rem; text-align: center">
                     <template #body="{ data }">
-                        {{ data?.biology_name ?? '-' }}
-                    </template>
-                </Column>
-                <Column field="category" :header="$t('planting_time_start')" style="min-width: 12rem; text-align: center">
-                    <template #body="{ data }">
-                        <span v-if="data.planting_time_start">{{ dayjs(data.planting_time_start).format('DD-MM-YYYY') }}</span>
+                        <span v-if="data.createdAt">{{ dayjs(data.createdAt).format('DD-MM-YYYY hh:mm') }}</span>
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>

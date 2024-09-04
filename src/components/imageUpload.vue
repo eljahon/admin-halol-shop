@@ -12,7 +12,11 @@ let props = defineProps({
         type: String,
         required: true
     },
-
+   folder:{
+        type:String,
+        required: true,
+       default:() => 'other'
+   }
 });
 
 const store = useStore();
@@ -26,7 +30,7 @@ const onTemplatedUpload = async (event) => {
 
     const payload = { file: event.target.files[0] };
 
-    store.dispatch('uploadFile', { data:payload, folder: 'crops' })
+    store.dispatch('uploadFile', { data:payload, folder: props.folder })
         .then((res) => {
             toast.add({ severity: 'success', summary: 'Success', detail: 'File uploaded successfully', life: 3000 });
             emit('update:modelValue', res);
@@ -59,7 +63,7 @@ watch(() => props.modelValue, (value) => {
                 <i v-else class="pi pi-cloud-upload text-red" style="font-size: 5rem"></i>
             </div>
             <div class="flex gap-2">
-                <Button severity="warning" icon="pi pi-trash" v-if="modelValue" @click="delteImagefun"
+                <Button severity="danger" icon="pi pi-trash" v-if="modelValue" @click="delteImagefun"
                         class="inline-block" />
                 <label class="inline-block p-button p-component p-button-icon-only p-button-success inline-block">
                     <input type="file" class="hidden" @change="onTemplatedUpload">
