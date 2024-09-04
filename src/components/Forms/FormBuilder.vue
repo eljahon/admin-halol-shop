@@ -72,7 +72,6 @@ const handleSubmitForm = handleSubmit(async (value) => {
 const {updateValue} =toRefs(props)
 watch(() => updateValue.value,
     (values) => {
-        console.log('updateFild ---------', values);
         props.feilds.forEach(el => {
 
             if(el.renderElement === 'Select') {

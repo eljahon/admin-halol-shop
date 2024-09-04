@@ -45,7 +45,6 @@ if (route.params.id !== 'new') {
     getByIdCrops({ id: route.params.id, query: { populate: '*' } })
         .then((res) => {
             const _data = { ...res };
-            console.log('resdddd', res);
             _data.crop_category = _data?.crop_category?.id;
             updateValue.value = _data;
             is_common.value = res['is_common'];
