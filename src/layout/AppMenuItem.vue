@@ -64,7 +64,9 @@ function itemClick(event, item) {
 }
 
 function checkActiveRoute(item) {
-    return route.path === item.to;
+    const subTitle = route.name.split('-')
+    return subTitle.includes(item.label)
+    // return route.path === item.to;
 }
 </script>
 
@@ -73,12 +75,12 @@ function checkActiveRoute(item) {
         <div v-if="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div>
         <a v-if="(!item.to || item.items) && item.visible !== false" :href="item.url" @click="itemClick($event, item, index)" :class="item.class" :target="item.target" tabindex="0">
             <i :class="item.icon" class="layout-menuitem-icon"></i>
-            <span class="layout-menuitem-text">{{ item.label }}</span>
+            <span class="layout-menuitem-text">{{ $t(`${item?.label}`) }}</span>
             <i class="pi pi-fw pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
         </a>
         <router-link v-if="item.to && !item.items && item.visible !== false" @click="itemClick($event, item, index)" :class="[item.class, { 'active-route': checkActiveRoute(item) }]" tabindex="0" :to="item.to">
             <i :class="item.icon" class="layout-menuitem-icon"></i>
-            <span class="layout-menuitem-text">{{ item.label }}</span>
+            <span class="layout-menuitem-text">{{ $t(`${item?.label}`) }}</span>
             <i class="pi pi-fw pi-angle-down layout-submenu-toggler" v-if="item.items"></i>
         </router-link>
         <Transition v-if="item.items && item.visible !== false" name="layout-submenu">

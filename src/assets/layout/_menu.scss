@@ -22,7 +22,7 @@
 
     .layout-root-menuitem {
         > .layout-menuitem-root-text {
-            font-size: 0.857rem;
+            font-size: 0.957rem;
             text-transform: uppercase;
             font-weight: 700;
             color: var(--text-color);
@@ -72,6 +72,10 @@
 
             .layout-menuitem-icon {
                 margin-right: 0.5rem;
+                font-size:18px;
+            }
+            .layout-menuitem-text {
+                font-size: 16px;
             }
 
             .layout-submenu-toggler {

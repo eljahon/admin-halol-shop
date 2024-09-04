@@ -5,17 +5,18 @@ import AppMenuItem from './AppMenuItem.vue';
 
 const model = ref([
     {
-        label: 'Home',
+        // label: 'Home',
         items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
     },
     {
-        label: 'UI Components',
+        // label: 'UI Components',
         items: [
             { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
             { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
             { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
             { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
             { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
+            { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' },
             { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
             { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
@@ -29,7 +30,7 @@ const model = ref([
         ]
     },
     {
-        label: 'Pages',
+        // label: 'Pages',
         icon: 'pi pi-fw pi-briefcase',
         to: '/pages',
         items: [
@@ -45,17 +46,17 @@ const model = ref([
                     {
                         label: 'Login',
                         icon: 'pi pi-fw pi-sign-in',
-                        to: '/auth/login'
+                        to: '/Auth/login'
                     },
                     {
                         label: 'Error',
                         icon: 'pi pi-fw pi-times-circle',
-                        to: '/auth/error'
+                        to: '/Auth/error'
                     },
                     {
                         label: 'Access Denied',
                         icon: 'pi pi-fw pi-lock',
-                        to: '/auth/access'
+                        to: '/Auth/access'
                     }
                 ]
             },

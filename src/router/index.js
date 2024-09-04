@@ -1,6 +1,33 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
+// function  Gouard(from, to , next) {
+//     console.log(from , to);
+//     const token = localStorage.getItem('token');
+//     const userRole = localStorage.getItem('role');
+//     const requiredRole = to.meta.role;
+//     next();
+// }
+function guard(to, from, next) {
+    try {
+        const token = localStorage.getItem('token');
+        const userRole = localStorage.getItem('role');
+        const requiredRole = to.meta.role;
+
+        if (to.meta.requiresAuth) {
+            if (!token) {
+                return next({ name: 'AuthLogin' });
+            } else if (requiredRole.includes(userRole)) {
+                // return next({ name: 'accessDenied' });
+                return next();
+            }
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        next();
+    }
+}
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -10,99 +37,145 @@ const router = createRouter({
             children: [
                 {
                     path: '/',
-                    name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
+                    name: 'Dashboard',
+                    component: () => import('@/views/Dashboard.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
-                    component: () => import('@/views/uikit/FormLayout.vue')
+                    component: () => import('@/views/uikit/FormLayout.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/input',
                     name: 'input',
-                    component: () => import('@/views/uikit/InputDoc.vue')
+                    component: () => import('@/views/uikit/InputDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/button',
                     name: 'button',
-                    component: () => import('@/views/uikit/ButtonDoc.vue')
+                    component: () => import('@/views/uikit/ButtonDoc.vue'),
+
+                    meta: { requiresAuth: true, role: ['admin'] }
+                },
+                {
+                    path: '/crops',
+                    name: 'crops',
+                    component: () => import('@/views/pages/crops/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'crops-list',
+                            component: () => import('@/views/pages/crops/crops-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'crops-create',
+                            component: () => import('@/views/pages/crops/crops-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'info',
+                            name: 'crops-info',
+                            component: () => import('@/views/pages/crops/crops-info.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
                     path: '/uikit/table',
                     name: 'table',
-                    component: () => import('@/views/uikit/TableDoc.vue')
+                    component: () => import('@/views/uikit/TableDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/list',
                     name: 'list',
-                    component: () => import('@/views/uikit/ListDoc.vue')
+                    component: () => import('@/views/uikit/ListDoc.vue'),
+                    meta: { requiresAuth: true, role:['admin'] }
                 },
                 {
                     path: '/uikit/tree',
                     name: 'tree',
-                    component: () => import('@/views/uikit/TreeDoc.vue')
+                    component: () => import('@/views/uikit/TreeDoc.vue'),
+                    meta: { requiresAuth: true, role:['admin'] }
                 },
                 {
                     path: '/uikit/panel',
                     name: 'panel',
-                    component: () => import('@/views/uikit/PanelsDoc.vue')
+                    component: () => import('@/views/uikit/PanelsDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
 
                 {
                     path: '/uikit/overlay',
                     name: 'overlay',
-                    component: () => import('@/views/uikit/OverlayDoc.vue')
+                    component: () => import('@/views/uikit/OverlayDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/media',
                     name: 'media',
-                    component: () => import('@/views/uikit/MediaDoc.vue')
+                    component: () => import('@/views/uikit/MediaDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/message',
                     name: 'message',
-                    component: () => import('@/views/uikit/MessagesDoc.vue')
+                    component: () => import('@/views/uikit/MessagesDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/file',
                     name: 'file',
-                    component: () => import('@/views/uikit/FileDoc.vue')
+                    component: () => import('@/views/uikit/FileDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/menu',
                     name: 'menu',
-                    component: () => import('@/views/uikit/MenuDoc.vue')
+                    component: () => import('@/views/uikit/MenuDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/charts',
                     name: 'charts',
-                    component: () => import('@/views/uikit/ChartDoc.vue')
+                    component: () => import('@/views/uikit/ChartDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/misc',
                     name: 'misc',
-                    component: () => import('@/views/uikit/MiscDoc.vue')
+                    component: () => import('@/views/uikit/MiscDoc.vue'),
+                    meta: { requiresAuth: true, role:[ 'admin'] }
                 },
                 {
                     path: '/uikit/timeline',
                     name: 'timeline',
-                    component: () => import('@/views/uikit/TimelineDoc.vue')
+                    component: () => import('@/views/uikit/TimelineDoc.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/pages/empty',
                     name: 'empty',
-                    component: () => import('@/views/pages/Empty.vue')
+                    component: () => import('@/views/pages/Empty.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/pages/crud',
                     name: 'crud',
-                    component: () => import('@/views/pages/Crud.vue')
+                    component: () => import('@/views/pages/Crud.vue'),
+                    meta: { requiresAuth: true, role:[ 'admin'] }
                 },
                 {
                     path: '/documentation',
                     name: 'documentation',
-                    component: () => import('@/views/pages/Documentation.vue')
+                    component: () => import('@/views/pages/Documentation.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 }
             ]
         },
@@ -119,20 +192,22 @@ const router = createRouter({
 
         {
             path: '/auth/login',
-            name: 'login',
+            name: 'AuthLogin',
             component: () => import('@/views/pages/auth/Login.vue')
         },
         {
-            path: '/auth/access',
+            path: '/Auth/access',
             name: 'accessDenied',
             component: () => import('@/views/pages/auth/Access.vue')
         },
         {
-            path: '/auth/error',
+            path: '/Auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
         }
     ]
 });
+
+router.beforeEach(guard);
 
 export default router;
