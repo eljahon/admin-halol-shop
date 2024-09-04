@@ -87,6 +87,64 @@ const router = createRouter({
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
+                    path: '/activitytypes',
+                    name: 'activity_types',
+                    component: () => import('@/views/pages/crops/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'activity_types-list',
+                            component: () => import('@/views/pages/management/activity-types/activity-types-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'activity_types-create',
+                            component: () => import('@/views/pages/management/activity-types/activity-types-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        // {
+                        //     path: 'info',
+                        //     name: 'activitytypes-info',
+                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     meta: { requiresAuth: true, role: ['admin'] }
+                        // }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                // {
+                //     path: '/management',
+                //     name: 'management',
+                //     children: [
+                //         {
+                //             path: '/activity-types',
+                //             name: 'management-list-activity-types',
+                //             component: () => import('@/views/pages/management/activity-types/index.vue'),
+                //             children:[
+                //                {
+                //                    path: '',
+                //                    name: 'management-activity-types-list',
+                //                    component:() => import('@/views/pages/management/activity-types/activity-types-list.vue'),
+                //                    meta: { requiresAuth: true, role: ['admin'] }
+                //                }
+                //            ]
+                //         },
+                //         {
+                //             path: 'forms/:id',
+                //             name: 'crops-create',
+                //             component: () => import('@/views/pages/crops/crops-create.vue'),
+                //             meta: { requiresAuth: true, role: ['admin'] }
+                //         },
+                //         {
+                //             path: 'info',
+                //             name: 'crops-info',
+                //             component: () => import('@/views/pages/crops/crops-info.vue'),
+                //             meta: { requiresAuth: true, role: ['admin'] }
+                //         }
+                //     ],
+                //     // meta: { requiresAuth: true, role: 'admin' }
+                // },
+                {
                     path: '/uikit/table',
                     name: 'table',
                     component: () => import('@/views/uikit/TableDoc.vue'),

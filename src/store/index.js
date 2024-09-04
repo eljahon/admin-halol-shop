@@ -61,7 +61,8 @@ const store = createStore({
         crops: CRUD('crops',isCrudGenerator),
         products: CRUD('products',isCrudGenerator),
         cropAdmin: CRUD('cropAdmin', isCropAdminGenerator, '/admin/crops'),
-        cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories')
+        cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
+        activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types')
 
     }
 });
