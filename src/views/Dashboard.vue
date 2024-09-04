@@ -5,7 +5,6 @@ const store = useStore()
 const _page = ['login'];
 const action =actions(_page, {get: true})
 // // mapActions(actions(_page))
-console.log(action,store,'userstore');
 
 import { useLayout } from '@/layout/composables/layout';
 import { ProductService } from '@/service/ProductService';

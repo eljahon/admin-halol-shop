@@ -66,7 +66,6 @@ function itemClick(event, item) {
 function checkActiveRoute(item) {
 
     const subTitle = route.name.split('-')
-    console.log(item.label, subTitle);
     return subTitle.includes(item.label)
     // return route.path === item.to;
 }
