@@ -70,9 +70,9 @@ const model = ref([
                         to: '/activitytypes'
                     },
                     {
-                        label: 'Error',
+                        label: 'companies',
                         icon: 'pi pi-fw pi-times-circle',
-                        to: '/Auth/error'
+                        to: '/companies'
                     },
                     {
                         label: 'Access Denied',

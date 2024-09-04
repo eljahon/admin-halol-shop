@@ -112,6 +112,32 @@ const router = createRouter({
                     ],
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
+                {
+                    path: '/companies',
+                    name: 'companies',
+                    component: () => import('@/views/pages/management/companies/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'companies-list',
+                            component: () => import('@/views/pages/management/companies/companie-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                        // {
+                        //     path: 'forms/:id',
+                        //     name: 'activity_types-create',
+                        //     component: () => import('@/views/pages/management/activity-types/activity-types-create.vue'),
+                        //     meta: { requiresAuth: true, role: ['admin'] }
+                        // },
+                        // {
+                        //     path: 'info',
+                        //     name: 'activitytypes-info',
+                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     meta: { requiresAuth: true, role: ['admin'] }
+                        // }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
                 // {
                 //     path: '/management',
                 //     name: 'management',

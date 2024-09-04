@@ -69,7 +69,8 @@ const store = createStore({
         products: CRUD('products', isCrudGenerator),
         cropAdmin: CRUD('cropAdmin', isCropAdminGenerator, '/admin/crops'),
         cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
-        activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types')
+        activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types'),
+        companies:CRUD('companies',isCropAdminGenerator)
     }
 });
 store.hasAction = function (actionName) {
