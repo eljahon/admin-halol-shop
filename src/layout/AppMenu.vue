@@ -12,10 +12,10 @@ const model = ref([
         // label: 'UI Components',
         items: [
             // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
-            // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-            // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
-            // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
+            { label: 'land-monitoring', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
+            { label: 'tasks', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
+            { label: 'produts', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
+            { label: 'chat-statistik', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
@@ -40,6 +40,27 @@ const model = ref([
             //     to: '/landing'
             // },
             {
+                label: 'user',
+                icon: 'pi pi-fw pi-user',
+                items: [
+                    {
+                        label: 'activity_types',
+                        icon: 'pi pi-fw pi-sign-in',
+                        to: '/activitytypes'
+                    },
+                    {
+                        label: 'Error',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/Auth/error'
+                    },
+                    {
+                        label: 'Access Denied',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/Auth/access'
+                    }
+                ]
+            },
+            {
                 label: 'management',
                 icon: 'pi pi-fw pi-user',
                 items: [
@@ -60,6 +81,49 @@ const model = ref([
                     }
                 ]
             },
+            {
+                label: 'website-settings',
+                icon: 'pi pi-fw pi-user',
+                items: [
+                    {
+                        label: 'activity_types',
+                        icon: 'pi pi-fw pi-sign-in',
+                        to: '/activitytypes'
+                    },
+                    {
+                        label: 'Error',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/Auth/error'
+                    },
+                    {
+                        label: 'Access Denied',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/Auth/access'
+                    }
+                ]
+            },
+            {
+                label: 'settings',
+                icon: 'pi pi-fw pi-user',
+                items: [
+                    {
+                        label: 'activity_types',
+                        icon: 'pi pi-fw pi-sign-in',
+                        to: '/activitytypes'
+                    },
+                    {
+                        label: 'Error',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/Auth/error'
+                    },
+                    {
+                        label: 'Access Denied',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/Auth/access'
+                    }
+                ]
+            },
+
             // {
             //     label: 'Crud',
             //     icon: 'pi pi-fw pi-pencil',
