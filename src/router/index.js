@@ -38,7 +38,7 @@ const router = createRouter({
                 {
                     path: '/',
                     name: 'Dashboard',
-                    component: () => import('@/views/Dashboard.vue'),
+                    component: () => import('@/views/pages/dashboard/Dashboard.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
@@ -223,18 +223,18 @@ const router = createRouter({
                     component: () => import('@/views/pages/Empty.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
                 },
-                {
-                    path: '/pages/crud',
-                    name: 'crud',
-                    component: () => import('@/views/pages/Crud.vue'),
-                    meta: { requiresAuth: true, role:[ 'admin'] }
-                },
-                {
-                    path: '/documentation',
-                    name: 'documentation',
-                    component: () => import('@/views/pages/Documentation.vue'),
-                    meta: { requiresAuth: true, role: ['admin'] }
-                }
+                // {
+                //     path: '/pages/crud',
+                //     name: 'crud',
+                //     component: () => import('@/views/pages/Crud.vue'),
+                //     meta: { requiresAuth: true, role:[ 'admin'] }
+                // },
+                // {
+                //     path: '/documentation',
+                //     name: 'documentation',
+                //     component: () => import('@/views/pages/Documentation.vue'),
+                //     meta: { requiresAuth: true, role: ['admin'] }
+                // }
             ]
         },
         {
