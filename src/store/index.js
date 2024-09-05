@@ -47,7 +47,7 @@ const store = createStore({
         },
         getUsers ({commit},payload) {
             return new Promise((resolve, reject) => {
-                const pageSize = 25;
+                const pageSize = payload.pageSize;
                 request.get('/users', {params:{start: (payload.page-1||0)*pageSize, limit: pageSize,populate: '*', filters:payload.filters}})
                     .then(res => {
                         console.log(res);
