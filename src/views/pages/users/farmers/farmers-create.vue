@@ -29,6 +29,14 @@ const feilds = ref([
     // { label: 'planting_time_end', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
     // { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     // { label: 'harvest_duration', schema: { type: 'number', required: true }, renderElement: 'InputText', prop: { type: 'number' } },
+
+    { label: 'region', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: regions, optionLabel: 'name', optionValue: 'id', showClear: true } },
+    { label: 'district', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: districts, optionLabel: 'name', optionValue: 'id', showClear: true } },
+    { label: 'area', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: areas, optionLabel: 'name', optionValue: 'id', showClear: true } },
+    { label: 'phone', schema: { type: 'phone', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'farmer_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    // { label: 'fullname', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'contact_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     {
         label: 'farmer_type',
         schema: { type: 'string', required: true },
@@ -52,14 +60,7 @@ const feilds = ref([
             optionValue: 'id',
             showClear: true
         }
-    },
-    { label: 'region', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: regions, optionLabel: 'name', optionValue: 'id', showClear: true } },
-    { label: 'district', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: districts, optionLabel: 'name', optionValue: 'id', showClear: true } },
-    { label: 'area', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: areas, optionLabel: 'name', optionValue: 'id', showClear: true } },
-    { label: 'phone', schema: { type: 'phone', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'farmer_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    // { label: 'fullname', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'contact_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} }
+    }
     // { label: 'details', schema: { type: 'string', required: false }, renderElement: 'Textarea', prop: { class: '' } }
 ]);
 

@@ -8,6 +8,10 @@ import { actions } from '@/utils/Store_Schema';
 import { useRoute, useRouter } from 'vue-router';
 import PaginatorCustom from '@/components/Paginator-Custom.vue';
 import { useI18n } from 'vue-i18n';
+const tabList = ref([
+    {label: 'users', id: 0, key: 'users', icon: 'pi pi-users'},
+    {label: 'consultants', id: 1, key: 'consultants', icon: 'pi pi-user-edit'},
+])
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -77,7 +81,8 @@ function getCropsList() {
     const filters = {
         populate: '*',
         sort: 'createdAt:desc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
+        page: _query?.page ? +_query?.page : 1,
+        pageSize: _query.pageSize ? +_query.pageSize : 25 ,
         region: _query.region ?? undefined,
         district: _query.district ?? undefined,
         area: _query.area ?? undefined
@@ -98,7 +103,7 @@ function getCropsList() {
 }
 async function getAreasList() {
     const _query = { ...route.query };
-    return await getAreas({populate: '*', district:_query.district ?? undefined}).then((res) => {
+    return await getAreas({populate: '*', filters:{district:_query.district ?? undefined}}).then((res) => {
         areas.value = res.data;
     });
 }
@@ -121,27 +126,27 @@ getDistrictList();
 getAreasList();
 async function filterAreas(value) {
     if(value) {
-        await routerPush({ area: value });
+        await routerPush({ area: value, page: 1 });
     } else {
-        await routerPush({ area: undefined });
+        await routerPush({ area: undefined, page: 1 });
     }
 }
 async function filterDistrict(value) {
     if (value) {
-        await routerPush({ district: value });
-        await getAreas();
+        await routerPush({ district: value, page: 1 });
+        await getAreasList();
     } else {
-        await routerPush({ district: undefined });
-        await getAreas();
+        await routerPush({ district: undefined, page: 1 });
+        await getAreasList();
     }
 }
 async function filterRegion(value) {
     if (value) {
-        await routerPush({ region: value });
-        await getDistricts();
+        await routerPush({ region: value, page: 1 });
+        await getDistrictList();
     } else {
-        await routerPush({ region: undefined });
-        await getDistricts();
+        await routerPush({ region: undefined, page: 1 });
+        await getDistrictList();
     }
 }
 function onChangePage(value) {

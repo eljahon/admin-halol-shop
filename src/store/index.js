@@ -2,6 +2,7 @@ import { Abouts } from '@/store/modules';
 import CRUD from '@/utils/dynamickCrud';
 import request from '@/utils/request';
 import { createStore } from 'vuex';
+import { palette } from '@primevue/themes';
 const isCrudGenerator = { get: true, put: true, remove: true, getById: true, post: true, state: false, mutation: false, getter: false };
 const isLoginGenerator = { get: false, put: false, remove: false, getById: false, post: true, state: false, mutation: false, getter: false };
 const isCropAdminGenerator = { get: true, put: false, remove: false, getById: false, post: false, state: false, mutation: false, getter: false };
@@ -44,9 +45,25 @@ const store = createStore({
                     });
             });
         },
-        // login({ commit }, payload) {
-        //     commit('SET_IS_LOGINED', payload);
-        // }
+        getUsers ({commit},payload) {
+            return new Promise((resolve, reject) => {
+                const pageSize = 25;
+                request.get('/users', {params:{start: (payload.page-1||0)*pageSize, limit: pageSize,populate: '*', filters:payload.filters}})
+                    .then(res => {
+                        console.log(res);
+                        const meta ={
+                            page: payload.page||1,
+                            pageCount: Math.ceil(res.total/pageSize),
+                            pageSize,
+                            total: res?.total||0
+                        }
+                        resolve({data:res?.users, meta})
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            })
+        },
 
         getUserMe() {
             return new Promise((resolve, reject) => {
@@ -64,15 +81,11 @@ const store = createStore({
     modules: {
         Abouts,
         login: CRUD('login', isLoginGenerator, '/auth/local'),
-        crops: CRUD('crops', isCrudGenerator),
         products: CRUD('products', isCrudGenerator),
         cropAdmin: CRUD('cropAdmin', isCropAdminGenerator, '/admin/crops'),
         cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
         activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types'),
         farmers: CRUD('farmers', isCrudGenerator),
-        regions: CRUD('regions', isCrudGenerator),
-        areas: CRUD('areas', isCrudGenerator),
-        districts: CRUD('districts', isCrudGenerator),
         companies: CRUD('companies', isCropAdminGenerator),
         treatments: CRUD('treatments', isCrudGenerator),
         fertilizations: CRUD('fertilizations', isCrudGenerator),
@@ -80,9 +93,12 @@ const store = createStore({
         diseaseCategory: CRUD('diseaseCategory', isCrudGenerator, '/disease-category'),
         districts: CRUD('districts', isCrudGenerator),
         areas: CRUD('areas', isCrudGenerator),
+        areaManagers: CRUD('areaManagers', isCrudGenerator, '/area-managers'),
         drugs: CRUD('drugs', isCrudGenerator),
+        distributors: CRUD('distributors', isCrudGenerator),
         drugCategories: CRUD('drugCategories', isCrudGenerator, '/drug-categories'),
         crops: CRUD('crops', isCrudGenerator),
+        employeeRoles: CRUD('employeeRoles', isCrudGenerator, '/employee-roles'),
         fertilizers: CRUD('fertilizers', isCrudGenerator),
         fertilizerCategories: CRUD('fertilizerCategories', isCrudGenerator, '/fertilizer-categories'),
         questions: CRUD('questions', isCrudGenerator),

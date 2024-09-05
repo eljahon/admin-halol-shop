@@ -87,6 +87,32 @@ const router = createRouter({
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
+                    path: '/products',
+                    name: 'products',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'products-list',
+                            component: () => import('@/views/pages/product/products-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'products-create',
+                            component: () => import('@/views/pages/crops/crops-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'info',
+                            name: 'crops-info',
+                            component: () => import('@/views/pages/crops/crops-info.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
                     path: '/farmers',
                     name: 'farmers',
                     component: () => import('@/views/pages/index.vue'),
@@ -113,7 +139,7 @@ const router = createRouter({
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
-                    path: '/farmers',
+                    path: '/area-managers',
                     name: 'area_managers',
                     component: () => import('@/views/pages/index.vue'),
                     children: [
@@ -214,18 +240,18 @@ const router = createRouter({
                 },
                 {
                     path: '/employee-role',
-                    name: 'user_role',
+                    name: 'employee_roles',
                     component: () => import('@/views/pages/index.vue'),
                     children: [
                         {
                             path: '',
-                            name: 'employee_role-list',
+                            name: 'employee_roles-list',
                             component: () => import('@/views/pages/users/employee-role/employee-role-list.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         },
                         {
                             path: 'forms/:id',
-                            name: 'employee_role-create',
+                            name: 'employee_roles-create',
                             component: () => import('@/views/pages/users/employee-role/employee-role-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         },
@@ -373,7 +399,7 @@ const router = createRouter({
                 //         {
                 //             path: '/activity-types',
                 //             name: 'management-list-activity-types',
-                //             component: () => import('@/views/pages/management/activity-types/index.vue'),
+                //             component: () => import('@/views/pages/management/activity-types/products-list.vue'),
                 //             children:[
                 //                {
                 //                    path: '',

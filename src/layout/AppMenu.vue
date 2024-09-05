@@ -12,10 +12,10 @@ const model = ref([
         // label: 'UI Components',
         items: [
             // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: 'land-monitoring', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
-            { label: 'tasks', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-            { label: 'produts', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
-            { label: 'chat-statistik', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
+            { label: 'land-monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/uikit/input' },
+            { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/uikit/button', class: 'rotated-icon' },
+            { label: 'products', icon: 'pi pi-fw pi-table', to: '/products' },
+            { label: 'chat-statistik', icon: 'pi pi-fw pi-send', to: '/uikit/list' },
             { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' }
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
@@ -41,7 +41,7 @@ const model = ref([
             // },
             {
                 label: 'user',
-                icon: 'pi pi-fw pi-user',
+                icon: 'pi pi-fw pi-users',
                 items: [
                     {
                         label: 'farmers',
@@ -49,8 +49,8 @@ const model = ref([
                         to: '/farmers'
                     },
                     {
-                        label: 'area-managers',
-                        icon: 'pi pi-fw pi-lock',
+                        label: 'area_managers',
+                        icon: 'pi pi-fw pi-id-card',
                         to: '/area-managers'
                     },
                     {
@@ -74,7 +74,7 @@ const model = ref([
                     //     to: '/activitytypes'
                     // },
                     {
-                        label: 'employee-roles',
+                        label: 'employee_roles',
                         icon: 'pi pi-fw pi-times-circle',
                         to: '/employee-role'
                     }
@@ -82,7 +82,7 @@ const model = ref([
             },
             {
                 label: 'management',
-                icon: 'pi pi-fw pi-user',
+                icon: 'pi pi-sliders-h',
                 items: [
                     {
                         label: 'activity_types',
@@ -183,7 +183,7 @@ const model = ref([
             },
             {
                 label: 'website-settings',
-                icon: 'pi pi-fw pi-user',
+                icon: 'pi pi-fw pi-box',
                 items: [
                     {
                         label: 'activity_types',
@@ -204,7 +204,7 @@ const model = ref([
             },
             {
                 label: 'settings',
-                icon: 'pi pi-fw pi-user',
+                icon: 'pi pi-spin pi-cog',
                 items: [
                     {
                         label: 'activity_types',

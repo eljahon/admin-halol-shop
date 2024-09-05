@@ -19,11 +19,11 @@ if (!props.src) onError();
 </script>
 
 <template>
-    <div class="image-wrapper" :class="[loading ? 'active' : '']" :style="{ width: `${width}px` }">
+    <div class="image-wrapper" :class="[loading ? 'active' : '']" :style="{ width: `${width}px`, height:`${height}px` }">
         <div class="absolute w-full h-full flex items-center justify-center">
             <div v-if="loading" class="spinner"></div>
         </div>
-        <Image v-if="src" :src="url + src" alt="Image" :width="width" :height="height" @load="onLoad" @error="onError" preview />
+        <Image :imageClass="`h-[${height}px] rounded`" v-if="src" :src="url + src" alt="Image" :width="width" :height="100" @load="onLoad" @error="onError" preview />
         <!--        <img :src="url + src" alt="" />-->
         <div v-if="error" class="error-placeholder">{{ $t('image-not') }}</div>
     </div>

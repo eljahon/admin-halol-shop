@@ -4,6 +4,7 @@ import DatePicker from 'primevue/datepicker';
 import Select from 'primevue/select';
 import Textarea from 'primevue/textarea';
 import ToggleSwitch from 'primevue/toggleswitch';
+import Password from 'primevue/password'
 import { useForm } from 'vee-validate';
 import {ref, toRefs, watch } from 'vue';
 import * as yup from 'yup';
@@ -78,7 +79,8 @@ const componentList = {
     InputText,
     Select,
     Textarea,
-    ToggleSwitch
+    ToggleSwitch,
+    Password,
 };
 const handleSubmitForm = handleSubmit(async (value) => {
     emit('handelSubmitForm', id === 'new' ? { data: value } : { id, data: value });
