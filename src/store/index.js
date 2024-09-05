@@ -1,12 +1,11 @@
-import { createStore } from 'vuex';
 import { Abouts } from '@/store/modules';
 import CRUD from '@/utils/dynamickCrud';
 import request from '@/utils/request';
+import { createStore } from 'vuex';
 const isCrudGenerator = { get: true, put: true, remove: true, getById: true, post: true, state: false, mutation: false, getter: false };
 const isLoginGenerator = { get: false, put: false, remove: false, getById: false, post: true, state: false, mutation: false, getter: false };
-// const isCropsGenerator={ get:true, put:true,remove:true,getById:true,post:true, state:false, mutation:false, getter:false}
-// const isProductsGenerator={ get:true, put:true,remove:true,getById:true,post:true, state:false, mutation:false, getter:false}
 const isCropAdminGenerator = { get: true, put: false, remove: false, getById: false, post: false, state: false, mutation: false, getter: false };
+const isUsefullinfosGenerator = { get: true, put: false, remove: true, getById: false, post: false, state: false, mutation: false, getter: false };
 const isCropsCategoryGenerator = { get: true, put: true, remove: true, getById: true, post: true, state: false, mutation: false, getter: false };
 const store = createStore({
     namespaced: true,
@@ -74,7 +73,24 @@ const store = createStore({
         regions: CRUD('regions', isCrudGenerator),
         areas: CRUD('areas', isCrudGenerator),
         districts: CRUD('districts', isCrudGenerator),
-        companies:CRUD('companies',isCropAdminGenerator)
+        companies: CRUD('companies', isCropAdminGenerator),
+        treatments: CRUD('treatments', isCrudGenerator),
+        fertilizations: CRUD('fertilizations', isCrudGenerator),
+        diseases: CRUD('diseases', isCrudGenerator),
+        diseaseCategory: CRUD('diseaseCategory', isCrudGenerator, '/disease-category'),
+        districts: CRUD('districts', isCrudGenerator),
+        areas: CRUD('areas', isCrudGenerator),
+        drugs: CRUD('drugs', isCrudGenerator),
+        drugCategories: CRUD('drugCategories', isCrudGenerator, '/drug-categories'),
+        crops: CRUD('crops', isCrudGenerator),
+        fertilizers: CRUD('fertilizers', isCrudGenerator),
+        fertilizerCategories: CRUD('fertilizerCategories', isCrudGenerator, '/fertilizer-categories'),
+        questions: CRUD('questions', isCrudGenerator),
+        regions: CRUD('regions', isCrudGenerator),
+        seasons: CRUD('seasons', isCrudGenerator),
+        units: CRUD('units', isCrudGenerator),
+        usefullinfos: CRUD('usefullinfos', isUsefullinfosGenerator),
+        type: CRUD('type', isUsefullinfosGenerator)
     }
 });
 store.hasAction = function (actionName) {

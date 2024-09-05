@@ -83,7 +83,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/crops/crops-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -109,7 +109,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/farmers/farmers-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -129,7 +129,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/farmers/farmers-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -149,7 +149,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/area-managers/area-managers-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -169,7 +169,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/users-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -189,7 +189,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/employees/employees-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -209,7 +209,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/users/distributors/distributors-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -235,7 +235,7 @@ const router = createRouter({
                             component: () => import('@/views/pages/crops/crops-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -254,14 +254,14 @@ const router = createRouter({
                             name: 'activity_types-create',
                             component: () => import('@/views/pages/management/activity-types/activity-types-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
-                        },
+                        }
                         // {
                         //     path: 'info',
                         //     name: 'activitytypes-info',
                         //     component: () => import('@/views/pages/crops/crops-info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
@@ -287,8 +287,84 @@ const router = createRouter({
                         //     component: () => import('@/views/pages/crops/crops-info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
-                    ],
+                    ]
                     // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/treatments',
+                    name: 'treatments',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'treatments-list',
+                            component: () => import('@/views/pages/management/treatments/treatments-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'treatments-create',
+                            component: () => import('@/views/pages/management/treatments/treatments-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/fertilizations',
+                    name: 'fertilizations',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'fertilizations-list',
+                            component: () => import('@/views/pages/management/fertilizations/fertilizations-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'fertilizations-create',
+                            component: () => import('@/views/pages/management/fertilizations/fertilizations-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/cropsCategory',
+                    name: 'cropsCategory',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'cropsCategory-list',
+                            component: () => import('@/views/pages/management/crops-category/crops-category-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'cropsCategory-create',
+                            component: () => import('@/views/pages/management/crops-category/crops-category-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/diseases',
+                    name: 'diseases',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'diseases-list',
+                            component: () => import('@/views/pages/management/diseases/diseases-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'diseases-create',
+                            component: () => import('@/views/pages/management/diseases/diseases-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
                 },
                 // {
                 //     path: '/management',
@@ -332,13 +408,13 @@ const router = createRouter({
                     path: '/uikit/list',
                     name: 'list',
                     component: () => import('@/views/uikit/ListDoc.vue'),
-                    meta: { requiresAuth: true, role:['admin'] }
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/tree',
                     name: 'tree',
                     component: () => import('@/views/uikit/TreeDoc.vue'),
-                    meta: { requiresAuth: true, role:['admin'] }
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/panel',
@@ -387,7 +463,7 @@ const router = createRouter({
                     path: '/uikit/misc',
                     name: 'misc',
                     component: () => import('@/views/uikit/MiscDoc.vue'),
-                    meta: { requiresAuth: true, role:[ 'admin'] }
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/timeline',
@@ -400,7 +476,7 @@ const router = createRouter({
                     name: 'empty',
                     component: () => import('@/views/pages/Empty.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
-                },
+                }
                 // {
                 //     path: '/pages/crud',
                 //     name: 'crud',

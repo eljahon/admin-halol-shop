@@ -24,9 +24,9 @@ let list = {
 };
 const meta = ref({});
 
-const { getActivityTypes, deleteActivityTypes } = actions(['activityTypes'], { get: true, remove: true });
+const { getDiseases, deleteDiseases } = actions(['diseases'], { get: true, remove: true });
 function openNew() {
-    router.push({ name: 'activity_types-create', params: { id: 'new' } });
+    router.push({ name: 'diseases-create', params: { id: 'new' } });
 }
 
 function confirmDeleteProduct(prod) {
@@ -37,12 +37,12 @@ function confirmDeleteProduct(prod) {
 function deleteProduct() {
     deleteCropDialog.value = false;
     isLoading.value = true;
-    deleteActivityTypes(crop.value.id)
+    deleteDiseases(crop.value.id)
         .then((res) => {
             crop.value = {};
             toast.add({ severity: 'success', summary: 'Successful', detail: t('crops') + ' ' + t('delete'), life: 3000 });
             isLoading.value = false;
-            getCropsList();
+            getDiseasesList();
         })
         .catch((err) => {
             toast.add({ severity: 'error', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
@@ -50,21 +50,15 @@ function deleteProduct() {
         });
 }
 
-function getCropsList() {
+function getDiseasesList() {
     isLoading.value = true;
     const _query = { ...route.query };
     const filters = {
         populate: '*',
-        sort: 'createdAt:desc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
-        filters: {
-            is_common: _query?.is_common ?? undefined,
-            name: {
-                $containsi: _query.search ?? undefined
-            }
-        }
+        sort: 'createdAt:asc',
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 }
     };
-    getActivityTypes(filters)
+    getDiseases(filters)
         .then((res) => {
             crops.value = res.data;
             meta.value = res.meta;
@@ -75,10 +69,10 @@ function getCropsList() {
         });
 }
 
-getCropsList();
+getDiseasesList();
 
 function onChangePage(value) {
-    getCropsList();
+    getDiseasesList();
 }
 
 watch(
@@ -113,16 +107,17 @@ watch(
                     </template>
                 </Column>
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
+                <Column field="crop.name" :header="$t('crop')" style="min-width: 12rem"></Column>
                 <Column field="category" :header="$t('date')" style="min-width: 5rem">
                     <template #body="{ data }">
                         <span v-if="data.createdAt">{{ dayjs(data.createdAt).format('DD-MM-YYYY hh:mm') }}</span>
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>
-
+                <Column field="type" :header="$t('type')" style="min-width: 12rem"></Column>
                 <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
                     <template #body="{ data }">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'activity_types-create', params: { id: data.id } })" />
+                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseases-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>
                 </Column>

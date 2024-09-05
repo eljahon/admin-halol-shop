@@ -16,7 +16,7 @@ const model = ref([
             { label: 'tasks', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
             { label: 'produts', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
             { label: 'chat-statistik', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
-            { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' },
+            { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' }
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
             // { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
@@ -47,11 +47,13 @@ const model = ref([
                         label: 'farmers',
                         icon: 'pi pi-fw pi-lock',
                         to: '/farmers'
-                    }, {
+                    },
+                    {
                         label: 'area-managers',
                         icon: 'pi pi-fw pi-lock',
                         to: '/area-managers'
-                    },{
+                    },
+                    {
                         label: 'user',
                         icon: 'pi pi-fw pi-lock',
                         to: '/user'
@@ -60,7 +62,8 @@ const model = ref([
                         label: 'employees',
                         icon: 'pi pi-fw pi-lock',
                         to: '/employees'
-                    },{
+                    },
+                    {
                         label: 'distributors',
                         icon: 'pi pi-fw pi-lock',
                         to: '/distributors'
@@ -74,8 +77,7 @@ const model = ref([
                         label: 'employee-roles',
                         icon: 'pi pi-fw pi-times-circle',
                         to: '/employee-role'
-                    },
-
+                    }
                 ]
             },
             {
@@ -93,9 +95,89 @@ const model = ref([
                         to: '/companies'
                     },
                     {
-                        label: 'Access Denied',
+                        label: 'treatments',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/treatments'
+                    },
+                    {
+                        label: 'fertilizations',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/fertilizations'
+                    },
+                    {
+                        label: 'cropsCategory',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/cropsCategory'
+                    },
+                    {
+                        label: 'diseases',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/diseases'
+                    },
+                    {
+                        label: 'diseaseCategory',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/diseaseCategory'
+                    },
+                    {
+                        label: 'districts',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/districts'
+                    },
+                    {
+                        label: 'areas',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/areas'
+                    },
+                    {
+                        label: 'drugs',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/drugs'
+                    },
+                    {
+                        label: 'drugCategories',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/drugCategories'
+                    },
+                    {
+                        label: 'crops',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/crops'
+                    },
+                    {
+                        label: 'fertilizers',
+                        icon: 'pi pi-fw pi-times-circle',
+                        to: '/fertilizers'
+                    },
+                    {
+                        label: 'fertilizerCategories',
                         icon: 'pi pi-fw pi-lock',
-                        to: '/Auth/access'
+                        to: 'fertilizerCategories'
+                    },
+                    {
+                        label: 'questions',
+                        icon: 'pi pi-fw pi-lock',
+                        to: 'questions'
+                    },
+                    {
+                        label: 'regions',
+                        icon: 'pi pi-fw pi-lock',
+                        to: 'regions'
+                    },
+                    {
+                        label: 'seasons',
+                        icon: 'pi pi-fw pi-lock',
+                        to: 'seasons'
+                    },
+                    {
+                        label: 'units',
+                        icon: 'pi pi-fw pi-lock',
+                        to: 'units'
+                    },
+                    {
+                        label: 'usefullinfos',
+                        icon: 'pi pi-fw pi-lock',
+                        to: 'usefullinfos'
                     }
                 ]
             },
@@ -140,7 +222,7 @@ const model = ref([
                         to: '/Auth/access'
                     }
                 ]
-            },
+            }
 
             // {
             //     label: 'Crud',
@@ -158,7 +240,7 @@ const model = ref([
             //     to: '/pages/empty'
             // }
         ]
-    },
+    }
     // {
     //     label: 'Hierarchy',
     //     items: [
