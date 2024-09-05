@@ -70,6 +70,10 @@ const store = createStore({
         cropAdmin: CRUD('cropAdmin', isCropAdminGenerator, '/admin/crops'),
         cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
         activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types'),
+        farmers: CRUD('farmers', isCrudGenerator),
+        regions: CRUD('regions', isCrudGenerator),
+        areas: CRUD('areas', isCrudGenerator),
+        districts: CRUD('districts', isCrudGenerator),
         companies:CRUD('companies',isCropAdminGenerator)
     }
 });

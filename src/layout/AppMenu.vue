@@ -51,12 +51,25 @@ const model = ref([
                         label: 'area-managers',
                         icon: 'pi pi-fw pi-lock',
                         to: '/area-managers'
+                    },{
+                        label: 'user',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/user'
                     },
                     {
-                        label: 'activity_types',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/activitytypes'
+                        label: 'employees',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/employees'
+                    },{
+                        label: 'distributors',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/distributors'
                     },
+                    // {
+                    //     label: 'activity_types',
+                    //     icon: 'pi pi-fw pi-sign-in',
+                    //     to: '/activitytypes'
+                    // },
                     {
                         label: 'employee-roles',
                         icon: 'pi pi-fw pi-times-circle',

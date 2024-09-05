@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<h1>area-managers</h1>
+<h1>list</h1>
 </template>
 
 <style scoped lang="scss">

@@ -133,6 +133,86 @@ const router = createRouter({
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
+                    path: '/area-managers',
+                    name: 'area_managers',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'area_managers-list',
+                            component: () => import('@/views/pages/users/area-managers/area-managers-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'area_managers-create',
+                            component: () => import('@/views/pages/users/area-managers/area-managers-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/user',
+                    name: 'user',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'user-list',
+                            component: () => import('@/views/pages/users/users-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'user-create',
+                            component: () => import('@/views/pages/users/users-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/employees',
+                    name: 'employees',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'employees-list',
+                            component: () => import('@/views/pages/users/employees/employees-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'employees-create',
+                            component: () => import('@/views/pages/users/employees/employees-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/distributors',
+                    name: 'distributors',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'distributors-list',
+                            component: () => import('@/views/pages/users/distributors/distributors-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'distributors-create',
+                            component: () => import('@/views/pages/users/distributors/distributors-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
                     path: '/employee-role',
                     name: 'user_role',
                     component: () => import('@/views/pages/index.vue'),
