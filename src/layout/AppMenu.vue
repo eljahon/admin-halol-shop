@@ -44,20 +44,25 @@ const model = ref([
                 icon: 'pi pi-fw pi-user',
                 items: [
                     {
+                        label: 'farmers',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/farmers'
+                    }, {
+                        label: 'area-managers',
+                        icon: 'pi pi-fw pi-lock',
+                        to: '/area-managers'
+                    },
+                    {
                         label: 'activity_types',
                         icon: 'pi pi-fw pi-sign-in',
                         to: '/activitytypes'
                     },
                     {
-                        label: 'Error',
+                        label: 'employee-roles',
                         icon: 'pi pi-fw pi-times-circle',
-                        to: '/Auth/error'
+                        to: '/employee-role'
                     },
-                    {
-                        label: 'Access Denied',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/Auth/access'
-                    }
+
                 ]
             },
             {

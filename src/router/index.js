@@ -63,7 +63,7 @@ const router = createRouter({
                 {
                     path: '/crops',
                     name: 'crops',
-                    component: () => import('@/views/pages/crops/index.vue'),
+                    component: () => import('@/views/pages/index.vue'),
                     children: [
                         {
                             path: '',
@@ -87,9 +87,81 @@ const router = createRouter({
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
                 {
+                    path: '/farmers',
+                    name: 'farmers',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'farmers-list',
+                            component: () => import('@/views/pages/users/farmers/farmers-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'farmers-create',
+                            component: () => import('@/views/pages/users/farmers/farmers-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'info',
+                            name: 'farmers-info',
+                            component: () => import('@/views/pages/users/farmers/farmers-info.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/farmers',
+                    name: 'area_managers',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'area_managers-list',
+                            component: () => import('@/views/pages/users/farmers/farmers-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'area_managers-create',
+                            component: () => import('@/views/pages/users/farmers/farmers-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
+                    path: '/employee-role',
+                    name: 'user_role',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'employee_role-list',
+                            component: () => import('@/views/pages/users/employee-role/employee-role-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'employee_role-create',
+                            component: () => import('@/views/pages/users/employee-role/employee-role-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'info',
+                            name: 'crops-info',
+                            component: () => import('@/views/pages/crops/crops-info.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ],
+                    // meta: { requiresAuth: true, role: 'admin' }
+                },
+                {
                     path: '/activitytypes',
                     name: 'activity_types',
-                    component: () => import('@/views/pages/crops/index.vue'),
+                    component: () => import('@/views/pages/index.vue'),
                     children: [
                         {
                             path: '',
@@ -115,7 +187,7 @@ const router = createRouter({
                 {
                     path: '/companies',
                     name: 'companies',
-                    component: () => import('@/views/pages/management/companies/index.vue'),
+                    component: () => import('@/views/pages/index.vue'),
                     children: [
                         {
                             path: '',
