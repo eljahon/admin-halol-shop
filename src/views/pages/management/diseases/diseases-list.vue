@@ -114,7 +114,12 @@ watch(
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>
-                <Column field="type" :header="$t('type')" style="min-width: 12rem"></Column>
+
+                <Column field="type" :header="$t('type')" style="min-width: 9rem">
+                    <template #body="{ data }">
+                        <Tag>{{ $t(data?.type) }}</Tag>
+                    </template>
+                </Column>
                 <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseases-create', params: { id: data.id } })" />

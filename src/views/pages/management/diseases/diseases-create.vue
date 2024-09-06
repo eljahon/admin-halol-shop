@@ -18,7 +18,7 @@ let updateValue = ref();
 let isSubmit = ref(false);
 const crops = ref([]);
 const type = ref([]);
-const diseaseCategory = ref([]);
+const drugCategories = ref([]);
 const image = ref({ id: undefined, url: undefined });
 
 const feilds = ref([
@@ -26,22 +26,22 @@ const feilds = ref([
     { label: 'description', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     { label: 'crop', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: crops, optionLabel: 'name', optionValue: 'id' } },
     { label: 'type', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: type, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'disease_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: diseaseCategory, optionLabel: 'name', optionValue: 'id' } }
+    { label: 'disease_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: drugCategories, optionLabel: 'name', optionValue: 'id' } }
 ]);
 const onImageUpload = (value) => {
     image.value = value.media;
 };
-const { postDiseases, putDiseases, getByIdDiseases, getCrops, getDiseaseCategory } = actions(['diseases', 'crops', 'type', 'diseaseCategory'], { get: true, post: true, put: true, getById: true });
+const { postDiseases, putDiseases, getByIdDiseases, getCrops, getDrugCategories ,getDiseasesType} = actions(['diseases', 'crops', 'diseasesType', 'drugCategories'], { get: true, post: true, put: true, getById: true });
 
 const isUpdate = ref(false);
 
-getDiseaseCategory({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
-    diseaseCategory.value = res.data;
+getDrugCategories({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
+    drugCategories.value = res.data;
 });
 getCrops({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
     crops.value = res.data;
 });
-getType({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
+getDiseasesType({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
     type.value = res.data;
 });
 if (route.params.id !== 'new') {
@@ -81,7 +81,7 @@ async function handleSubmitFrom(values) {
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <FormBuilder gridClass="grid grid-cols-1 w-1/2" v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
+            <FormBuilder v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
                 <template #default="{ values, set }">
                     <div class="w-full flex">
                         <ImageUpload :forlder="'other'" :model-value="image?.aws_path" @update:modelValue="onImageUpload" />

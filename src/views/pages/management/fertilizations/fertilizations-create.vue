@@ -75,7 +75,7 @@ async function handleSubmitFrom(values) {
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <FormBuilder gridClass="grid grid-cols-1 w-1/2" v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom"> </FormBuilder>
+            <FormBuilder  v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom"> </FormBuilder>
         </div>
     </div>
 </template>

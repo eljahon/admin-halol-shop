@@ -90,7 +90,8 @@ const store = createStore({
         treatments: CRUD('treatments', isCrudGenerator),
         fertilizations: CRUD('fertilizations', isCrudGenerator),
         diseases: CRUD('diseases', isCrudGenerator),
-        diseaseCategory: CRUD('diseaseCategory', isCrudGenerator, '/disease-category'),
+        drugCategories: CRUD('drugCategories', isCrudGenerator, '/drug-categories'),
+        diseasesType: CRUD('diseasesType', isUsefullinfosGenerator, '/diseases/type'),
         districts: CRUD('districts', isCrudGenerator),
         areas: CRUD('areas', isCrudGenerator),
         areaManagers: CRUD('areaManagers', isCrudGenerator, '/area-managers'),
@@ -105,8 +106,7 @@ const store = createStore({
         regions: CRUD('regions', isCrudGenerator),
         seasons: CRUD('seasons', isCrudGenerator),
         units: CRUD('units', isCrudGenerator),
-        usefullinfos: CRUD('usefullinfos', isUsefullinfosGenerator),
-        type: CRUD('type', isUsefullinfosGenerator)
+        usefullinfos: CRUD('usefullinfos', isUsefullinfosGenerator)
     }
 });
 store.hasAction = function (actionName) {

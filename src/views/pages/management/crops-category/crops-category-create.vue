@@ -74,7 +74,7 @@ async function handleSubmitFrom(values) {
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <FormBuilder gridClass="grid grid-cols-1 w-1/2" v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
+            <FormBuilder  v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
                 <template #default="{ values, set }">
                     <div class="w-full flex">
                         <ImageUpload :forlder="'other'" :model-value="icon?.aws_path" @update:modelValue="onImageUpload" />
