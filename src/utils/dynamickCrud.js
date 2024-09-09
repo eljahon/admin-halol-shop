@@ -17,7 +17,7 @@ export default function (param, isStoreAndMethods, url) {
         pagination: `PAGINATION_${toUpper}`,
         removeOne: `REMOVE_ONE_${toUpper}`
     };
-    const { get = true, getById = true, put = true, post = true, remove = true, state = true, getter = true, mutation = true } = isStoreAndMethods;
+    const { get = false, getById = false, put = false, post = false, remove = false, state = false, getter = false, mutation = false } = isStoreAndMethods;
     const fullStore = { actions: {}, state: {}, getters: {}, mutations: {} };
     if (state)
         fullStore.state = {
@@ -92,17 +92,12 @@ export default function (param, isStoreAndMethods, url) {
                 axios_init
                     .get(`${url ?? param}`, { params })
                     .then((res) => {
-                        if (res.meta && params?.pagination) {
+                        let meta ={}
+                        if (res?.meta && res.meta?.pagination) {
                             const { page, total, pageSize } = res.meta.pagination;
-                            const _paginationData = {
-                                page: page,
-                                pageSize: pageSize,
-                                // from: (page - 1) * pageSize + 1,
-                                // to: page * pageSize > total ? total : page * pageSize,
-                                total: total
-                            };
-                            // commit(_mutations.pagination, _paginationData);
+                            meta = {page, total, pageSize:+pageSize}
                         }
+<<<<<<< HEAD
                         if (res.meta?.pagination) {
                             const { page, total, pageSize } = res.meta?.pagination;
                             const _res = { data: res.data || [], meta: { page, total, pageSize } };
@@ -112,9 +107,13 @@ export default function (param, isStoreAndMethods, url) {
                             const _res = { data: res.data || [] };
                             resolve(_res);
                         }
+=======
+                        const _res = {data: (res?.data|| res) || [], meta};
+                        resolve(_res);
+>>>>>>> 36689f0 (fixed)
                     })
                     .catch((error) => {
-                        commit(_mutations.error, error);
+                        // commit(_mutations.error, error);
                         reject(error);
                     })
                     .finally(() => {

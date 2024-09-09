@@ -15,7 +15,7 @@ const model = ref([
             { label: 'land-monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/uikit/input' },
             { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/uikit/button', class: 'rotated-icon' },
             { label: 'products', icon: 'pi pi-fw pi-table', to: '/products' },
-            { label: 'chat-statistik', icon: 'pi pi-fw pi-send', to: '/uikit/list' },
+            { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik' },
             { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' }
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
@@ -139,11 +139,19 @@ const model = ref([
                         icon: 'pi pi-circle',
                         to: '/drugCategories'
                     },
+<<<<<<< HEAD
                     {
                         label: 'crops',
                         icon: 'pi pi-circle',
                         to: '/crops'
                     },
+=======
+                    // {
+                    //     label: 'crops',
+                    //     icon: 'pi pi-fw pi-times-circle',
+                    //     to: '/crops'
+                    // },
+>>>>>>> 36689f0 (fixed)
                     {
                         label: 'fertilizers',
                         icon: 'pi pi-circle',

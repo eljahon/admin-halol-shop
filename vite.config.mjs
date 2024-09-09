@@ -9,7 +9,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     optimizeDeps: {
         noDiscovery: true,
-        include: ['yup', 'dayjs','axios', 'exceljs', 'lodash', 'ymaps', 'spherical-geometry-js']
+        include: ['yup', 'dayjs','axios', 'exceljs', 'lodash', 'ymaps', 'spherical-geometry-js','quill']
     },
     plugins: [
         vue(),

@@ -52,6 +52,11 @@ const router = createRouter({
                     name: 'input',
                     component: () => import('@/views/uikit/InputDoc.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
+                }, {
+                    path: '/chat-statictik',
+                    name: 'chat_statictik',
+                    component: () => import('@/views/pages/chat-statistik/chat-statistik-list.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
                 },
                 {
                     path: '/uikit/button',
@@ -100,13 +105,13 @@ const router = createRouter({
                         {
                             path: 'forms/:id',
                             name: 'products-create',
-                            component: () => import('@/views/pages/crops/crops-create.vue'),
+                            component: () => import('@/views/pages/product/products-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         },
                         {
                             path: 'info',
-                            name: 'crops-info',
-                            component: () => import('@/views/pages/crops/crops-info.vue'),
+                            name: 'products-info',
+                            component: () => import('@/views/pages/product/products-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
                     ]

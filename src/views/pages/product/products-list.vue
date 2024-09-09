@@ -20,23 +20,25 @@ const toast = useToast();
 const dt = ref();
 const crops = ref();
 const crop = ref();
+const companiyList =ref(undefined)
+const url = import.meta.env.VITE_APP_AWS_PATH;
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
-let list = {
-    undefined: { name: t('all'), id: undefined },
-    true: { name: t('is_main'), id: true },
-    false: { name: t('is_main_not'), id: false }
-};
-const cropsFilter = ref(list[route.query?.is_common].id);
+const confirmedList = ref([
+    { name: t('all'), id: 'all' },
+    { name: t('confirmed'), id: 'true' },
+    { name: t('not_confirmed'), id: 'false' }
+]);
+
+const cropsFilter = ref(route.query?.confirmed ?? 'all');
+const companyFilter = ref(route.query?.comp ? +route.query.comp :undefined);
 const search = ref(route.query?.search ?? '');
 const meta = ref({});
 
-
-const { getProducts, deleteProducts} = actions(['products'], { get: true, remove: true });
+const { getProducts, deleteProducts, getCompanies } = actions(['products', 'companies'], { get: true, remove: true });
 function openNew() {
     router.push({ name: 'crops-create', params: { id: 'new' } });
 }
-
 
 function confirmDeleteProduct(prod) {
     crop.value = prod;
@@ -49,9 +51,9 @@ function deleteProduct() {
     deleteProducts(crop.value.id)
         .then((res) => {
             crop.value = {};
-            toast.add({ severity: 'success', summary: t('products'), detail: t('products')+' '+t('delete'), life: 3000 });
+            toast.add({ severity: 'success', summary: t('products'), detail: t('products') + ' ' + t('delete'), life: 3000 });
             isLoading.value = false;
-            getCropsList()
+            getCropsList();
         })
         .catch((err) => {
             toast.add({ severity: 'error', summary: t('products'), detail: t('products'), life: 3000 });
@@ -78,26 +80,26 @@ const excelDownload = async () => {
     link.click();
     document.body.removeChild(link);
 };
-function getStatusLabel(status) {
-    if (status) return 'success';
-
-    return 'danger';
-}
 async function routerPush(param) {
     console.log(route.query, '==>>', param);
-    const _query ={...route.query, ...param}
+    const _query = { ...route.query, ...param };
     console.log(_query);
     await router.replace({ query: _query });
     await getCropsList();
 }
 
 function onChangeSelect(value) {
-    routerPush({ is_common: value, page: 1 });
+    if(value !== 'all')   routerPush({ confirmed: value, page: 1 });
+    else  routerPush({ confirmed: undefined, page: 1 });
+
+}
+function onChangeSelectCom(value) {
+    routerPush({ comp: value ? value : undefined, page: 1 });
 }
 
-let onSearch = debounce(function(value) {
+let onSearch = debounce(function (value) {
     routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
-}, 1500)
+}, 1500);
 function getCropsList() {
     isLoading.value = true;
     const _query = { ...route.query };
@@ -106,8 +108,9 @@ function getCropsList() {
         sort: 'createdAt:desc',
         pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
         filters: {
-            is_common: _query?.is_common ?? undefined,
-            name: {
+            confirmed: _query?.confirmed ?? undefined,
+            company: _query.comp ?? undefined,
+            title: {
                 $containsi: _query.search ?? undefined
             }
         }
@@ -125,8 +128,32 @@ function getCropsList() {
     //     isLoading.value =false
     // });
 }
+function productConfirmed(item) {
+    isLoading.value = true
+    if (!item.confirmed) {
+        store
+            .dispatch('productConfirmed', {id: item.id })
+            .then((res) => {
+                isLoading.value = false;
+                toast.add({ severity: 'success', summary: t('products'), detail: t('product-confirmed'), life: 3000 });
+                getCropsList()
+            })
+            .catch((err) => {
+                isLoading.value=false;
+                console.log(err);
+                toast.add({ severity: 'error', summary: t('products'), detail: t('product-confirmed-error'), life: 3000 });
+
+            });
+    } else {
+        toast.add({ severity: 'info', summary: t('products'), detail: t('product-confirmed'), life: 3000 });
+    }
+}
 
 getCropsList();
+getCompanies({pagination:{page: 1,pageSize: 100}})
+    .then(res => {
+        companiyList.value = res.data
+    })
 
 function onChangePage(value) {
     getCropsList();
@@ -146,13 +173,19 @@ function onChangePage(value) {
                             :placeholder="$t('all')"
                             optionLabel="name"
                             optionValue="id"
-                            clearable
+                            showClear
                             @update:modelValue="onChangeSelect"
-                            :options="[
-                                { name: $t('all'), id: undefined },
-                                { name: $t('is_main'), id: true },
-                                { name: $t('is_main_not'), id: false }
-                            ]"
+                            :options="confirmedList"
+                        >
+                        </Select>     <Select
+                            class="w-full md:w-56"
+                            v-model="companyFilter"
+                            :placeholder="$t('company')"
+                            optionLabel="name"
+                            optionValue="id"
+                            showClear
+                            @update:modelValue="onChangeSelectCom"
+                            :options="companiyList"
                         >
                         </Select>
                         <IconField>
@@ -177,41 +210,46 @@ function onChangePage(value) {
                         </div>
                     </template>
                 </Column>
-                <Column :header="$t('image')" style="min-width: 8rem">
+                <Column :header="$t('image')" style="min-width: 7rem">
                     <template #body="{ data }">
                         <ImageOnLoad width="100" height="100" :src="data?.image?.aws_path" />
                     </template>
                 </Column>
-                <Column field="name" :header="$t('name')" style="min-width: 16rem"></Column>
+                <Column field="title" :header="$t('name')"></Column>
 
-                <Column field="price" :header="$t('biology_name')" style="min-width: 9rem">
+                <Column :header="$t('company')" style="min-width: 9rem">
                     <template #body="{ data }">
-                        {{ data?.biology_name ?? '-' }}
+                        {{ data?.company?.name ?? '-' }}
                     </template>
                 </Column>
-                <Column field="category" :header="$t('planting_time_start')" style="min-width: 12rem; text-align: center">
+                <Column field="category" :header="$t('certificate')">
                     <template #body="{ data }">
-                        <span v-if="data.planting_time_start">{{ dayjs(data.planting_time_start).format('DD-MM-YYYY') }}</span>
-                        <span v-else class="text-red-500">{{ '--' }}</span>
+                        <div class="flex gap-2 items-center" v-if="data.cer">
+                            <i class="pi pi-cloud-download text-blue-400"></i>
+                            <a class="text-blue-400" target="_blank" :href="url + data?.cer?.aws_path">{{ $t('certificate') }}</a>
+                        </div>
+                        <span v-else class="text-primary">{{ $t('not_certificate') }}</span>
                     </template>
                 </Column>
-                <Column field="rating" :header="$t('planting_time_end')" style="min-width: 12rem; text-align: center">
+                <Column field="rating" :header="$t('confir')">
                     <template #body="{ data }">
-                        <span v-if="data.planting_time_end">{{ dayjs(data.planting_time_end).format('DD-MM-YYYY') }}</span>
-                        <span v-else class="text-red-500">{{ '--' }}</span>
+                        <div v-if="data?.confirmed">
+                            <Tag><i class="pi pi-check-circle"></i>{{ $t('confirmed') }}</Tag>
+                        </div>
+                        <div v-else @click="productConfirmed(data)" class="cursor-pointer">
+                            <Tag severity="warn"><i class="pi pi-times-circle"></i>{{ $t('not_confirmed') }}</Tag>
+                        </div>
+
                         <!--                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />-->
                     </template>
                 </Column>
-                <Column field="inventoryStatus" :header="$t('active')" style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Tag :value="slotProps.data.is_common ? $t('is_main') : $t('is_main_not')" :severity="getStatusLabel(slotProps.data.is_common)" />
-                    </template>
-                </Column>
-                <Column :header="$t('actions')" :frozen="actions" align-frozen="left" style="min-width: 12rem">
+                <Column :header="$t('actions')" :frozen="actions" align-frozen="left">
                     <template #body="{ data }">
-                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'crops-info', query: { id: data.id } })" />
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'crops-create', params: { id: data.id } })" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
+                        <div class="flex">
+                            <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'products-info', query: { id: data.id } })" />
+                            <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'products-create', params: { id: data.id } })" />
+                            <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
+                        </div>
                     </template>
                 </Column>
                 <template #footer>
@@ -226,8 +264,8 @@ function onChangePage(value) {
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
                 <span v-if="crop"
-                >{{ $t('you-want-to-delete') }} <b>{{ crop.name }}</b
-                >?</span
+                    >{{ $t('you-want-to-delete') }} <b>{{ crop.name }}</b
+                    >?</span
                 >
             </div>
             <template #footer>
