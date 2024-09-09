@@ -392,6 +392,101 @@ const router = createRouter({
                         }
                     ]
                 },
+                {
+                    path: '/diseaseCategories',
+                    name: 'diseaseCategories',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'diseaseCategories-list',
+                            component: () => import('@/views/pages/management/disease-categories/disease-categories-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'diseaseCategories-create',
+                            component: () => import('@/views/pages/management/disease-categories/disease-categories-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/districts',
+                    name: 'districts',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'districts-list',
+                            component: () => import('@/views/pages/management/districts/districts-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'districts-create',
+                            component: () => import('@/views/pages/management/districts/districts-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/areas',
+                    name: 'areas',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'areas-list',
+                            component: () => import('@/views/pages/management/areas/areas-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'areas-create',
+                            component: () => import('@/views/pages/management/areas/areas-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/drugs',
+                    name: 'drugs',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'drugs-list',
+                            component: () => import('@/views/pages/management/drugs/drugs-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'drugs-create',
+                            component: () => import('@/views/pages/management/drugs/drugs-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
+                {
+                    path: '/drugCategories',
+                    name: 'drugCategories',
+                    component: () => import('@/views/pages/index.vue'),
+                    children: [
+                        {
+                            path: '',
+                            name: 'drugCategories-list',
+                            component: () => import('@/views/pages/management/drug-categories/drug-categories-list.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        },
+                        {
+                            path: 'forms/:id',
+                            name: 'drugCategories-create',
+                            component: () => import('@/views/pages/management/drug-categories/drug-categories-create.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
+                        }
+                    ]
+                },
                 // {
                 //     path: '/management',
                 //     name: 'management',

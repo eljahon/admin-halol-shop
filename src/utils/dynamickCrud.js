@@ -1,5 +1,5 @@
-import axios_init from '@/utils/request';
 import { camelize } from '@/utils/index';
+import axios_init from '@/utils/request';
 
 export default function (param, isStoreAndMethods, url) {
     // param = 'crops'
@@ -90,7 +90,7 @@ export default function (param, isStoreAndMethods, url) {
         fullStore.actions[camelize(`get ${_param}`)] = function ({ commit, state }, params) {
             return new Promise((resolve, reject) => {
                 axios_init
-                    .get(`${url ?? param}`, {params})
+                    .get(`${url ?? param}`, { params })
                     .then((res) => {
                         if (res.meta && params?.pagination) {
                             const { page, total, pageSize } = res.meta.pagination;
@@ -103,10 +103,15 @@ export default function (param, isStoreAndMethods, url) {
                             };
                             // commit(_mutations.pagination, _paginationData);
                         }
-                        const { page, total, pageSize } = res.meta.pagination;
-                        const _res = {data: res.data || [], meta:{page, total, pageSize}};
-                        // commit(_mutations.data, _res);
-                        resolve(_res);
+                        if (res.meta?.pagination) {
+                            const { page, total, pageSize } = res.meta?.pagination;
+                            const _res = { data: res.data || [], meta: { page, total, pageSize } };
+                            // commit(_mutations.data, _res);
+                            resolve(_res);
+                        } else {
+                            const _res = { data: res.data || [] };
+                            resolve(_res);
+                        }
                     })
                     .catch((error) => {
                         commit(_mutations.error, error);
@@ -121,7 +126,7 @@ export default function (param, isStoreAndMethods, url) {
         fullStore.actions[camelize(`get by id ${_param}`)] = function ({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 axios_init
-                    .get(`${url ?? param}/${payload.id}`, {params:payload.query})
+                    .get(`${url ?? param}/${payload.id}`, { params: payload.query })
                     .then((res) => {
                         resolve(res);
                     })
@@ -135,7 +140,7 @@ export default function (param, isStoreAndMethods, url) {
         };
     if (post)
         fullStore['actions'][camelize(`post ${_param}`)] = function ({ commit, dispatch }, payload) {
-            if(mutation) commit(_mutations.pending, true);
+            if (mutation) commit(_mutations.pending, true);
             return new Promise((resolve, reject) => {
                 axios_init
                     .post(`${url ?? param}`, { ...payload })

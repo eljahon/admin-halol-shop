@@ -16,45 +16,29 @@ const toast = useToast();
 const store = useStore();
 let updateValue = ref();
 let isSubmit = ref(false);
-const crops = ref([]);
-const type = ref([]);
-const drugCategories = ref([]);
-const image = ref({ id: undefined, url: undefined });
+
+const icon = ref({ id: undefined, url: undefined });
 
 const feilds = ref([
     { label: 'name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'description', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'crop', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: crops, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'type', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: type, optionLabel: 'name', optionValue: 'value' } },
-    { label: 'disease_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: drugCategories, optionLabel: 'name', optionValue: 'id' } }
+    { label: 'description', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} }
 ]);
 const onImageUpload = (value) => {
-    image.value = value.media;
+    icon.value = value.media;
 };
-const { postDiseases, putDiseases, getByIdDiseases, getCrops, getDiseasesCategories, getDiseasesType } = actions(['diseases', 'crops', 'diseasesType', 'diseasesCategories'], { get: true, post: true, put: true, getById: true });
+const { postDrugCategories, putDrugCategories, getByIdDrugCategories } = actions(['drugCategories'], { get: true, post: true, put: true, getById: true });
 
 const isUpdate = ref(false);
 
-getDiseasesCategories().then((res) => {
-    drugCategories.value = res.data;
-});
-getCrops({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
-    crops.value = res.data;
-});
-getDiseasesType().then((res) => {
-    type.value = res.data;
-});
-
 if (route.params.id !== 'new') {
     isUpdate.value = true;
-    getByIdDiseases({ id: route.params.id, query: { populate: '*' } })
+    getByIdDrugCategories({ id: route.params.id, query: { populate: '*' } })
         .then((res) => {
             const _data = { ...res?.data };
-            _data.crop = _data?.crop?.id;
             _data.disease_category = _data?.disease_category?.id;
             updateValue.value = _data;
             isUpdate.value = false;
-            image.value = res.data.image;
+            icon.value = res.data.icon;
         })
         .catch((err) => {
             isUpdate.value = false;
@@ -63,14 +47,14 @@ if (route.params.id !== 'new') {
 async function handleSubmitFrom(values) {
     isSubmit.value = true;
     const data = values.id
-        ? await putDiseases({
+        ? await putDrugCategories({
               id: values.id,
               data: {
                   ...values.data,
-                  image: image?.value?.id
+                  icon: icon?.value?.id
               }
           })
-        : await postDiseases({ data: { ...values.data, image: image.value.id } });
+        : await postDrugCategories({ data: { ...values.data, icon: icon.value.id } });
     if (data) {
         router.go(-1);
         toast.add({ severity: 'success', summary: t('activity_types'), detail: t('crops') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
@@ -85,7 +69,7 @@ async function handleSubmitFrom(values) {
             <FormBuilder v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
                 <template #default="{ values, set }">
                     <div class="w-full flex">
-                        <ImageUpload :forlder="'other'" :model-value="image?.aws_path" @update:modelValue="onImageUpload" />
+                        <ImageUpload :forlder="'other'" :model-value="icon?.aws_path" @update:modelValue="onImageUpload" />
                     </div>
                 </template>
             </FormBuilder>

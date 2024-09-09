@@ -2,7 +2,6 @@ import { Abouts } from '@/store/modules';
 import CRUD from '@/utils/dynamickCrud';
 import request from '@/utils/request';
 import { createStore } from 'vuex';
-import { palette } from '@primevue/themes';
 const isCrudGenerator = { get: true, put: true, remove: true, getById: true, post: true, state: false, mutation: false, getter: false };
 const isLoginGenerator = { get: false, put: false, remove: false, getById: false, post: true, state: false, mutation: false, getter: false };
 const isCropAdminGenerator = { get: true, put: false, remove: false, getById: false, post: false, state: false, mutation: false, getter: false };
@@ -30,7 +29,7 @@ const store = createStore({
                         { ...payload.data },
                         {
                             headers: {
-                                'Content-Type': 'multipart/form-data' // Explicitly set the Content-Type
+                                'Content-Type': 'multipart/form-data'
                             },
                             params: {
                                 folder: payload.folder
@@ -45,26 +44,26 @@ const store = createStore({
                     });
             });
         },
-        getUsers ({commit},payload) {
+        getUsers({ commit }, payload) {
             return new Promise((resolve, reject) => {
                 const pageSize = payload.pageSize;
-                request.get('/users', {params:{start: (payload.page-1||0)*pageSize, limit: pageSize,populate: '*', filters:payload.filters}})
-                    .then(res => {
+                request
+                    .get('/users', { params: { start: (payload.page - 1 || 0) * pageSize, limit: pageSize, populate: '*', filters: payload.filters } })
+                    .then((res) => {
                         console.log(res);
-                        const meta ={
-                            page: payload.page||1,
-                            pageCount: Math.ceil(res.total/pageSize),
+                        const meta = {
+                            page: payload.page || 1,
+                            pageCount: Math.ceil(res.total / pageSize),
                             pageSize,
-                            total: res?.total||0
-                        }
-                        resolve({data:res?.users, meta})
+                            total: res?.total || 0
+                        };
+                        resolve({ data: res?.users, meta });
                     })
-                    .catch(err => {
-                        reject(err)
-                    })
-            })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
-
         getUserMe() {
             return new Promise((resolve, reject) => {
                 request
@@ -91,7 +90,9 @@ const store = createStore({
         fertilizations: CRUD('fertilizations', isCrudGenerator),
         diseases: CRUD('diseases', isCrudGenerator),
         drugCategories: CRUD('drugCategories', isCrudGenerator, '/drug-categories'),
-        diseasesType: CRUD('diseasesType', isUsefullinfosGenerator, '/diseases/type'),
+        diseasesType: CRUD('diseasesType', isCrudGenerator, '/diseases/type'),
+        diseasesCategoriesTree: CRUD('diseasesCategoriesTree', isCrudGenerator, '/disease-categories', 'tree'),
+        diseasesCategories: CRUD('diseasesCategories', isCrudGenerator, '/disease-categories'),
         districts: CRUD('districts', isCrudGenerator),
         areas: CRUD('areas', isCrudGenerator),
         areaManagers: CRUD('areaManagers', isCrudGenerator, '/area-managers'),

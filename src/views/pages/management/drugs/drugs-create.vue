@@ -1,6 +1,5 @@
 <script setup>
 import FormBuilder from '@/components/Forms/FormBuilder.vue';
-import ImageUpload from '@/components/imageUpload.vue';
 import TheBreadcrumb from '@/components/The-Breadcrumb.vue';
 import { actions } from '@/utils/Store_Schema';
 import { useToast } from 'primevue/usetoast';
@@ -17,44 +16,40 @@ const store = useStore();
 let updateValue = ref();
 let isSubmit = ref(false);
 const crops = ref([]);
-const type = ref([]);
 const drugCategories = ref([]);
 const image = ref({ id: undefined, url: undefined });
 
 const feilds = ref([
     { label: 'name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'description', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'crop', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: crops, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'type', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: type, optionLabel: 'name', optionValue: 'value' } },
-    { label: 'disease_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: drugCategories, optionLabel: 'name', optionValue: 'id' } }
+    { label: 'description', schema: { type: 'string' }, renderElement: 'InputText', prop: {} },
+
+    { label: 'crop', schema: { type: 'string' }, renderElement: 'Select', prop: { options: crops, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'drug_category', schema: { type: 'string' }, renderElement: 'Select', prop: { options: drugCategories, optionLabel: 'name', optionValue: 'id' } }
 ]);
 const onImageUpload = (value) => {
+    console.log(value);
     image.value = value.media;
 };
-const { postDiseases, putDiseases, getByIdDiseases, getCrops, getDiseasesCategories, getDiseasesType } = actions(['diseases', 'crops', 'diseasesType', 'diseasesCategories'], { get: true, post: true, put: true, getById: true });
+const { postDrugs, putDrugs, getByIdDrugs, getCrops, getDrugCategories } = actions(['drugs', 'drugCategories', 'crops'], { get: true, post: true, put: true, getById: true });
 
 const isUpdate = ref(false);
 
-getDiseasesCategories().then((res) => {
+getDrugCategories().then((res) => {
     drugCategories.value = res.data;
 });
-getCrops({ pagination: { page: 1, pageSize: 25 } }).then((res) => {
+
+getCrops().then((res) => {
     crops.value = res.data;
 });
-getDiseasesType().then((res) => {
-    type.value = res.data;
-});
-
 if (route.params.id !== 'new') {
     isUpdate.value = true;
-    getByIdDiseases({ id: route.params.id, query: { populate: '*' } })
+    getByIdDrugs({ id: route.params.id, query: { populate: '*' } })
         .then((res) => {
             const _data = { ...res?.data };
             _data.crop = _data?.crop?.id;
-            _data.disease_category = _data?.disease_category?.id;
+            _data.drug_category = _data?.drug_category?.id;
             updateValue.value = _data;
             isUpdate.value = false;
-            image.value = res.data.image;
         })
         .catch((err) => {
             isUpdate.value = false;
@@ -63,14 +58,14 @@ if (route.params.id !== 'new') {
 async function handleSubmitFrom(values) {
     isSubmit.value = true;
     const data = values.id
-        ? await putDiseases({
+        ? await putDrugs({
               id: values.id,
               data: {
                   ...values.data,
                   image: image?.value?.id
               }
           })
-        : await postDiseases({ data: { ...values.data, image: image.value.id } });
+        : await postDrugs({ data: { ...values.data, image: image.value.id } });
     if (data) {
         router.go(-1);
         toast.add({ severity: 'success', summary: t('activity_types'), detail: t('crops') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
@@ -78,6 +73,7 @@ async function handleSubmitFrom(values) {
     }
 }
 </script>
+
 <template>
     <div>
         <TheBreadcrumb />

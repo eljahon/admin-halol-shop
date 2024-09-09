@@ -86,97 +86,97 @@ const model = ref([
                 items: [
                     {
                         label: 'activity_types',
-                        icon: 'pi pi-fw pi-sign-in',
+                        icon: 'pi  pi-circle',
                         to: '/activitytypes'
                     },
                     {
                         label: 'companies',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/companies'
                     },
                     {
                         label: 'treatments',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/treatments'
                     },
                     {
                         label: 'fertilizations',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/fertilizations'
                     },
                     {
                         label: 'cropsCategory',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/cropsCategory'
                     },
                     {
                         label: 'diseases',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/diseases'
                     },
                     {
                         label: 'diseaseCategory',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/diseaseCategory'
+                        icon: 'pi pi-circle',
+                        to: '/diseaseCategories'
                     },
                     {
                         label: 'districts',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/districts'
                     },
                     {
                         label: 'areas',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/areas'
                     },
                     {
                         label: 'drugs',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/drugs'
                     },
                     {
                         label: 'drugCategories',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/drugCategories'
                     },
                     {
                         label: 'crops',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/crops'
                     },
                     {
                         label: 'fertilizers',
-                        icon: 'pi pi-fw pi-times-circle',
+                        icon: 'pi pi-circle',
                         to: '/fertilizers'
                     },
                     {
                         label: 'fertilizerCategories',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'fertilizerCategories'
                     },
                     {
                         label: 'questions',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'questions'
                     },
                     {
                         label: 'regions',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'regions'
                     },
                     {
                         label: 'seasons',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'seasons'
                     },
                     {
                         label: 'units',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'units'
                     },
                     {
                         label: 'usefullinfos',
-                        icon: 'pi pi-fw pi-lock',
+                        icon: 'pi pi-circle',
                         to: 'usefullinfos'
                     }
                 ]

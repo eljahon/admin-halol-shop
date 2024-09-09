@@ -13,20 +13,16 @@ const route = useRoute();
 const { t } = useI18n();
 const toast = useToast();
 const dt = ref();
-const crops = ref();
+const diseasesCategories = ref();
 const crop = ref();
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
-let list = {
-    undefined: { name: t('all'), id: undefined },
-    true: { name: t('is_main'), id: true },
-    false: { name: t('is_main_not'), id: false }
-};
+
 const meta = ref({});
 
-const { getDiseases, deleteDiseases } = actions(['diseases'], { get: true, remove: true });
+const { getDiseasesCategoriesTree, deleteDiseasesCategoriesTree } = actions(['diseasesCategoriesTree'], { get: true, remove: true });
 function openNew() {
-    router.push({ name: 'diseases-create', params: { id: 'new' } });
+    router.push({ name: 'diseaseCategories-create', params: { id: 'new' } });
 }
 
 function confirmDeleteProduct(prod) {
@@ -37,12 +33,12 @@ function confirmDeleteProduct(prod) {
 function deleteProduct() {
     deleteCropDialog.value = false;
     isLoading.value = true;
-    deleteDiseases(crop.value.id)
+    deleteDiseasesCategoriesTree(crop.value.id)
         .then((res) => {
             crop.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: t('crops') + ' ' + t('delete'), life: 3000 });
+            toast.add({ severity: 'success', summary: 'Successful', detail: t('DiseasesCategories') + ' ' + t('delete'), life: 3000 });
             isLoading.value = false;
-            getDiseasesList();
+            getDiseasesCategoriesList();
         })
         .catch((err) => {
             toast.add({ severity: 'error', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
@@ -50,17 +46,16 @@ function deleteProduct() {
         });
 }
 
-function getDiseasesList() {
+function getDiseasesCategoriesList() {
     isLoading.value = true;
     const _query = { ...route.query };
     const filters = {
         populate: '*',
-        sort: 'createdAt:asc',
         pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 }
     };
-    getDiseases(filters)
+    getDiseasesCategoriesTree(filters)
         .then((res) => {
-            crops.value = res.data;
+            diseasesCategories.value = res.data;
             meta.value = res.meta;
             isLoading.value = false;
         })
@@ -69,10 +64,10 @@ function getDiseasesList() {
         });
 }
 
-getDiseasesList();
+getDiseasesCategoriesList();
 
 function onChangePage(value) {
-    getDiseasesList();
+    getDiseasesCategoriesList();
 }
 
 watch(
@@ -92,7 +87,7 @@ watch(
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
             </div>
-            <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
+            <DataTable ref="dt" :value="diseasesCategories" dataKey="id" :loading="isLoading">
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
                     <template #loading>
@@ -103,26 +98,20 @@ watch(
                 </Column>
                 <Column :header="$t('image')" style="max-width: 6rem">
                     <template #body="{ data }">
-                        <ImageOnLoad width="90" :src="data?.image?.aws_path" />
+                        <ImageOnLoad width="90" :src="data?.icon?.aws_path" />
                     </template>
                 </Column>
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
-                <Column field="crop.name" :header="$t('crop')" style="min-width: 12rem"></Column>
+
                 <Column field="category" :header="$t('date')" style="min-width: 5rem">
                     <template #body="{ data }">
                         <span v-if="data.createdAt">{{ dayjs(data.createdAt).format('DD-MM-YYYY hh:mm') }}</span>
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>
-
-                <Column field="type" :header="$t('type')" style="min-width: 9rem">
-                    <template #body="{ data }">
-                        <Tag>{{ $t(data?.type) }}</Tag>
-                    </template>
-                </Column>
                 <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
                     <template #body="{ data }">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseases-create', params: { id: data.id } })" />
+                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseaseCategories-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>
                 </Column>
