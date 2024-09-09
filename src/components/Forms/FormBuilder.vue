@@ -6,8 +6,6 @@ import Textarea from 'primevue/textarea';
 import ToggleSwitch from 'primevue/toggleswitch';
 import Password from 'primevue/password'
 import InputNumber from 'primevue/inputnumber';
-// import Editor from 'primevue/editor';
-import Editor from '@/components/Editor/editor.vue'
 import { useForm } from 'vee-validate';
 import {ref, toRefs, watch } from 'vue';
 import * as yup from 'yup';
@@ -59,7 +57,8 @@ const vlist ={
     'string': yup.string(),
     'number': yup.number(),
     'date': yup.date(),
-    'phone': phone
+    'phone': phone,
+    'email': yup.string().email("Noto'g'ri email manzili").required('email manzlilini kiriting')
 }
 const validationList = (name) => vlist[name]
 const route = useRoute();
@@ -67,7 +66,7 @@ const id = route.params.id;
 const { handleSubmit, defineField, resetForm, errors, setFieldValue, values, isSubmitting } = useForm({
     validationSchema: yup.object(
         props.feilds.reduce((acc, el) => {
-            acc[el.label] = el.schema.required ? validationList(el.schema.type).required(t(`${el.label}`) + ' ' + t('required-fild')) : '';
+            acc[el.label] = el.schema?.required ? validationList(el.schema.type).required(t(`${el.label}`) + ' ' + t('required-fild')) : '';
             return acc;
         }, {})
     ),
@@ -85,7 +84,6 @@ const componentList = {
     ToggleSwitch,
     Password,
     InputNumber,
-    Editor
 };
 const handleSubmitForm = handleSubmit(async (value) => {
     emit('handelSubmitForm', id === 'new' ? { data: value } : { id, data: value });

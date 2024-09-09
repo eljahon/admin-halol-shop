@@ -18,23 +18,35 @@ const cropsCategory = ref();
 const is_common = ref();
 let updateValue = ref();
 let isSubmit = ref(false);
-
+// {
+//     "fullname": "testst",
+//     "phone": "+998900000000",
+//     "email": "dfasdfads@gmail.com",
+//     "username": "dsfsadf",
+//     "gender": 1,
+//     "password": "dfasfdasdfasdf",
+//     "role": 1,
+//     "provider": "local",
+//     "blocked": false,
+//     "confirmed": true,
+//     "interests": []
+// }
 const image = ref({ id: undefined, url: undefined });
 const feilds = ref([
-    { label: 'name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'biology_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'fullname', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'username', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     // { label: 'planting_time_start', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    // { label: 'planting_time_end', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'harvest_duration', schema: { type: 'number', required: true }, renderElement: 'InputText', prop: { type: 'number' } },
-    { label: 'crop_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'details', schema: { type: 'string', required: false }, renderElement: 'Textarea', prop: { class: '' } }
+    { label: 'email', schema: { type: 'email', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
+    // { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'phone', schema: { type: 'phone', required: true }, renderElement: 'InputText', prop: { } },
+    { label: 'gender', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'role', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'password', schema: { type: 'string', required: false }, renderElement: 'Password', prop: { class: 'w-full', toggleMask:true,fluid:true, feedback:false}  }
 ]);
 const onImageUpload = (value) => {
     console.log(value);
     image.value = value.media;
 };
-let forms = ['name', 'biology_name', 'crop_code', 'crop_category', 'description', 'details', 'main_image', 'gallery', 'planting_time_end', 'planting_time_start', 'harvest_duration', 'is_common'];
 const { postCrops, putCrops, getCropsCategory, getByIdCrops } = actions(['crops', 'cropsCategory'], { get: true, post: true, put: true, getById: true });
 const isUpdate = ref(false);
 getCropsCategory().then((res) => {
