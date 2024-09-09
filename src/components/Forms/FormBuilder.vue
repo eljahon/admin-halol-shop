@@ -6,7 +6,8 @@ import Textarea from 'primevue/textarea';
 import ToggleSwitch from 'primevue/toggleswitch';
 import Password from 'primevue/password'
 import InputNumber from 'primevue/inputnumber';
-import Editor from 'primevue/editor';
+// import Editor from 'primevue/editor';
+import Editor from '@/components/Editor/editor.vue'
 import { useForm } from 'vee-validate';
 import {ref, toRefs, watch } from 'vue';
 import * as yup from 'yup';
@@ -83,8 +84,8 @@ const componentList = {
     Textarea,
     ToggleSwitch,
     Password,
-    Editor,
-    InputNumber
+    InputNumber,
+    Editor
 };
 const handleSubmitForm = handleSubmit(async (value) => {
     emit('handelSubmitForm', id === 'new' ? { data: value } : { id, data: value });
@@ -101,7 +102,7 @@ watch(() => updateValue.value,
             setFieldValue(`${el.label}`,values[el.label])
         })
 
-        console.log('set value', values);
+        // console.log('set value', values);
     }
 );
 </script>
@@ -123,8 +124,11 @@ watch(() => updateValue.value,
                     </small>
                 </div>
             </div>
-            <slot class="my-4" v-bind="{ values, set: setFieldValue }"></slot>
 
+
+        </div>
+        <div>
+            <slot class="my-4" v-bind="{ values, set: setFieldValue }"></slot>
         </div>
 
         <div class="mt-5 flex gap-4 justify-end w-full">
@@ -135,3 +139,5 @@ watch(() => updateValue.value,
 </template>
 
 <style scoped lang="scss"></style>
+
+
