@@ -5,7 +5,7 @@
 
 <script setup>
 import { computeArea ,LatLng} from 'spherical-geometry-js';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, toRef, watch } from 'vue';
 import ymaps from 'ymaps';
 import iconPoligon from '@/assets/image/poligon.png'
 import iconPoligonEdit from '@/assets/image/edits.png'
@@ -280,6 +280,7 @@ function handleMapAddButtonPoligonEdit () {
     mapRef.controls.add(editButtonPoligon, {float: 'right'});
 
 }
+const {poligons} =toRef(props)
 watch(() => props.isPoligonAdd, (newValue,oldValue) => {
     if(newValue&&!addButtonPoligon) {
 
@@ -288,7 +289,7 @@ watch(() => props.isPoligonAdd, (newValue,oldValue) => {
     }
 })
 watch(() => props.poligons, (newValue, oldValue) => {
-
+    console.log('list item');
     if(newValue.length) {
 
         mapAddPolygon(mapsRef, mapRef, newValue)
@@ -317,16 +318,11 @@ async function handleMapAddButtonPoligon () {
 async function initMap() {
 
     mapsRef = await ymaps.load(defaultMap.api)
-    console.log(mapsRef, 'mapsRef');
 
     mapRef = new mapsRef.Map(document.getElementById('map'), {...defaultMap.Map, center:props.center?.length ? props.center : [41.312947, 69.280204], zoom: props.zoom}, { earchControlProvider: 'yandex#search' })
 
     mapRef.container.fitToViewport()
 
-
-    // console.log("mapsRef ===>>>", mapsRef);
-
-    //  console.log("mapRef ===>>>", mapRef);
 
     let polygonList = props?.poligons;
 

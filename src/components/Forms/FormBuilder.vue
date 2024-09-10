@@ -94,10 +94,10 @@ watch(() => updateValue.value,
         props.feilds.forEach(el => {
 
             if(el.renderElement === 'Select') {
-                setFieldValue(`${el.label}`,values[el.label]?.id)
+                setFieldValue(`${el.key ? el.key : el.label}`,values[el.key ? el.key : el.label]?.id)
             }
 
-            setFieldValue(`${el.label}`,values[el.label])
+            setFieldValue(`${el.key ? el.key : el.label}`,values[el.key ? el.key : el.label])
         })
 
         // console.log('set value', values);

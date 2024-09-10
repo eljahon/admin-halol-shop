@@ -12,7 +12,7 @@ const model = ref([
         // label: 'UI Components',
         items: [
             // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: 'land-monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/uikit/input' },
+            { label: 'land_monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/land-monitoring' },
             { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/uikit/button', class: 'rotated-icon' },
             { label: 'products', icon: 'pi pi-fw pi-table', to: '/products' },
             { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik' },
@@ -139,19 +139,12 @@ const model = ref([
                         icon: 'pi pi-circle',
                         to: '/drugCategories'
                     },
-<<<<<<< HEAD
-                    {
-                        label: 'crops',
-                        icon: 'pi pi-circle',
-                        to: '/crops'
-                    },
-=======
+
                     // {
                     //     label: 'crops',
                     //     icon: 'pi pi-fw pi-times-circle',
                     //     to: '/crops'
                     // },
->>>>>>> 36689f0 (fixed)
                     {
                         label: 'fertilizers',
                         icon: 'pi pi-circle',

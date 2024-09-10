@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import { useRouter } from 'vue-router';
+import store from '@/store';
 
 let config = {
     baseURL: import.meta.env.VITE_APP_API_URL,
@@ -13,15 +14,17 @@ function showToast(severity, summary, detail) {
     return toast.add({ severity, summary, detail, life: 3000 });
 }
 function Error(status) {
+    store.dispatch('error', status)
     function notAuth() {
         localStorage.clear();
-        const router = useRouter();
-        return router.push('/auth/login');
+         window.location.href='/auth/login'
     }
 
     switch (status) {
         case 401:
             return notAuth();
+
+        case 403: store.dispatch('error', status)
     }
 }
 request.interceptors.request.use(function (config) {

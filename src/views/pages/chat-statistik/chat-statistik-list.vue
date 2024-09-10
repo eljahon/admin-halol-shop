@@ -48,6 +48,7 @@ function getCropsList() {
             crops.value = res.data;
             meta.value = res.meta;
             isLoading.value = false;
+            console.log(res);
             return res;
         })
         .catch((err) => {

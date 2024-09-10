@@ -210,9 +210,9 @@ function onChangePage(value) {
                         </div>
                     </template>
                 </Column>
-                <Column :header="$t('image')" style="min-width: 7rem">
+                <Column :header="$t('image')" style="min-width: 7rem; height: 2rem">
                     <template #body="{ data }">
-                        <ImageOnLoad width="100" height="100" :src="data?.image?.aws_path" />
+                        <ImageOnLoad :imageHeight="90" :imageWidth="90" width="100" height="100" :src="data?.image?.aws_path" />
                     </template>
                 </Column>
                 <Column field="title" :header="$t('name')"></Column>

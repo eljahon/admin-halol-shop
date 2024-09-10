@@ -1,9 +1,17 @@
 <script setup>
 // import {router, store} from './modules/index';
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
+import { watch } from 'vue';
+import store from '@/store';
 
 // console.log(store, router, 'module');
 const {t} = useI18n()
+const toast = useToast()
+watch(()=> store.state.errorStatus, (value) => {
+    toast.add({ severity: 'error', summary: value, detail: value, life: 3000 });
+
+})
 document.title = t('logo-title')
 </script>
 
