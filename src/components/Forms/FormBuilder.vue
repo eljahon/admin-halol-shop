@@ -5,6 +5,7 @@ import Select from 'primevue/select';
 import Textarea from 'primevue/textarea';
 import ToggleSwitch from 'primevue/toggleswitch';
 import Password from 'primevue/password'
+import InputNumber from 'primevue/inputnumber';
 import { useForm } from 'vee-validate';
 import {ref, toRefs, watch } from 'vue';
 import * as yup from 'yup';
@@ -56,7 +57,8 @@ const vlist ={
     'string': yup.string(),
     'number': yup.number(),
     'date': yup.date(),
-    'phone': phone
+    'phone': phone,
+    'email': yup.string().email("Noto'g'ri email manzili").required('email manzlilini kiriting')
 }
 const validationList = (name) => vlist[name]
 const route = useRoute();
@@ -64,7 +66,7 @@ const id = route.params.id;
 const { handleSubmit, defineField, resetForm, errors, setFieldValue, values, isSubmitting } = useForm({
     validationSchema: yup.object(
         props.feilds.reduce((acc, el) => {
-            acc[el.label] = el.schema.required ? validationList(el.schema.type).required(t(`${el.label}`) + ' ' + t('required-fild')) : '';
+            acc[el.label] = el.schema?.required ? validationList(el.schema.type).required(t(`${el.label}`) + ' ' + t('required-fild')) : '';
             return acc;
         }, {})
     ),
@@ -81,6 +83,7 @@ const componentList = {
     Textarea,
     ToggleSwitch,
     Password,
+    InputNumber,
 };
 const handleSubmitForm = handleSubmit(async (value) => {
     emit('handelSubmitForm', id === 'new' ? { data: value } : { id, data: value });
@@ -91,12 +94,13 @@ watch(() => updateValue.value,
         props.feilds.forEach(el => {
 
             if(el.renderElement === 'Select') {
-                // console.log('daslomsfsdfsdfds', values[el.label]?.id);
-                setFieldValue(`${el.label}`,values[el.label]?.id)
+                setFieldValue(`${el.key ? el.key : el.label}`,values[el.key ? el.key : el.label]?.id)
             }
 
-            setFieldValue(`${el.label}`,values[el.label])
+            setFieldValue(`${el.key ? el.key : el.label}`,values[el.key ? el.key : el.label])
         })
+
+        // console.log('set value', values);
     }
 );
 </script>
@@ -118,8 +122,13 @@ watch(() => updateValue.value,
                     </small>
                 </div>
             </div>
+
+
         </div>
-        <slot v-bind="{ values, set: setFieldValue }"></slot>
+        <div>
+            <slot class="my-4" v-bind="{ values, set: setFieldValue }"></slot>
+        </div>
+
         <div class="mt-5 flex gap-4 justify-end w-full">
             <Button severity="secondary" class="w-1/2" @click="resetForm" :label="$t('reset')"/>
             <Button class="w-1/2" :loading="isSubmit" :disabled="isSubmit" @click="handleSubmitForm" type="button" :label="id === 'new' ? $t('create') : $t('update')"/>
@@ -128,3 +137,5 @@ watch(() => updateValue.value,
 </template>
 
 <style scoped lang="scss"></style>
+
+

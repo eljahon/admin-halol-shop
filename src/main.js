@@ -10,6 +10,7 @@ import store from '@/store';
 import i18n from '@/i18n';
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
+import '@mdi/font/css/materialdesignicons.min.css'
 
 const app = createApp(App);
 

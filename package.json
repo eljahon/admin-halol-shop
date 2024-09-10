@@ -2,7 +2,7 @@
     "name": "growz.uz",
     "version": "4.1.0",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build",
         "build:prod": "NODE_ENV=production vite build --mode production",
         "build:dev": "NODE_ENV=development vite build --mode development",
@@ -12,12 +12,14 @@
         "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
     },
     "dependencies": {
+        "@mdi/font": "^7.4.47",
         "@primevue/themes": "^4.0.0",
         "chart.js": "3.3.2",
         "exceljs": "^4.3.0",
         "lodash": "^4.17.21",
         "primeicons": "^6.0.1",
         "primevue": "^4.0.0",
+        "quill": "^2.0.2",
         "spherical-geometry-js": "^3.0.2",
         "vue": "^3.4.34",
         "vue-router": "^4.4.0",

@@ -81,6 +81,7 @@ function getCropsList() {
     };
     return getDistributors(filters)
         .then((res) => {
+            console.log(res);
             crops.value = res.data;
             meta.value = res.meta;
             isLoading.value = false;

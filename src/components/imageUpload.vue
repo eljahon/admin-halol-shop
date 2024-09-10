@@ -45,9 +45,9 @@ const delteImagefun = () => {
     emit('delete');
 }
 
-watch(() => props.modelValue, (value) => {
-    console.log(value);
-})
+// watch(() => props.modelValue, (value) => {
+//     console.log(value);
+// })
 </script>
 <template>
     <div class="w-full">

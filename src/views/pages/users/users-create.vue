@@ -14,42 +14,54 @@ const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const store = useStore();
-const cropsCategory = ref();
+const roles = ref();
+const gendor = ref();
 const is_common = ref();
 let updateValue = ref();
 let isSubmit = ref(false);
-
+// {
+//     "provider": "local",
+//     "blocked": false,
+//     "confirmed": true,
+//     "interests": []
+// }
 const image = ref({ id: undefined, url: undefined });
 const feilds = ref([
-    { label: 'name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'biology_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'fullname', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'username', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     // { label: 'planting_time_start', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    // { label: 'planting_time_end', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    { label: 'harvest_duration', schema: { type: 'number', required: true }, renderElement: 'InputText', prop: { type: 'number' } },
-    { label: 'crop_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'details', schema: { type: 'string', required: false }, renderElement: 'Textarea', prop: { class: '' } }
+    { label: 'email', schema: { type: 'email', required: true }, renderElement: 'InputText', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
+    // { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'phone', schema: { type: 'phone', required: true }, renderElement: 'InputText', prop: {} },
+    { label: 'gender', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: gendor, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'role',key: 'employee_role', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: roles, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'password', schema: { type: 'string', required: route.params.id !== 'new' ? false : true }, renderElement: 'Password', prop: { class: 'w-full', toggleMask: true, fluid: true, feedback: false } }
 ]);
 const onImageUpload = (value) => {
     console.log(value);
     image.value = value.media;
 };
-let forms = ['name', 'biology_name', 'crop_code', 'crop_category', 'description', 'details', 'main_image', 'gallery', 'planting_time_end', 'planting_time_start', 'harvest_duration', 'is_common'];
-const { postCrops, putCrops, getCropsCategory, getByIdCrops } = actions(['crops', 'cropsCategory'], { get: true, post: true, put: true, getById: true });
+const { getGenders } = actions(['genders'], { get: true, post: true, put: true, getById: true });
 const isUpdate = ref(false);
-getCropsCategory().then((res) => {
-    cropsCategory.value = res.data;
+getGenders().then((res) => {
+    gendor.value = res.data;
+});
+store.dispatch('getRoles').then((res) => {
+    roles.value = res.filter((el) => el.type !== 'public' && el.type !== 'admin');
 });
 if (route.params.id !== 'new') {
     isUpdate.value = true;
-    getByIdCrops({ id: route.params.id, query: { populate: '*' } })
+    store
+        .dispatch('getByIdUsers', route.params.id)
         .then((res) => {
+            console.log(res);
             const _data = { ...res };
-            _data.crop_category = _data?.crop_category?.id;
+            _data.role = _data?.role?.id;
+            _data.gender = _data?.gender?.id;
             updateValue.value = _data;
-            is_common.value = res['is_common'];
+            // is_common.value = res['is_common'];
             isUpdate.value = false;
-            image.value = res.main_image;
+            // image.value = res.main_image;
         })
         .catch((err) => {
             isUpdate.value = false;
@@ -58,19 +70,27 @@ if (route.params.id !== 'new') {
 async function handleSubmitFrom(values) {
     isSubmit.value = true;
     const data = values.id
-        ? await putCrops({
-            id: values.id,
-            data: {
-                ...values.data,
-                is_common: is_common.value,
-                main_image: image.value.id
-            }
-        })
-        : await postCrops({ data: { ...values.data, is_common: is_common.value, main_image: image.value.id } });
+        ? await store
+              .dispatch('putUsers', {
+                  id: values.id,
+                  data: {
+                      ...values.data
+                  }
+              })
+              .catch((err) => {
+                  // console.log(err.message);
+                  // toast.add({ severity: 'error', summary: t('user'), detail: t('user') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
+                  isSubmit.value = false;
+              })
+        : await store.dispatch('postUsers', { ...values.data, provider: 'local', blocked: false, confirmed: true, interests: [] }).catch(() => {
+              isSubmit.value = false;
+          });
     if (data) {
         router.go(-1);
-        toast.add({ severity: 'success', summary: t('crops'), detail: t('crops') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
+        toast.add({ severity: 'success', summary: t('user'), detail: t('user') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
         isSubmit.value = false;
+    } else {
+        // toast.add({ severity: 'error', summary: t('user'), detail: t('user') + ' ' + values.id ? t('update') : t('create'), life: 3000 });
     }
 }
 </script>
@@ -79,8 +99,7 @@ async function handleSubmitFrom(values) {
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <FormBuilder v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom">
-            </FormBuilder>
+            <FormBuilder v-bind="{ isSubmit, isUpdate, updateValue, feilds }" @handel-submit-form="handleSubmitFrom"> </FormBuilder>
         </div>
     </div>
 </template>

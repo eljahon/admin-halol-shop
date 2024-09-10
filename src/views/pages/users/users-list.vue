@@ -29,12 +29,7 @@ let list = {
     true: { name: t('is_main'), id: true },
     false: { name: t('is_main_not'), id: false }
 };
-const regions = ref(undefined);
-const region = ref(route.query.region ? +route.query.region : undefined);
-const districts = ref(undefined);
-const district = ref(route.query.district ? +route.query.district : undefined);
-const areas = ref();
-const area = ref(route.query.area ? +route.query.area : undefined);
+
 const meta = ref({});
 
 const { getFarmers, deleteFarmers, getRegions, getDistricts, getAreas } = actions(['farmers', 'regions', 'districts', 'areas'], { get: true, remove: true });
