@@ -104,7 +104,7 @@ function getCropsList() {
     const filters = {
         populate: '*',
         sort: 'createdAt:desc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
         filters: {
             is_common: _query?.is_common ?? undefined,
             name: {
@@ -174,7 +174,6 @@ watch(() => route.query, (value) => {
                 </div>
             </div>
             <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
-                <template #header> </template>
                 <Column field="id" :header="$t('id')">
                     <template #loading>
                         <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
@@ -201,6 +200,11 @@ watch(() => route.query, (value) => {
                     </template>
                 </Column>
                 <Column field="rating" :header="$t('planting_time_end')" style="min-width: 12rem; text-align: center">
+                    <template #loading>
+                        <div class="flex items-center" :style="{ height: '17px', 'flex-grow': '1', overflow: 'hidden' }">
+                            <Skeleton width="30%" height="1rem" />
+                        </div>
+                    </template>
                     <template #body="{ data }">
                         <span v-if="data.planting_time_end">{{ dayjs(data.planting_time_end).format('DD-MM-YYYY') }}</span>
                         <span v-else class="text-red-500">{{ '--' }}</span>
