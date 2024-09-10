@@ -2,18 +2,26 @@
 import { useStore } from 'vuex';
 
 import { useLayout } from '@/layout/composables/layout';
-import { ProductService } from '@/service/ProductService';
-import { onMounted, ref, watch } from 'vue';
+import {onMounted, ref } from 'vue';
 import Uzbmap from '@/components/UZmap/uzbmap.vue';
 import { useI18n } from 'vue-i18n';
 import { Viloyat, Tumalar, Hudud, Farmers, Maydon, allLand, consultand, areaManger, agranom, kasalik, Osimliklar, Zarar, kassaliklar, dori } from '@/assets/svg';
-
+import { useRoute, useRouter } from 'vue-router';
+import { actions } from '@/utils/Store_Schema';
+const { getRegionStatistics } = actions(['regionStatistics'], { get: true });
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
 const store = useStore();
 const { t } = useI18n();
 const analiticList = ref(null);
+const router = useRouter();
+const route = useRoute();
 const isLoading = ref(false);
-
+const isDisdtirct = ref(route.query.district ?? false);
+const reagions = ref();
+const allPlice = ref(0);
+const districtName = ref(undefined);
+const isRegion = ref(false);
+const id = ref(route.query?.id ?? undefined);
 function getDashboard() {
     isLoading.value = true;
     store
@@ -135,7 +143,64 @@ function getDashboard() {
             isLoading.value = false;
         });
 }
+function getRegionStatick() {
+    isRegion.value = true;
+    const _query={...route.query}
+  return   getRegionStatistics({ region: 12, ..._query })
+        .then((res) => {
+            reagions.value = res.data;
+            res.data.forEach(el => {
+                allPlice.value+=el.amount
+            })
+            isRegion.value = false;
+        })
+        .catch((err) => {
+            isRegion.value = false;
+        });
+}
+
 getDashboard();
+getRegionStatick();
+async function routerPush(param) {
+    const _query = { ...route.query, ...param };
+    await router.replace({ query: _query });
+    await await getRegionStatick()
+}
+async function handelItem(item) {
+    id.value = item.id;
+    districtName.value = item;
+    routerPush({region: item.id})
+
+}
+async function handleClick(item) {
+    // districtName.value = item
+    isDisdtirct.value = true
+    await routerPush({district: item.id})
+}
+async function handleDistrict () {
+    isDisdtirct.value = false;
+    await routerPush({district: undefined})
+}
+function  handleScroll (event) {
+    console.log(event);
+    const scrollTop = event.target.scrollTop;
+    const scrollHeight = event.target.scrollHeight;
+    const clientHeight = event.target.clientHeight;
+
+    // Quyidagi holatda scroll oxiriga yetganini tekshirish
+    if (scrollTop + clientHeight >= scrollHeight) {
+        console.log('Scroll bottom reached');
+    } else {
+        console.log('Current scroll position:', scrollTop);
+    }
+}
+onMounted(()=> {
+    setTimeout(() =>{
+        const scroll = document.getElementById('scroll');
+        scroll?.addEventListener('scroll', handleScroll)
+    }, 0)
+
+})
 </script>
 
 <template>
@@ -148,11 +213,10 @@ getDashboard();
             </template>
             <template v-else>
                 <div class="col-span-12 lg:col-span-6 xl:col-span-3" v-for="(item, index) in analiticList" :key="index">
-                    <div class="bg-white dark:bg-blue-400/10 p-3 rounded mb-0">
+                    <div class="bg-white dark:bg-blue-400/10 p-4 rounded mb-0">
                         <div class="flex justify-between mb-4">
-                            <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 1.5rem; height: 1.5rem">
-                                <!--                        <i class="text-blue-500 !text-xl" :class="[item.icon]"></i>-->
-                                <img width="20" height="20" :src="item.slug" alt="" />
+                            <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded" style="width: 2rem; height: 2rem">
+                                <img width="25" height="25" :src="item.slug" alt="" />
                             </div>
                             <div>
                                 <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ item.count }}</div>
@@ -167,16 +231,27 @@ getDashboard();
         <div class="grid grid-cols-12 gap-4 mt-8">
             <div class="col-span-12 xl:col-span-8">
                 <div class="card">
-                    <span>{{$t('region')}}: {{'Buhoro'}}</span>
+                    <span>{{ $t('region') }}: {{ districtName?.name }}</span>
                     <div class="mt-4">
-                        <Uzbmap @handelItem="handelItem"/>
+                        <Uzbmap @handelItem="handelItem" :id="id" />
                     </div>
                 </div>
             </div>
             <div class="col-span-12 xl:col-span-4">
-                <div class="card">
-
-                    <h1>{{$t('region')}}</h1>
+                <div class="card overflow-hidden">
+                    <div class="flex justify-between items-center">{{ isDisdtirct ? $t('areas') :$t('districts') }} <i v-if="isDisdtirct" class="pi pi-arrow-left text-primary cursor-pointer" @click="handleDistrict"></i></div>
+                    <span class="text-primary">{{allPlice?.toFixed(2)}}:{{$t('hectare')}}</span>
+                    <div v-if="!isRegion" class="overflow-y-auto mt-2 p-2" style="height: 440px" id="scroll">
+                        <sectio class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 p-4 rounded shadow-custom max-h-2xl cursor-pointer" v-for="(item, index) in reagions" :key="index" @click="isDisdtirct? ()=>{} :handleClick(item)">
+                            <span class="">
+                                <img :src="Hudud" alt="Hudud image" />
+                            </span>
+                            <span class="dark:text-white text-primary">{{ item.name }}</span>
+                        </sectio>
+                    </div>
+                    <sectio v-else class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 rounded" v-for="item in 8" :key="item">
+                        <Skeleton width="100%" height="4rem" />
+                    </sectio>
                 </div>
             </div>
         </div>
