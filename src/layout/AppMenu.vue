@@ -140,9 +140,9 @@ const model = ref([
                         to: '/drugCategories'
                     },
                     {
-                        label: 'crops',
+                        label: 'plantings',
                         icon: 'pi pi-circle',
-                        to: '/crops'
+                        to: '/plantings'
                     },
                     {
                         label: 'fertilizers',
