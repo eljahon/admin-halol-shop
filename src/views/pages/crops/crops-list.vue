@@ -9,9 +9,11 @@ import { useRoute, useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 import PaginatorCustom from '@/components/Paginator-Custom.vue';
 import ImageOnLoad from '@/components/ImageOnLoad.vue';
+
 import Exceljs from 'exceljs';
 import { useI18n } from 'vue-i18n';
 import { debounce } from 'lodash';
+import CustomSelect from '@/components/Selects/Selects-index.vue';
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -132,34 +134,16 @@ function onChangePage(value) {
     getCropsList();
 }
 
-// onSearch = debounce(onSearch, 1500);
-watch(() => route.query, (value) => {
-    console.log(value, 'valtcha');
-})
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
+
         <div class="card">
             <div class="flex gap-2 justify-between">
                 <div>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <Select
-                            class="w-full md:w-56"
-                            v-model="cropsFilter"
-                            :placeholder="$t('all')"
-                            optionLabel="name"
-                            optionValue="id"
-                            clearable
-                            @update:modelValue="onChangeSelect"
-                            :options="[
-                                { name: $t('all'), id: undefined },
-                                { name: $t('is_main'), id: true },
-                                { name: $t('is_main_not'), id: false }
-                            ]"
-                        >
-                        </Select>
                         <IconField>
                             <InputIcon>
                                 <i class="pi pi-search" />

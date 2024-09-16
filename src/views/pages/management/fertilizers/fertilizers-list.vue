@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { debounce } from 'lodash';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -15,7 +16,7 @@ const crops = ref();
 const crop = ref();
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
-
+const search = ref(route.query.search ?? undefined);
 const meta = ref({});
 
 const { getFertilizers, deleteFertilizers } = actions(['fertilizers'], { get: true, remove: true });
@@ -49,7 +50,10 @@ function getFertilizersList() {
     const _query = { ...route.query };
     const filters = {
         populate: '*',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 }
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
+        filters:{
+            name:{$containsi: _query?.search ?? undefined}
+        }
     };
     getFertilizers(filters)
         .then((res) => {
@@ -68,19 +72,29 @@ function onChangePage(value) {
     getFertilizersList();
 }
 
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
+async function routerPush(param) {
+    const _query = { ...route.query, ...param };
+    await router.replace({ query: _query });
+    getFertilizersList();
+}
+let onSearch = debounce(function (value) {
+    routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
+}, 1500);
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-between">
+                <div>
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="search" :placeholder="$t('name')" @input="onSearch" />
+                    </IconField>
+                </div>
                 <div class="flex gap-2 justify-end">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
@@ -96,7 +110,7 @@ watch(
                 </Column>
                 <Column :header="$t('image')" style="max-width: 6rem">
                     <template #body="{ data }">
-                        <ImageOnLoad width="90" :src="data?.image?.aws_path" />
+                        <ImageOnLoad :styles="{width: 50+'px', height: 50+'px'}" width="90" :src="data?.image?.aws_path" />
                     </template>
                 </Column>
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
@@ -104,7 +118,7 @@ watch(
 
                 <Column field="fertilizer_category.name" :header="$t('fertilizer-category')" style="min-width: 12rem"></Column>
 
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'fertilizers-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

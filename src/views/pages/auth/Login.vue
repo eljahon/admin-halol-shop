@@ -5,7 +5,7 @@ import { useForm } from 'vee-validate';
 import { useI18n } from 'vue-i18n';
 import * as yup from 'yup';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { actions } from '@/utils/Store_Schema';
 import { useStore } from 'vuex';
 const { t } = useI18n();
@@ -35,6 +35,7 @@ const handleSubmitFrom = handleSubmit(async (value) => {
             store
                 .dispatch('getUserMe')
                 .then((res) => {
+                    localStorage.setItem('role', res?.role?.type)
                     router.push('/');
                     isSubmit.value = false;
                 })
@@ -47,6 +48,9 @@ const handleSubmitFrom = handleSubmit(async (value) => {
         });
     // router.push('/')
 });
+onMounted(() => {
+    localStorage.clear()
+})
 </script>
 
 <template>

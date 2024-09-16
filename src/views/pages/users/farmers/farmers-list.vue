@@ -82,7 +82,7 @@ function getCropsList() {
         populate: '*',
         sort: 'createdAt:desc',
         page: _query?.page ? +_query?.page : 1,
-        pageSize: _query.pageSize ? +_query.pageSize : 25 ,
+        pageSize: _query.pageSize ? +_query.pageSize : 10 ,
         region: _query.region ?? undefined,
         district: _query.district ?? undefined,
         area: _query.area ?? undefined
@@ -204,27 +204,11 @@ function onChangePage(value) {
                         <Tag>{{ (data?.field_area / 10000).toFixed(2) ?? '-' }} {{ $t('hectare') }}</Tag>
                     </template>
                 </Column>
-                <!--                <Column field="category" :header="$t('planting_time_start')" style="min-width: 12rem; text-align: center">-->
-                <!--                    <template #body="{ data }">-->
-                <!--                        <span v-if="data.planting_time_start">{{ dayjs(data.planting_time_start).format('DD-MM-YYYY') }}</span>-->
-                <!--                        <span v-else class="text-red-500">{{ '&#45;&#45;' }}</span>-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-                <!--                <Column field="rating" :header="$t('planting_time_end')" style="min-width: 12rem; text-align: center">-->
-                <!--                    <template #body="{ data }">-->
-                <!--                        <span v-if="data.planting_time_end">{{ dayjs(data.planting_time_end).format('DD-MM-YYYY') }}</span>-->
-                <!--                        <span v-else class="text-red-500">{{ '&#45;&#45;' }}</span>-->
-                <!--                        &lt;!&ndash;                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />&ndash;&gt;-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-                <!--                <Column field="inventoryStatus" :header="$t('active')" style="min-width: 12rem">-->
-                <!--                    <template #body="slotProps">-->
-                <!--                        <Tag :value="slotProps.data.is_common ? $t('is_main') : $t('is_main_not')" :severity="getStatusLabel(slotProps.data.is_common)" />-->
-                <!--                    </template>-->
-                <!--                </Column>-->
                 <Column :header="$t('actions')" :frozen="actions" align-frozen="left" style="min-width: 12rem">
                     <template #body="{ data }">
-                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'farmers-info', query: { id: data.id } })" />
+<!--                        <span>{{data}}</span>-->
+                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'farmers-info', query: { fid:data.id,region:data.region.id,district: data.district.id, area:data.area.id} })" />
+
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'farmers-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>

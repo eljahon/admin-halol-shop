@@ -18,7 +18,10 @@ const store = useStore();
 const cropsCategory = ref();
 const is_common = ref();
 let updateValue = ref();
+let valueOption = ref({name: 'test', id: 1});
+let options = ref([]);
 const textFild = ref(undefined)
+const videoFild = ref(undefined)
 const textFildRef = ref()
 let isSubmit = ref(false);
 function imageHandler(event) {
@@ -42,7 +45,7 @@ const onImageUpload = (value) => {
 };
 const { postCrops, putCrops, getCropsCategory, getByIdCrops } = actions(['crops', 'cropsCategory'], { get: true, post: true, put: true, getById: true });
 const isUpdate = ref(false);
-getCropsCategory().then((res) => {
+getCropsCategory({pagination:{page: 1, pageSize: 1000}}).then((res) => {
     cropsCategory.value = res.data;
 });
 if (route.params.id !== 'new') {
@@ -51,9 +54,13 @@ if (route.params.id !== 'new') {
         .then((res) => {
             const _data = { ...res };
             // console.log(res);
-            _data.crop_category = _data?.crop_category?.id;
+            _data.crop_category = _data?.crop_category?.id
+
             updateValue.value = _data;
             textFildRef.value=_data.details
+            setTimeout(()=> {
+                options.value =[{name: 'test', id: 1}, {name: 'test 2', id: 2}]
+            })
 
 
           // const itemHtml = textFildRef.value.quill?.clipboard.convertHTML(_data.details);
@@ -89,6 +96,8 @@ async function handleSubmitFrom(values) {
 function  updateEditor (value) {
     console.log(value);
 }
+const itemSelect = ref();
+
 </script>
 
 <template>
@@ -110,16 +119,14 @@ function  updateEditor (value) {
 
                     </div>
                     <div class="mt-4">
-<!--                        <Editor v-model="textFild" :modules="{-->
 
-<!--                        }" ref="textFildRef"/>-->
                         <CustomEditor v-model="textFild"  :model-value="textFildRef"/>
                     </div>
-
                 </template>
             </FormBuilder>
 
         </div>
+
     </div>
 </template>
 

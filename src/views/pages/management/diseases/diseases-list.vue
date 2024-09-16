@@ -8,6 +8,8 @@ import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { debounce } from 'lodash';
+import SelectsIndex from '@/components/Selects/Selects-index.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -15,20 +17,24 @@ const toast = useToast();
 const dt = ref();
 const crops = ref();
 const crop = ref();
+const diseasesCat = ref();
+const areas = ref(route.query?.dis ? route.query.dis : undefined);
+const search = ref(route.query?.search ?? undefined);
 const deleteCropDialog = ref(false);
+const diseasesCrop = ref();
 const isLoading = ref(false);
-let list = {
-    undefined: { name: t('all'), id: undefined },
-    true: { name: t('is_main'), id: true },
-    false: { name: t('is_main_not'), id: false }
-};
+
 const meta = ref({});
 
-const { getDiseases, deleteDiseases } = actions(['diseases'], { get: true, remove: true });
+const { getDiseases, deleteDiseases, getDiseasesType, getCrops } = actions(['diseases', 'diseasesType','crops'], { get: true, remove: true });
 function openNew() {
     router.push({ name: 'diseases-create', params: { id: 'new' } });
 }
-
+function getDiseasesCat() {
+    getDiseasesType().then((res) => {
+        diseasesCat.value = res.data;
+    });
+}
 function confirmDeleteProduct(prod) {
     crop.value = prod;
     deleteCropDialog.value = true;
@@ -40,23 +46,37 @@ function deleteProduct() {
     deleteDiseases(crop.value.id)
         .then((res) => {
             crop.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: t('crops') + ' ' + t('delete'), life: 3000 });
+            toast.add({ severity: 'success', summary: 'Successful', detail: t('diesases') + ' ' + t('delete'), life: 3000 });
             isLoading.value = false;
             getDiseasesList();
         })
         .catch((err) => {
-            toast.add({ severity: 'error', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+            toast.add({ severity: 'error', summary: 'Successful', detail: `${t('diesases')} Deleted`, life: 3000 });
             isLoading.value = false;
         });
 }
-
+function getCropsList() {
+    getCrops({pagination: {page: 1, pageSize: 10000}})
+        .then(res => {
+            diseasesCrop.value =res.data
+        })
+}
 function getDiseasesList() {
     isLoading.value = true;
     const _query = { ...route.query };
     const filters = {
         populate: '*',
         sort: 'createdAt:asc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 }
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
+        filters: {
+            type: _query.dis ?? undefined,
+            crop:{
+                id: _query.value ?? undefined
+            },
+            name: {
+                $containsi: _query.search ?? undefined
+            }
+        }
     };
     getDiseases(filters)
         .then((res) => {
@@ -70,24 +90,43 @@ function getDiseasesList() {
 }
 
 getDiseasesList();
-
+getDiseasesCat();
+getCropsList()
 function onChangePage(value) {
     getDiseasesList();
 }
 
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
+async function routerPush(param) {
+    const _query = { ...route.query, ...param };
+    await router.replace({ query: _query });
+    getDiseasesList();
+}
+let onSearch = debounce(function (value) {
+    routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
+}, 1500);
+function filterAreas(value) {
+    routerPush({ dis: value ? value : undefined, page: 1 });
+}
+function filterCrops (value) {
+    routerPush({ value: value ? value : undefined, page: 1 });
+}
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-between">
+                <div class="flex gap-2">
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="search" :placeholder="$t('name')" @input="onSearch" />
+                    </IconField>
+                    <Select class="w-full md:w-56" v-model="areas" :placeholder="$t('area')" optionLabel="name" optionValue="value" showClear @update:modelValue="filterAreas" :options="diseasesCat"> </Select>
+                    <SelectsIndex :modelValue="diseasesList"  class="w-full" :actionName="'crops'" :filterName="'name'" :placeholder="$t('crops')" @update:modelValue="filterCrops"/>
+                </div>
                 <div class="flex gap-2 justify-end">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
@@ -103,7 +142,7 @@ watch(
                 </Column>
                 <Column :header="$t('image')" style="max-width: 6rem">
                     <template #body="{ data }">
-                        <ImageOnLoad width="90" :src="data?.image?.aws_path" />
+                        <ImageOnLoad :styles="{ width: 90 + 'px', height: 90 + 'px' }" width="90" :src="data?.image?.aws_path" />
                     </template>
                 </Column>
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
@@ -117,10 +156,10 @@ watch(
 
                 <Column field="type" :header="$t('type')" style="min-width: 9rem">
                     <template #body="{ data }">
-                        <Tag>{{ $t(data?.type) }}</Tag>
+                        <Tag>{{ $t(`${data?.type}`) }}</Tag>
                     </template>
                 </Column>
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseases-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

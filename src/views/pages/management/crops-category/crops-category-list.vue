@@ -115,7 +115,7 @@ watch(
                     </template>
                 </Column>
 
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem;">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'cropsCategory-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

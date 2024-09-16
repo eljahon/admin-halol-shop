@@ -4,7 +4,7 @@ const layoutConfig = reactive({
     preset: 'Aura',
     primary: 'emerald',
     surface: null,
-    darkTheme: false,
+    darkTheme: Boolean(localStorage.getItem('dark')),
     menuMode: 'static'
 });
 
@@ -40,9 +40,9 @@ export function useLayout() {
     };
 
     const toggleDarkMode = () => {
+        // localStorage.setItem('dark', true)
         if (!document.startViewTransition) {
             executeDarkModeToggle();
-
             return;
         }
 

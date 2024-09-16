@@ -73,7 +73,7 @@ function getCropsList() {
     const _query = { ...route.query };
 
     return store
-        .dispatch('getUsers', { page: +route.query.page ?? 1, pageSize: _query.pageSize ?? 25, filters: { role: { type: { $eq: _query?.user ?? undefined } } } })
+        .dispatch('getUsers', { page: +route.query.page ?? 1, pageSize: _query.pageSize ?? 10, filters: { role: { type: { $eq: _query?.user ?? undefined } } } })
         .then((res) => {
             console.log(res);
             crops.value = res.data;

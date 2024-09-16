@@ -241,7 +241,7 @@ onMounted(()=> {
                 <div class="card overflow-hidden">
                     <div class="flex justify-between items-center">{{ isDisdtirct ? $t('areas') :$t('districts') }} <i v-if="isDisdtirct" class="pi pi-arrow-left text-primary cursor-pointer" @click="handleDistrict"></i></div>
                     <span class="text-primary">{{allPlice?.toFixed(2)}}:{{$t('hectare')}}</span>
-                    <div v-if="!isRegion" class="overflow-y-auto mt-2 p-2" style="height: 400px" id="scroll">
+                    <div v-if="!isRegion" class="overflow-y-auto mt-2 p-2 h-full" style="max-height: 400px" id="scroll">
                         <section class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 p-4 rounded shadow-custom max-h-2xl cursor-pointer" v-for="(item, index) in reagions" :key="index" @click="isDisdtirct? ()=>{} :handleClick(item)">
                             <span class="">
                                 <img :src="Hudud" alt="Hudud image" />

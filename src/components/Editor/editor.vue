@@ -22,7 +22,7 @@ const toolbarOptions = [
     ['link', 'image'],
     ['clean']
 ];
-const htmlText = ref;
+const htmlText = ref();
 function imageHandler() {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');

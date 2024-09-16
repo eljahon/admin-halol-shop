@@ -17,6 +17,9 @@ const store = createStore({
     state: {
         errorStatus: null
     },
+    getters: {
+        getErrorStatus:(state) => state.errorStatus
+    },
     mutations: {
         ERROR(state, payload){
             state.errorStatus = payload
@@ -71,7 +74,7 @@ const store = createStore({
         },
         getUsers({ commit }, payload) {
             return new Promise((resolve, reject) => {
-                const pageSize = payload?.pageSize? +payload.pageSize : 25
+                const pageSize = payload?.pageSize? +payload.pageSize : 10
                 request.get('/users', {params:{start: (payload?.page-1||0)*pageSize, limit: pageSize,populate: '*', filters:payload.filters}})
                     .then(res => {
                         const meta ={
@@ -133,6 +136,17 @@ const store = createStore({
                     })
             })
         },
+        putMainIfo({commit}, payload) {
+            return new Promise((resolve, reject) => {
+                request.put(`/main-info`, {...payload})
+                    .then(res => {
+                        resolve(res)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            })
+        },
         deleteUsers ({commit}, payload) {
             return new Promise((resolve, reject) => {
                 request.delete(`/users/${payload}`)
@@ -144,7 +158,11 @@ const store = createStore({
                     })
             })
         },
+        async productReject(payload) {
+            return await request.patch(`/product/reject/${payload.id}`);
+        },
         error({commit}, paload){
+            // console.log(paload);
             commit('ERROR', paload)
             // const toast = useToast()
             // const {t} = useI18n()
@@ -191,7 +209,7 @@ const store = createStore({
     modules: {
         Abouts,
         login: CRUD('login', isPost, '/auth/local'),
-        // landMonitoring: CRUD('landMonitoring', isGet, ''),
+        aboutUs: CRUD('aboutUs', isCrudGenerator, '/aboutus'),
         products: CRUD('products', isCrudGenerator),
         cropAdmin: CRUD('cropAdmin', isGet, '/admin/crops'),
         cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
@@ -209,6 +227,7 @@ const store = createStore({
         genders: CRUD('genders', isCrudGenerator),
         districts: CRUD('districts', isCrudGenerator),
         areas: CRUD('areas', isCrudGenerator),
+        reels: CRUD('reels', isCrudGenerator),
         areaManagers: CRUD('areaManagers', isCrudGenerator, '/area-managers'),
         drugs: CRUD('drugs', isCrudGenerator),
         distributors: CRUD('distributors', isCrudGenerator),
@@ -216,10 +235,16 @@ const store = createStore({
         plantings: CRUD('plantings', isCrudGenerator),
         fields: CRUD('fields', isCrudGenerator),
         employeeRoles: CRUD('employeeRoles', isCrudGenerator, '/employee-roles'),
+        news: CRUD('news', isCrudGenerator),
+        langs: CRUD('langs', isCrudGenerator),
+        langItems: CRUD('langItems', isCrudGenerator, '/lang-items'),
         fertilizers: CRUD('fertilizers', isCrudGenerator),
         fertilizerCategories: CRUD('fertilizerCategories', isCrudGenerator, '/fertilizer-categories'),
         questions: CRUD('questions', isCrudGenerator),
         questionsType: CRUD('questionsType', isCrudGenerator, '/question-types'),
+        mainInfo: CRUD('mainInfo', isCrudGenerator, '/main-info'),
+        activityTemplates: CRUD('activityTemplates', isCrudGenerator, '/activity-templates'),
+        activityYears: CRUD('activityYears', isGet, '/activity/years'),
         employees: CRUD('employees', isCrudGenerator),
         regions: CRUD('regions', isCrudGenerator),
         regionStatistics: CRUD('regionStatistics', isGet, '/region/statistics'),

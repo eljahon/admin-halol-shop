@@ -14,8 +14,7 @@ const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const store = useStore();
-const cropsCategory = ref();
-const is_common = ref();
+
 let updateValue = ref();
 let isSubmit = ref(false);
 

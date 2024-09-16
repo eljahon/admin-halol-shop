@@ -6,6 +6,9 @@ import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { debounce } from 'lodash';
+import SelectsIndex from '@/components/Selects/Selects-index.vue';
+import dayjs from 'dayjs';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -13,6 +16,8 @@ const toast = useToast();
 const dt = ref();
 const plantings = ref();
 const fertilization = ref();
+const search = ref(route.query?.search ?? undefined)
+const date = ref(route.query?.date ?? undefined)
 const deletePlantingsDialog = ref(false);
 const isLoading = ref(false);
 
@@ -50,10 +55,11 @@ function getPlantingsList() {
     const filters = {
         populate: '*',
         sort: 'createdAt:asc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
         filters: {
-            is_common: _query?.is_common ?? undefined,
-            name: {
+            crop: _query.crop ?? undefined,
+            createdAt: _query.date ?? undefined,
+            title: {
                 $containsi: _query.search ?? undefined
             }
         }
@@ -74,20 +80,39 @@ getPlantingsList();
 function onChangePage(value) {
     getPlantingsList();
 }
-
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
+async function routerPush(param) {
+    const _query = { ...route.query, ...param };
+    await router.replace({ query: _query });
+    getPlantingsList();
+}
+let onSearch = debounce(function (value) {
+    routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
+}, 1500);
+function filterCrop(value) {
+    routerPush({crop: value ? value : undefined})
+}
+function filterDate(value) {
+    console.log(value);
+    const _date =dayjs(value).format('YYYY-MM-DD');
+    routerPush({date: value ? _date : undefined})
+}
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-between">
+                <div class="flex gap-2">
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="search" :placeholder="$t('name')" @input="onSearch" />
+                    </IconField>
+                    <SelectsIndex class="w-full" action-name="crops" filter-name="name" @update:modelValue="filterCrop" :placeholder="$t('crops')" />
+                    <DatePicker v-model="date" showIcon fluid iconDisplay="input" dateFormat="yy-mm-dd" @update:modelValue="filterDate" class="w-full" :placeholder="$t('date')" />
+                </div>
                 <div class="flex gap-2 justify-end">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
@@ -95,14 +120,34 @@ watch(
             <DataTable ref="dt" :value="plantings" dataKey="id" :loading="isLoading">
                 <template #header> </template>
 
-                <Column field="title" :header="$t('title')" style="min-width: 10rem"></Column>
+                <Column field="title" :header="$t('title')" style="min-width: 10rem">
+                    <template #body="{data}">
+                        {{data?.title ?? '-'}}
+                    </template>
+                </Column>
                 <Column field="crop.name" :header="$t('crop')" style="min-width: 10rem"></Column>
                 <Column field="variety" :header="$t('variety')" style="min-width: 10rem"></Column>
-                <Column field="field" :header="$t('field')" style="min-width: 6rem"></Column>
-                <Column field="season" :header="$t('season')" style="min-width: 10rem"></Column>
-                <Column field="harvest_amount" :header="$t('harvest_amount')" style="min-width: 10rem"></Column>
-                <Column field="harvest_time" :header="$t('harvest_time')" style="min-width: 10rem"></Column>
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column field="field" :header="$t('field')" style="min-width: 6rem">
+                    <template #body="{data}">
+                        {{data?.field?.name ?? '-'}}
+                    </template>
+                </Column>
+                <Column field="season" :header="$t('season')" style="min-width: 10rem">
+                    <template #body="{data}">
+                        {{data?.season?.name ?? '-'}}
+                    </template>
+                </Column>
+                <Column field="harvest_amount" :header="$t('harvest_amount')" style="min-width: 10rem">
+                    <template #body="{data}">
+                        {{data?.harvest_amount ?? '-'}}
+                    </template>
+                </Column>
+                <Column field="harvest_time" :header="$t('harvest_time')" style="min-width: 10rem">
+                    <template #body="{data}">
+                        {{data?.harvest_time ?? '-'}}
+                    </template>
+                </Column>
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'plantings-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

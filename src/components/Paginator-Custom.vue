@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-
+import Paginator from 'primevue/paginator';
 const props = defineProps(['meta', 'refetch']);
 const emit = defineEmits(['onChangePage']);
 const router = useRouter();
@@ -24,7 +24,7 @@ function onRows(value) {
 
 <template>
     <div>
-        <Paginator @page="onChangePage" @update:first="OnFirst" @update:rows="onRows" :rows="meta?.pageSize" :first="(meta?.page - 1) * meta?.pageSize"  :totalRecords="meta.total" :rowsPerPageOptions="[5,10,25, 50, 75, 100]"></Paginator>
+        <Paginator @page="onChangePage" @update:first="OnFirst" @update:rows="onRows" :rows="meta?.pageSize" :first="(meta?.page - 1) * meta?.pageSize"  :totalRecords="meta?.total" :rowsPerPageOptions="[5,10,25, 50, 75, 100]"></Paginator>
     </div>
 </template>
 

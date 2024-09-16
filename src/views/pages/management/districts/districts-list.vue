@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { debounce } from 'lodash';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -13,6 +14,7 @@ const toast = useToast();
 const dt = ref();
 const crops = ref();
 const crop = ref();
+const search = ref(route.query.search ?? undefined);
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
 let list = {
@@ -53,7 +55,12 @@ function getDistrictsList() {
     const _query = { ...route.query };
     const filters = {
         populate: '*',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 }
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
+        filters:{
+            name:{
+                $containsi: _query.search ?? undefined
+            }
+        }
     };
     getDistricts(filters)
         .then((res) => {
@@ -72,19 +79,29 @@ function onChangePage(value) {
     getDistrictsList();
 }
 
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
+async function routerPush(param) {
+    const _query = { ...route.query, ...param };
+    await router.replace({ query: _query });
+    getDistrictsList();
+}
+let onSearch = debounce(function (value) {
+    routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
+}, 1500);
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-between">
+                <div>
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="search" :placeholder="$t('name')" @input="onSearch" />
+                    </IconField>
+                </div>
                 <div class="flex gap-2 justify-end">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>

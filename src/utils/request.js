@@ -14,6 +14,7 @@ function showToast(severity, summary, detail) {
     return toast.add({ severity, summary, detail, life: 3000 });
 }
 function Error(status) {
+    // console.log(status);
     store.dispatch('error', status)
     function notAuth() {
         localStorage.clear();

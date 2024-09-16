@@ -106,7 +106,7 @@ function getCropsList() {
     const filters = {
         populate: 'company,company.owner,image,unit,drug_category,cer',
         sort: 'createdAt:desc',
-        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
+        pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 10 },
         filters: {
             confirmed: _query?.confirmed ?? undefined,
             company: _query.comp ?? undefined,
@@ -212,7 +212,8 @@ function onChangePage(value) {
                 </Column>
                 <Column :header="$t('image')" style="min-width: 7rem; height: 2rem">
                     <template #body="{ data }">
-                        <ImageOnLoad :imageHeight="90" :imageWidth="90" width="100" height="100" :src="data?.image?.aws_path" />
+                        <img width="50" height="40" :src="url+data?.image?.aws_path" alt="">
+<!--                        <ImageOnLoad :styles="{widith: 100+'px', height: 110+'px'}" :imageHeight="90" :imageWidth="90" width="100" image-height="30" image-width="30" height="100" :src="data?.image?.aws_path" />-->
                     </template>
                 </Column>
                 <Column field="title" :header="$t('name')"></Column>

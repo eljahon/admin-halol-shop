@@ -90,7 +90,7 @@ watch(
 
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
 
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width:8rem; display: flex; justify-content: end">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'questions-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

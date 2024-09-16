@@ -93,20 +93,20 @@ export default function (param, isStoreAndMethods, url) {
                     .get(`${url ?? param}`, { params })
                     .then((res) => {
                         let meta ={}
-                        // if (res?.meta && res.meta?.pagination) {
-                        //     const { page, total, pageSize } = res.meta.pagination;
-                        //     meta = {page, total, pageSize:+pageSize}
-                        // }
-                        if (res?.meta?.pagination) {
-                            const { page, total, pageSize } = res.meta?.pagination;
-                            const _res = { data: res.data || [], meta: { page, total, pageSize } };
-                            // commit(_mutations.data, _res);
-                            resolve(_res);
-                        } else {
-                            const _res = { data: res?.data || res|| [] };
+                        if(res?.pagination) {
+                            const { page, total, pageSize } = res?.pagination;
+                            const _res = { data: (res.data ||res.results) ?? [], meta: { page, total, pageSize } };
                             resolve(_res);
                         }
-                        const _res = {data: (res?.data|| res) || [], meta};
+                        if (res?.meta?.pagination) {
+                            const { page, total, pageSize, pageCount } = res.meta?.pagination;
+                            const _res = { data: (res.data|| res.results) ??  ['list'], meta: { page, total, pageSize,pageCount } };
+                            resolve(_res);
+                        } else {
+                            const _res = { data: (res?.data||res ||res.results) ??  [] };
+                            resolve(_res);
+                        }
+                        const _res = {data: (res?.data|| res ||res.results) || [], meta};
                         resolve(_res);
                     })
                     .catch((error) => {

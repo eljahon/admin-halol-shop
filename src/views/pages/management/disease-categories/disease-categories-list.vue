@@ -15,6 +15,8 @@ const toast = useToast();
 const dt = ref();
 const diseasesCategories = ref();
 const crop = ref();
+const diseasesCat = ref();
+
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
 
@@ -22,7 +24,7 @@ const meta = ref({});
 
 const { getDiseasesCategoriesTree, deleteDiseasesCategoriesTree } = actions(['diseasesCategoriesTree'], { get: true, remove: true });
 function openNew() {
-    router.push({ name: 'diseaseCategories-create', params: { id: 'new' } });
+    router.push({ name: 'disease_category-create', params: { id: 'new' } });
 }
 
 function confirmDeleteProduct(prod) {
@@ -70,12 +72,6 @@ function onChangePage(value) {
     getDiseasesCategoriesList();
 }
 
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
 </script>
 
 <template>
@@ -83,6 +79,7 @@ watch(
         <TheBreadcrumb />
         <div class="card">
             <div class="flex gap-2 justify-end">
+
                 <div class="flex gap-2 justify-end">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
@@ -109,9 +106,9 @@ watch(
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">
                     <template #body="{ data }">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'diseaseCategories-create', params: { id: data.id } })" />
+                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'disease_category-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>
                 </Column>

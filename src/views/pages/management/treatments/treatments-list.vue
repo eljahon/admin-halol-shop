@@ -6,6 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { debounce } from 'lodash';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -13,6 +14,7 @@ const toast = useToast();
 const dt = ref();
 const treatments = ref();
 const treatment = ref();
+const search = ref(route.query?.search?? undefined);
 const deleteTreatmentsDialog = ref(false);
 const isLoading = ref(false);
 
@@ -53,8 +55,10 @@ function getTreatmentsList() {
         pagination: { page: _query?.page ? +_query?.page : 1, pageSize: _query.pageSize ? +_query.pageSize : 25 },
         filters: {
             is_common: _query?.is_common ?? undefined,
-            name: {
-                $containsi: _query.search ?? undefined
+            disease:{
+                name: {
+                    $containsi: _query.search ?? undefined
+                }
             }
         }
     };
@@ -74,21 +78,31 @@ getTreatmentsList();
 function onChangePage(value) {
     getTreatmentsList();
 }
+async function routerPush(param) {
+    const _query ={...route.query, ...param}
 
-watch(
-    () => route.query,
-    (value) => {
-        console.log(value, 'valtcha');
-    }
-);
+    await router.replace({ query: _query });
+    getTreatmentsList()
+}
+let onSearch = debounce(function(value) {
+    routerPush({ search: value.target?.value ? value.target?.value : undefined, page: 1 });
+}, 1500)
 </script>
 
 <template>
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
-                <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-between">
+                <div>
+                    <IconField>
+                        <InputIcon>
+                            <i class="pi pi-search" />
+                        </InputIcon>
+                        <InputText v-model="search" :placeholder="$t('disease')+' ' + $t('search')" @input="onSearch" />
+                    </IconField>
+                </div>
+                <div class="flex gap-2">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
             </div>
@@ -107,7 +121,7 @@ watch(
                 <Column field="dose" :header="$t('dose')" style="min-width: 6rem"></Column>
                 <Column field="dose_min" :header="$t('dose_min')" style="min-width: 6rem"></Column>
                 <Column field="dose_max" :header="$t('dose_max')" style="min-width: 6rem"></Column>
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="actions" style="min-width: 10rem;">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'treatments-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

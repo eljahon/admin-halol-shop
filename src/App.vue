@@ -3,7 +3,8 @@
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { watch } from 'vue';
-import store from '@/store';
+import { useStore } from 'vuex';
+const store = useStore()
 
 // console.log(store, router, 'module');
 const {t} = useI18n()
@@ -16,6 +17,7 @@ document.title = t('logo-title')
 </script>
 
 <template>
+    <Toast/>
     <router-view />
 </template>
 

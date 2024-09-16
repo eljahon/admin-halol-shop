@@ -5,68 +5,47 @@ import AppMenuItem from './AppMenuItem.vue';
 
 const model = ref([
     {
-        // label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/',roles:['admin'] }]
     },
     {
-        // label: 'UI Components',
         items: [
-            // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: 'land_monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/land-monitoring' },
-            { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/uikit/button', class: 'rotated-icon' },
-            { label: 'products', icon: 'pi pi-fw pi-table', to: '/products' },
-            { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik' },
-            { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops' }
-            // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
-            // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },
-            // { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
-            // { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
-            // { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/uikit/menu' },
-            // { label: 'Message', icon: 'pi pi-fw pi-comment', to: '/uikit/message' },
-            // { label: 'File', icon: 'pi pi-fw pi-file', to: '/uikit/file' },
-            // { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' },
-            // { label: 'Timeline', icon: 'pi pi-fw pi-calendar', to: '/uikit/timeline' },
-            // { label: 'Misc', icon: 'pi pi-fw pi-circle', to: '/uikit/misc' }
+            { label: 'land_monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/land-monitoring',roles:['admin'] },
+            { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/tasks', class: 'rotated-icon',roles:['admin'] },
+            { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops',roles:['admin'] },
+            { label: 'products', icon: 'pi pi-fw pi-table', to: '/products',roles:['admin'] },
+            { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik',roles:['admin'] }
         ]
     },
     {
-        // label: 'Pages',
-        icon: 'pi pi-fw pi-briefcase',
-        to: '/pages',
         items: [
-            // {
-            //     label: 'Landing',
-            //     icon: 'pi pi-fw pi-globe',
-            //     to: '/landing'
-            // },
             {
                 label: 'user',
                 icon: 'pi pi-fw pi-users',
                 items: [
                     {
                         label: 'farmers',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/farmers'
+                        icon: 'pi pi-fw pi-users',
+                        to: '/farmers',roles:['admin']
                     },
                     {
                         label: 'area_managers',
-                        icon: 'pi pi-fw pi-id-card',
-                        to: '/area-managers'
+                        icon: 'pi pi-fw pi-users',
+                        to: '/area-managers',roles:['admin']
                     },
                     {
                         label: 'user',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/user'
+                        icon: 'pi pi-fw pi-users',
+                        to: '/user',roles:['admin']
                     },
                     {
                         label: 'employees',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/employees'
+                        icon: 'pi pi-fw pi-users',
+                        to: '/employees',roles:['admin']
                     },
                     {
                         label: 'distributors',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/distributors'
+                        icon: 'pi pi-fw pi-users',
+                        to: '/distributors',roles:['admin']
                     },
                     // {
                     //     label: 'activity_types',
@@ -75,8 +54,8 @@ const model = ref([
                     // },
                     {
                         label: 'employee_roles',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/employee-role'
+                        icon: 'pi pi-fw pi-key',
+                        to: '/employee-role',roles:['admin']
                     }
                 ]
             },
@@ -86,63 +65,63 @@ const model = ref([
                 items: [
                     {
                         label: 'activity_types',
-                        icon: 'pi  pi-circle',
-                        to: '/activitytypes'
+                        icon: 'pi pi-info-circle',
+                        to: '/activitytypes',roles:['admin']
                     },
                     {
                         label: 'companies',
-                        icon: 'pi pi-circle',
-                        to: '/companies'
+                        icon: 'pi pi-info-circle',
+                        to: '/companies',roles:['admin']
                     },
                     {
                         label: 'treatments',
-                        icon: 'pi pi-circle',
-                        to: '/treatments'
+                        icon: 'pi pi-info-circle',
+                        to: '/treatments',roles:['admin']
                     },
                     {
                         label: 'fertilizations',
-                        icon: 'pi pi-circle',
+                        icon: 'pi pi-info-circle',
                         to: '/fertilizations'
                     },
                     {
-                        label: 'cropsCategory',
-                        icon: 'pi pi-circle',
-                        to: '/cropsCategory'
+                        label: 'crop_category',
+                        icon: 'pi pi-info-circle',
+                        to: '/cropsCategory',roles:['admin']
                     },
                     {
                         label: 'diseases',
-                        icon: 'pi pi-circle',
-                        to: '/diseases'
+                        icon: 'pi pi-info-circle',
+                        to: '/diseases',roles:['admin']
                     },
                     {
-                        label: 'diseaseCategory',
-                        icon: 'pi pi-circle',
-                        to: '/diseaseCategories'
+                        label: 'disease_category',
+                        icon: 'pi pi-info-circle',
+                        to: '/diseaseCategories',roles:['admin']
                     },
                     {
                         label: 'districts',
-                        icon: 'pi pi-circle',
-                        to: '/districts'
+                        icon: 'pi pi-info-circle',
+                        to: '/districts',roles:['admin']
                     },
                     {
                         label: 'areas',
-                        icon: 'pi pi-circle',
-                        to: '/areas'
+                        icon: 'pi pi-info-circle',
+                        to: '/areas',roles:['admin']
                     },
                     {
                         label: 'drugs',
-                        icon: 'pi pi-circle',
-                        to: '/drugs'
+                        icon: 'pi pi-info-circle',
+                        to: '/drugs',roles:['admin']
                     },
                     {
-                        label: 'drugCategories',
-                        icon: 'pi pi-circle',
-                        to: '/drugCategories'
+                        label: 'drug_categories',
+                        icon: 'pi pi-info-circle',
+                        to: '/drugCategories',roles:['admin']
                     },
                     {
                         label: 'plantings',
-                        icon: 'pi pi-circle',
-                        to: '/plantings'
+                        icon: 'pi pi-info-circle',
+                        to: '/plantings',roles:['admin']
                     },
 
                     // {
@@ -152,38 +131,38 @@ const model = ref([
                     // },
                     {
                         label: 'fertilizers',
-                        icon: 'pi pi-circle',
-                        to: '/fertilizers'
+                        icon: 'pi pi-info-circle',
+                        to: '/fertilizers',roles:['admin']
                     },
                     {
-                        label: 'fertilizerCategories',
-                        icon: 'pi pi-circle',
-                        to: 'fertilizerCategories'
+                        label: 'fertilizer_categories',
+                        icon: 'pi pi-info-circle',
+                        to: 'fertilizerCategories',roles:['admin']
                     },
                     {
                         label: 'questions',
-                        icon: 'pi pi-circle',
-                        to: 'questions'
+                        icon: 'pi pi-info-circle',
+                        to: 'questions',roles:['admin']
                     },
                     {
                         label: 'regions',
-                        icon: 'pi pi-circle',
-                        to: 'regions'
+                        icon: 'pi pi-info-circle',
+                        to: 'regions',roles:['admin']
                     },
                     {
                         label: 'seasons',
-                        icon: 'pi pi-circle',
-                        to: 'seasons'
+                        icon: 'pi pi-info-circle',
+                        to: 'seasons',roles:['admin']
                     },
                     {
                         label: 'units',
-                        icon: 'pi pi-circle',
-                        to: 'units'
+                        icon: 'pi pi-info-circle',
+                        to: 'units',roles:['admin']
                     },
                     {
-                        label: 'usefullinfos',
-                        icon: 'pi pi-circle',
-                        to: 'usefullinfos'
+                        label: 'usefull_infos',
+                        icon: 'pi pi-info-circle',
+                        to: 'usefullinfos',roles:['admin']
                     }
                 ]
             },
@@ -192,19 +171,19 @@ const model = ref([
                 icon: 'pi pi-fw pi-box',
                 items: [
                     {
-                        label: 'activity_types',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/activitytypes'
+                        label: 'news',
+                        icon: 'pi pi-info-circle',
+                        to: '/news',roles:['admin']
                     },
                     {
-                        label: 'Error',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/Auth/error'
+                        label: 'reels',
+                        icon: 'pi pi-info-circle',
+                        to: '/reels',roles:['admin']
                     },
                     {
-                        label: 'Access Denied',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/Auth/access'
+                        label: 'landing',
+                        icon: 'pi pi-info-circle',
+                        to: '/landing',roles:['admin']
                     }
                 ]
             },
@@ -213,46 +192,47 @@ const model = ref([
                 icon: 'pi pi-spin pi-cog',
                 items: [
                     {
-                        label: 'activity_types',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/activitytypes'
+                        label: 'languages',
+                        icon: 'pi pi-info-circle',
+                        to: '/languages',
+                        roles:['admin']
                     },
                     {
-                        label: 'Error',
-                        icon: 'pi pi-fw pi-times-circle',
-                        to: '/Auth/error'
+                        label: 'main_info',
+                        icon: 'pi pi-info-circle',
+                        to: '/main-info',roles:['admin']
                     },
                     {
-                        label: 'Access Denied',
-                        icon: 'pi pi-fw pi-lock',
-                        to: '/Auth/access'
+                        label: 'about_us',
+                        icon: 'pi pi-info-circle',
+                        to: '/about-us',roles:['admin']
                     }
                 ]
             }
-
-            // {
-            //     label: 'Crud',
-            //     icon: 'pi pi-fw pi-pencil',
-            //     to: '/pages/crud'
-            // },
-            // {
-            //     label: 'Not Found',
-            //     icon: 'pi pi-fw pi-exclamation-circle',
-            //     to: '/pages/notfound'
-            // },
-            // {
-            //     label: 'Empty',
-            //     icon: 'pi pi-fw pi-circle-off',
-            //     to: '/pages/empty'
-            // }
         ]
     }
 ]);
+function checkRole(arr) {
+    const userRole = localStorage.getItem('role');
+    return arr.filter(item => {
+        const hasAccess = item.roles ? item.roles.includes(userRole) : true;
+        if (item.items) {
+            item.items = checkRole(item.items);
+        }
+        return hasAccess || (item.items && item.items.length > 0);
+    });
+}
+const filteredModel = model.value.map(group => {
+    return {
+        ...group,
+        items: checkRole(group.items)
+    };
+}).filter(group => group.items.length > 0);
 </script>
 
 <template>
     <ul class="layout-menu">
-        <template v-for="(item, i) in model" :key="item">
+        <template v-for="(item, i) in filteredModel" :key="item">
             <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>

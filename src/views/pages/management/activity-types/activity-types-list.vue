@@ -112,7 +112,7 @@ watch(
                         <ImageOnLoad width="90" :src="data?.icon?.aws_path" />
                     </template>
                 </Column>
-                <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
+                <Column field="name" :header="$t('name')" style="min-width: 4rem"></Column>
                 <Column field="category" :header="$t('date')" style="min-width: 5rem">
                     <template #body="{ data }">
                         <span v-if="data.createdAt">{{ dayjs(data.createdAt).format('DD-MM-YYYY hh:mm') }}</span>
@@ -120,7 +120,7 @@ watch(
                     </template>
                 </Column>
 
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 12rem; text-align: end">
+                <Column :header="$t('actions')" :frozen="true" style="">
                     <template #body="{ data }">
                         <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'activity_types-create', params: { id: data.id } })" />
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />

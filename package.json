@@ -23,6 +23,7 @@
         "spherical-geometry-js": "^3.0.2",
         "vue": "^3.4.34",
         "vue-router": "^4.4.0",
+        "vue-select": "^4.0.0-beta.6",
         "yup": "^1.4.0"
     },
     "devDependencies": {

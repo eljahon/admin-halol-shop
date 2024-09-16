@@ -8,7 +8,7 @@ import { actions } from '@/utils/Store_Schema';
 import { useRoute, useRouter } from 'vue-router';
 import PaginatorCustom from '@/components/Paginator-Custom.vue';
 import { useI18n } from 'vue-i18n';
-import Ymaps from '@/components/ymaps/ymaps.vue';
+import Ymaps from '@/components/Ymaps/ymaps.vue';
 import { Hudud } from '@/assets/svg';
 const tabList = ref([
     { label: 'users', id: 0, key: 'users', icon: 'pi pi-users' },

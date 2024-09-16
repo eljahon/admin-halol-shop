@@ -122,37 +122,6 @@ watch(() => route.query, (value) => {
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
-                <!--                <div>-->
-                <!--                    <div class="flex flex-wrap gap-2 items-center justify-between">-->
-                <!--                        <Select-->
-                <!--                            class="w-full md:w-56"-->
-                <!--                            v-model="cropsFilter"-->
-                <!--                            :placeholder="$t('all')"-->
-                <!--                            optionLabel="name"-->
-                <!--                            optionValue="id"-->
-                <!--                            clearable-->
-                <!--                            @update:modelValue="onChangeSelect"-->
-                <!--                            :options="[-->
-                <!--                                { name: $t('all'), id: undefined },-->
-                <!--                                { name: $t('is_main'), id: true },-->
-                <!--                                { name: $t('is_main_not'), id: false }-->
-                <!--                            ]"-->
-                <!--                        >-->
-                <!--                        </Select>-->
-                <!--                        <IconField>-->
-                <!--                            <InputIcon>-->
-                <!--                                <i class="pi pi-search" />-->
-                <!--                            </InputIcon>-->
-                <!--                            <InputText v-model="search" :placeholder="$t('search-by-name')" @input="onSearch" />-->
-                <!--                        </IconField>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-<!--                <div class="flex gap-2 justify-end">-->
-<!--                    &lt;!&ndash;                    <Button label="Export" icon="pi pi-upload" severity="success" @click="excelDownload" />&ndash;&gt;-->
-<!--                    <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />-->
-<!--                </div>-->
-            </div>
             <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
@@ -168,57 +137,16 @@ watch(() => route.query, (value) => {
                     </template>
                 </Column>
                 <Column field="name" :header="$t('name')" style="min-width: 12rem"></Column>
-
-                <!--                <Column field="price" :header="$t('biology_name')" style="min-width: 9rem">-->
-                <!--                    <template #body="{ data }">-->
-                <!--                        {{ data?.biology_name ?? '-' }}-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-                <Column field="category" :header="$t('date')" style="min-width: 5rem; text-align: center">
+                <Column field="category" :header="$t('date')" style="min-width: 5rem">
                     <template #body="{ data }">
                         <span v-if="data.createdAt">{{ dayjs(data.createdAt).format('DD-MM-YYYY hh:mm') }}</span>
                         <span v-else class="text-red-500">{{ '--' }}</span>
                     </template>
                 </Column>
-                <!--                <Column field="rating" :header="$t('planting_time_end')" style="min-width: 12rem; text-align: center">-->
-                <!--                    <template #body="{ data }">-->
-                <!--                        <span v-if="data.planting_time_end">{{ dayjs(data.planting_time_end).format('DD-MM-YYYY') }}</span>-->
-                <!--                        <span v-else class="text-red-500">{{ '&#45;&#45;' }}</span>-->
-                <!--                        &lt;!&ndash;                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />&ndash;&gt;-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-                <!--                <Column field="inventoryStatus" :header="$t('active')" style="min-width: 12rem">-->
-                <!--                    <template #body="slotProps">-->
-                <!--                        <Tag :value="slotProps.data.is_common ? $t('is_main') : $t('is_main_not')" :severity="getStatusLabel(slotProps.data.is_common)" />-->
-                <!--                    </template>-->
-                <!--                </Column>-->
-<!--                <Column :header="$t('actions')" :frozen="actions" align-frozen="left" style="min-width: 12rem">-->
-<!--                    <template #body="{ data }">-->
-<!--                        &lt;!&ndash;                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'crops-info', query: { id: data.id } })" />&ndash;&gt;-->
-<!--                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'activity_types-create', params: { id: data.id } })" />-->
-<!--                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />-->
-<!--                    </template>-->
-<!--                </Column>-->
                 <template #footer>
                     <PaginatorCustom :meta="meta" @on-change-page="onChangePage" />
                 </template>
             </DataTable>
         </div>
-<!--        <Dialog v-model:visible="deleteCropDialog" :style="{ width: '450px' }" :modal="true">-->
-<!--            <template #header>-->
-<!--                <h1 class="text-3xl text-center">{{ $t('remove') }}</h1>-->
-<!--            </template>-->
-<!--            <div class="flex items-center gap-4">-->
-<!--                <i class="pi pi-exclamation-triangle !text-3xl" />-->
-<!--                <span v-if="crop"-->
-<!--                >{{ $t('you-want-to-delete') }} <b>{{ crop.name }}</b-->
-<!--                >?</span-->
-<!--                >-->
-<!--            </div>-->
-<!--            <template #footer>-->
-<!--                <Button severity="Danger" outlined :label="$t('no')" icon="pi pi-times" text @click="deleteCropDialog = false" />-->
-<!--                <Button :label="$t('yes')" icon="pi pi-check" @click="deleteProduct" />-->
-<!--            </template>-->
-<!--        </Dialog>-->
     </div>
 </template>
