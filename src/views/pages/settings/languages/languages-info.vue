@@ -42,10 +42,6 @@ function getLangItemsList() {
     getLangItems({ filters, pagination, sort })
         .then((res) => {
             langItems.value = res.data;
-            isHash.value = res.data.reduce((acc, el) => {
-                acc[el.id] = { id: el.id, key: el.key, value: el.value, isOpen: false };
-                return acc;
-            }, {});
             isLoading.value = false;
         })
         .catch(() => {
@@ -63,8 +59,8 @@ function openNew() {
     openForm.value = true;
 }
 function itemEdit(item) {
-    isHash.value[item.id].isOpen = true;
-    console.log(isHash.value);
+    isHash.value ={}
+    isHash.value[item.id] = {id: item.id, key: item.key, value: item.value, isOpen: true};
 }
 function itemEditSend(item) {
     console.log(isHash.value[item.id]);
@@ -136,7 +132,7 @@ getLangItemsList();
                         <button class="cursor-pointer" @click="copyText(item)"><i class="pi pi-copy"></i></button>
                         <br />
                         <hr class="my-2" />
-                        <div v-if="!isHash[item.id].isOpen" class="flex gap-2">
+                        <div v-if="!isHash.hasOwnProperty(item.id)" class="flex gap-2">
                             <b>{{ $t('value') }}</b
                             >: {{ item.value }}
                             <button @click="itemEdit(item)" class="text-primary cursor-pointer"><i class="pi pi-pencil"></i></button>

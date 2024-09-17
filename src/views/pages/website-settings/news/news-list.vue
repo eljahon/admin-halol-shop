@@ -26,7 +26,7 @@ let list = {
 };
 const meta = ref({});
 
-const { getNews, deleteNews } = actions(['news'], { get: true, remove: true });
+const { getNews, deleteNews } = actions(['news', 'relations'], { get: true, remove: true });
 
 function openNew() {
     router.push({ name: 'news-create', params: { id: 'new' } });
@@ -69,7 +69,6 @@ function getCropsList() {
     };
     return getNews(filters)
         .then((res) => {
-            console.log(res);
             crops.value = res.data;
             meta.value = res.meta;
             isLoading.value = false;
@@ -78,9 +77,6 @@ function getCropsList() {
         .catch((err) => {
             isLoading.value = false;
         });
-    // .finally(() =>{
-    //     isLoading.value =false
-    // });
 }
 getCropsList();
 
@@ -99,7 +95,6 @@ function onChangePage(value) {
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <!--                    <Button label="Export" icon="pi pi-upload" severity="success" @click="excelDownload" />-->
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
             </div>
@@ -107,21 +102,26 @@ function onChangePage(value) {
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
                 </Column>
-                <Column :header="$t('name')" style="min-width: 16rem">
+                <Column :header="$t('title')" style="min-width: 16rem">
                     <template #body="{ data }">
-                        <span class="text-primary">{{ data?.name }}</span>
+                        <span class="text-primary">{{ data?.title }}</span>
                     </template>
                 </Column>
-                <Column :header="$t('date')" style="min-width: 16rem">
+                <Column :header="$t('model')" style="min-width: 16rem">
                     <template #body="{ data }">
-                        <span>{{ dayjs(data.createAt).format('YYYY-MM-DD hh:mm') }}</span>
+                        <span>{{data.model}}</span>
+                    </template>
+                </Column>
+                <Column :header="$t('relation')" style="min-width: 16rem">
+                    <template #body="{ data }">
+                        <span>{{data?.relation?.name?? '-'}}</span>
                     </template>
                 </Column>
                 <!--                <Column field="fullname" :header="$t('area-managers-name')" style="min-width: 8rem"></Column>-->
                 <!--                <Column field="phone" :header="$t('phone')" style="min-width: 10rem"></Column>-->
                 <Column :header="$t('actions')" :frozen="actions" align-frozen="left" style="min-width: 12rem">
                     <template #body="{ data }">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'employee_roles-create', params: { id: data.id } })" />
+<!--                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'employee_roles-create', params: { id: data.id } })" />-->
                         <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>
                 </Column>

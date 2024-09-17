@@ -5,6 +5,7 @@ import { actions } from '@/utils/Store_Schema';
 import { camelize } from '@/utils';
 import { debounce } from 'lodash';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 const props = defineProps({
     filterName: {
         type: String,
@@ -28,8 +29,10 @@ const props = defineProps({
         required: false
     }
 });
+const store = useStore()
 const emit = defineEmits(['update:modelValue']);
-const action = actions([`${props.actionName}`], { get: true });
+const {actionName}=toRef(props)
+const action = actions([`${actionName}`], { get: true });
 const pageSize = 25;
 let items = ref([]);
 const page = ref(1);
@@ -37,7 +40,7 @@ const loading = ref(false);
 const search = ref(undefined);
 const selected = ref();
 let pages = {};
-let _items = [];
+let _items = ref([]);
 
 let searchFilter = function (event) {
     loading.value = true;
@@ -65,12 +68,12 @@ const checkDublicat = async (arr) => {
 }
 searchFilter = debounce(searchFilter, 1500);
 async function getOptions(params) {
-    await action[camelize(`get ${props.actionName}`)]({ ...params, pagination: { page: page.value, pageSize } })
+    await store.dispatch(`${camelize(`get ${props.actionName}`)}`,{ ...params, pagination: { page: page.value, pageSize } })
         .then(async (res) => {
             const { data, meta } = res;
             const itemCheck = await checkDublicat(data)
-            let _data = [..._items, ...itemCheck];
-            itemCheck.forEach(el=> {_items.push(el)})
+            let _data = [..._items.value, ...itemCheck];
+            itemCheck.forEach(el=> {_items.value.push(el)})
             items.value = _data;
             pages = meta;
             loading.value = false;
@@ -116,8 +119,10 @@ watch(
         }
     }
 );
-watch(()=> props.invalid ,(valu) => {
-    console.log(valu);
+watch(()=> props.actionName ,() => {
+     items.value =[]
+    _items.value =[]
+    page.value =1;
 })
 </script>
 

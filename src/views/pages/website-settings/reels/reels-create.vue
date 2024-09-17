@@ -114,6 +114,7 @@ function onImageUploadVideo(value) {
     images.value = value.media
 }
 const onImageUpload = (value) => {
+    console.log(value);
     isVideo.value = false
     images.value = value.media;
 };
