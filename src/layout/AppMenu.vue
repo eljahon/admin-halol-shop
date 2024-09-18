@@ -10,7 +10,7 @@ const model = ref([
     {
         items: [
             { label: 'land_monitoring', icon: 'pi pi-spin pi-stop-circle', to: '/land-monitoring',roles:['admin'] },
-            { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/tasks', class: 'rotated-icon',roles:['admin'] },
+            // { label: 'tasks', icon: 'pi pi-fw pi-file-word', to: '/tasks', class: 'rotated-icon',roles:['admin'] },
             { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops',roles:['admin'] },
             { label: 'products', icon: 'pi pi-fw pi-table', to: '/products',roles:['admin'] },
             { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik',roles:['admin'] }

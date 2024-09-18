@@ -42,7 +42,7 @@ const feilds = ref([
                     name: 'Tomorqa',
                     value: 'gardener'
                 }
-            ], optionLabel: 'name', optionValue: 'id', showClear: true }
+            ], optionLabel: 'name', optionValue: 'value', showClear: true }
     }
 ]);
 

@@ -89,6 +89,7 @@ export default function (param, isStoreAndMethods, url) {
     if (get)
         fullStore.actions[camelize(`get ${_param}`)] = function ({ commit, state }, params) {
             return new Promise((resolve, reject) => {
+                // debugger
                 axios_init
                     .get(`${url ?? param}`, { params })
                     .then((res) => {

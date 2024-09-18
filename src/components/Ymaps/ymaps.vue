@@ -36,6 +36,10 @@ const props = defineProps({
         required: false,
         default: false
     },
+    height:{
+        type: String,
+        default: () => 800+'px'
+    },
 
     layers: {
         type: Array,
@@ -112,8 +116,8 @@ function mapAddPolygon(maps, map, arr) {
                 properties
             },
             {
-                fillColor: el.fid === +route.query?.id ? '#F3CA52' : '#C3FF93',
-                strokeColor: el.fid === +route.query?.id ? '#799351' : '#F6EEC9',
+                fillColor: el.fid === +route.query?.fid ?'#C3FF93': '#F3CA52' ,
+                strokeColor: el.fid === +route.query?.fid ? '#F6EEC9': '#799351' ,
                 opacity: 0.6,
                 strokeWidth: 3,
                 strokeOpacity: 1
@@ -253,7 +257,6 @@ function handleMapAddButtonPoligonEdit() {
 
     mapRef.controls.add(editButtonPoligon, { float: 'right' });
 }
-const { poligons } = toRef(props);
 watch(
     () => props.isPoligonAdd,
     (newValue, oldValue) => {
@@ -265,7 +268,6 @@ watch(
 watch(
     () => props.poligons,
     (newValue, oldValue) => {
-        console.log('list item');
         if (newValue.length) {
             mapAddPolygon(mapsRef, mapRef, newValue);
         }
@@ -296,7 +298,7 @@ async function initMap() {
 
     mapRef.container.fitToViewport();
 
-    let polygonList = props?.poligons;
+    // let polygonList = props?.poligons;
 
     // if(polygonList.length) mapAddPolygon(mapsRef, mapRef, polygonList)
 
@@ -332,5 +334,5 @@ onMounted(() => {
 
 <template title="yandex-map" style="width: 100%">
     <h3 class="mt-3 mb-5">{{ addres.join(', ') }}</h3>
-    <div ref="basicMap" id="map" style="height: 800px; width: 100%"></div>
+    <div ref="basicMap" id="map" style="width: 100%" :style="{height}"></div>
 </template>

@@ -13,52 +13,38 @@ const toast = useToast();
 const store = useStore();
 const route = useRoute();
 const cropsCategory = ref();
-const activityYears = ref();
-const comment = ref();
-const is_common = ref();
+const seasonsList = ref();
 let isSubmit = ref(false);
-const props = defineProps(['hideTitle', 'updateValue']);
-const emit = defineEmits(['cloesModal'])
+const props = defineProps(['hideTitle', 'updateValue', 'fieldId']);
+const emit = defineEmits(['cloesModal', 'refetch'])
 const feilds = ref([
-    { label: 'activity_type', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
-    { label: 'cycle', schema: { type: 'number', required: true }, renderElement: 'InputNumber', prop: {} },
-    { label: 'start_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    { label: 'start_year', schema: { type: 'string', required: false }, renderElement: 'Select', prop: { options: activityYears, optionLabel: 'name', optionValue: 'value' } },
-    { label: 'end_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    { label: 'end_year', schema: { type: 'string', required: false }, renderElement: 'Select', prop: { options: activityYears, optionLabel: 'name', optionValue: 'value' } }
+    { label: 'crop', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
+    { label: 'season', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: seasonsList, optionLabel: 'title', optionValue: 'id' } },
+    { label: 'planting_time', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
+    { label: 'area_amount', schema: { type: 'number', required: true }, renderElement: 'InputNumber', prop: {} },
 ]);
-const {getActivityTypes, getActivityYears,postActivityTemplates, putActivityTemplates } = actions(['crops', 'activityTypes', 'activityYears', 'activityTemplates'], { get: true, post: true, put: true, getById: true });
+const {getCrops,getSeasons, getActivityYears,postPlantings, putActivityTemplates } = actions(['crops', 'seasons', 'plantings'], { get: true, post: true, put: true, getById: true });
 const isUpdate = ref(false);
-getActivityTypes({ pagination: { page: 1, pageSize: 1000 } }).then((res) => {
+getCrops({ pagination: { page: 1, pageSize: 1000 } }).then((res) => {
     cropsCategory.value = res.data;
 });
-getActivityYears({ pagination: { page: 1, pageSize: 1000 } }).then((res) => {
-    activityYears.value = res.data;
-});
+getSeasons({pagination:{page: 1, pageSize: 1000}})
+    .then(res => {
+        seasonsList.value = res.data
+    })
 async function handleSubmitFrom(values) {
     isSubmit.value = true;
-    console.log(values);
     const _data={
         ...values.data,
-        start_year:values.data.start_year > 0 ?values.data.start_year : 0 ,
-        end_year:values.data.end_year > 0 ?values.data.end_year : 0 ,
-        start_date: dayjs(values.data.start_date).format('YYYY-MM-DD'),
-        end_date: dayjs(values.data.end_date).format('YYYY-MM-DD'),
-        crop: +route.query.id,
-        comment: comment.value
-
+        planting_time: dayjs(values.data.planting_time).format('YYYY-MM-DD'),
+        field: props.fieldId,
+        farmer: +route.query.fid
     }
-    console.log(_data);
-    const data = values?.data?.id
-        ? await putActivityTemplates({
-            id: values.data.id,
-            data: _data
-        })
-        : await postActivityTemplates({ data: _data });
+    const data = await postPlantings({ data: _data });
     if (data) {
         emit('cloesModal')
-        // router.go(-1);
-        toast.add({ severity: 'success', summary: t('activity-templates'), detail: t('activity-templates') + ' ' + values?.data?.id ? t('update') : t('create'), life: 3000 });
+        emit('refetch')
+        toast.add({ severity: 'success', summary: t('planting-place-amount'), detail: t('planting-place-amount') + ' ' + t('create'), life: 3000 });
         isSubmit.value = false;
     }
 }
@@ -72,8 +58,6 @@ function updateEditor(value) {
     <div>
         <div class="card w-full">
             <FormBuilder grid-class="grid grid-cols-2 w-full" v-bind="{ isSubmit, isUpdate, updateValue, feilds, hideTitle }" @handel-submit-form="handleSubmitFrom" :methods="[, , , , , , , , updateEditor]">
-                <label>{{ $t('comment') }}</label>
-                <Textarea class="w-full" v-model="comment" />
             </FormBuilder>
         </div>
     </div>

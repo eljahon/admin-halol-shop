@@ -168,6 +168,11 @@ const router = createRouter({
                             name: 'farmers-info',
                             component: () => import('@/views/pages/users/farmers/farmers-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
+                        },{
+                            path: 'tasks',
+                            name: 'farmers-tasks',
+                            component: () => import('@/views/pages/users/farmers/farmers-tasks.vue'),
+                            meta: { requiresAuth: true, role: ['admin'] }
                         }
                     ]
                     // meta: { requiresAuth: true, role: 'admin' }
