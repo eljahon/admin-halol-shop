@@ -18,16 +18,16 @@ function guard(to, from, next) {
             if (!token) {
                 return next({ name: 'AuthLogin' });
             } else if (requiredRole.includes(userRole)) {
-                 return next()
+                return next();
                 // return next();
             } else {
-                return next({ name: 'accessDenied' })
-
+                return next({ name: 'accessDenied' });
             }
         }
         next();
     } catch (err) {
-        console.log(err);err
+        console.log(err);
+        err;
         next();
     }
 }
@@ -49,7 +49,8 @@ const router = createRouter({
                     name: 'land_monitoring',
                     component: () => import('@/views/pages/land-monitoring/index.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
-                },   {
+                },
+                {
                     path: '/tasks',
                     name: 'tasks',
                     component: () => import('@/views/pages/tasks/index.vue'),
@@ -67,7 +68,12 @@ const router = createRouter({
                     component: () => import('@/views/pages/chat-statistik/chat-statistik-list.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
                 },
-
+                {
+                    path: '/chat',
+                    name: 'chat',
+                    component: () => import('@/views/pages/chat/chat-list.vue'),
+                    meta: { requiresAuth: true, role: ['admin'] }
+                },
                 {
                     path: '/crops',
                     name: 'crops',
@@ -110,7 +116,7 @@ const router = createRouter({
                             name: 'reels-create',
                             component: () => import('@/views/pages/website-settings/reels/reels-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
-                        },
+                        }
                         // {
                         //     path: 'info',
                         //     name: 'crops-info',
@@ -168,7 +174,8 @@ const router = createRouter({
                             name: 'farmers-info',
                             component: () => import('@/views/pages/users/farmers/farmers-info.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
-                        },{
+                        },
+                        {
                             path: 'tasks',
                             name: 'farmers-tasks',
                             component: () => import('@/views/pages/users/farmers/farmers-tasks.vue'),
@@ -293,7 +300,7 @@ const router = createRouter({
                             name: 'employee_roles-create',
                             component: () => import('@/views/pages/users/employee-role/employee-role-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
-                        },
+                        }
                         // {
                         //     path: 'info',
                         //     name: 'crops-info',
@@ -745,8 +752,7 @@ const router = createRouter({
                             name: 'usefull_infos-list',
                             component: () => import('@/views/pages/management/usefull-infos/usefull-infos-list.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
-                        },
-
+                        }
                     ]
                 },
                 {
