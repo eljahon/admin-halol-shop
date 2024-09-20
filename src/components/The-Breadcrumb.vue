@@ -57,7 +57,7 @@ formatRouter();
 
                 <span>
                     <span :class="[item.icon, 'text-color', 'ml-2']" />
-                    <span class="font-semibold active-route">{{ $t(label) }}</span>
+                    <span class="font-semibold active-route text-primary">{{ $t(label) }}</span>
                 </span>
         </template>
     </Breadcrumb>

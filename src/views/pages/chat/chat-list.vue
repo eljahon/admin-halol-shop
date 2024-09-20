@@ -8,11 +8,11 @@ const selectedCountry = ref();
 <template>
     <div class="w-full">
         <TheBreadcrumb class="hidden sm:block" />
-        <div class="flex flex-col sm:flex-row gap-6 myHight">
-            <div class="w-full sm:max-w-[300px] bg-white rounded-lg shadow h-[200px] sm:h-full overflow-scroll scrollcss">
-                <div class="w-full text-center hidden sm:flex gap-4 items-center px-4 py-4 border-b border-gray-200">
+        <div class="flex flex-col sm:flex-row gap-6  myHight">
+            <div class="w-full sm:max-w-[300px]  bg-white dark:bg-surface-900 rounded-lg shadow h-[200px] sm:h-full overflow-scroll scrollcss">
+                <div class="w-full text-center hidden sm:flex gap-4 items-center px-4 py-4 border-b dark:border-b-blue-400/10 border-gray-200">
                     <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
-                    <h4 class="text-xl font-bold">Asiya Javayant</h4>
+                    <h4 class="text-xl font-bold text-primary">Asiya Javayant</h4>
                 </div>
                 <Tabs value="0">
                     <TabList class="overflow-x-scroll scrollcss sticky">
@@ -25,28 +25,28 @@ const selectedCountry = ref();
                 </Tabs>
                 <div class="p-4">
                     <!-- user data -->
-                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-100 border-gray-200">
+                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border rounded-lg dark:hover:bg-blue-400/10 hover:bg-gray-100 dark:border-blue-400/10 border-gray-200">
                         <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
                         <div>
                             <h3 class="text-base font-bold">User name</h3>
                             <p class="text-xs">name user</p>
                         </div>
                     </div>
-                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-100 border-gray-200">
+                    <div class="w-full cursor-pointer mb-2 flex dark:bg-blue-400/10 items-center gap-3 p-2 border rounded-lg dark:hover:bg-blue-400/10 hover:bg-gray-100 dark:border-blue-400/10 border-gray-200">
+                        <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
+                        <div class="text-primary">
+                            <h3 class="text-base font-bold text-primary">User name</h3>
+                            <p class="text-xs">name user</p>
+                        </div>
+                    </div>
+                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border dark:hover:bg-blue-400/10 rounded-lg hover:bg-gray-100 dark:border-blue-400/10 border-gray-200">
                         <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
                         <div>
                             <h3 class="text-base font-bold">User name</h3>
                             <p class="text-xs">name user</p>
                         </div>
                     </div>
-                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-100 border-gray-200">
-                        <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
-                        <div>
-                            <h3 class="text-base font-bold">User name</h3>
-                            <p class="text-xs">name user</p>
-                        </div>
-                    </div>
-                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border rounded-lg hover:bg-gray-100 border-gray-200">
+                    <div class="w-full cursor-pointer mb-2 flex items-center gap-3 p-2 border dark:hover:bg-blue-400/10 rounded-lg hover:bg-gray-100 dark:border-blue-400/10 border-gray-200">
                         <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
                         <div>
                             <h3 class="text-base font-bold">User name</h3>
@@ -55,13 +55,13 @@ const selectedCountry = ref();
                     </div>
                 </div>
             </div>
-            <div class="w-full h-full flex flex-col justify-between bg-white rounded-lg shadow">
+            <div class="w-full h-full flex flex-col justify-between bg-white dark:bg-surface-900 rounded-lg shadow">
                 <div class="w-full">
-                    <div class="w-full border-b border-gray-200">
+                    <div class="w-full border-b border-gray-200 dark:border-b-blue-400/10">
                         <div class="w-full cursor-pointer flex items-center gap-3 p-4">
                             <Avatar icon="pi pi-user" class="my-auto" size="large" shape="circle" />
-                            <div>
-                                <h3 class="text-base font-bold">User name</h3>
+                            <div class="text-primary">
+                                <h3 class="text-base font-bold text-primary">User name</h3>
                                 <p class="text-xs">name user</p>
                             </div>
                         </div>
@@ -121,10 +121,16 @@ const selectedCountry = ref();
 .scrollcss::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
+.app-dark .scrollcss::-webkit-scrollbar-track {
+    background: #000;
+}
 
 /* Handle */
 .scrollcss::-webkit-scrollbar-thumb {
     background: #888;
+}
+.app-dark .scrollcss::-webkit-scrollbar-thumb {
+    background: #000000;
 }
 
 /* Handle on hover */

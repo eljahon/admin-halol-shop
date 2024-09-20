@@ -110,6 +110,7 @@ const {updateValue} =toRefs(props)
 const inlineFeilds = computed(()=> props.feilds)
 watch(() => updateValue.value,
     (values) => {
+        console.log('salom list ');
        setValues(values)
     }
 );

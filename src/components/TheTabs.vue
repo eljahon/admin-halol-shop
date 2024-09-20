@@ -23,7 +23,7 @@ async function onChangeTabs(value) {
 }
 </script>
 <template>
-    <div class="card">
+    <div class="rounded my-2">
         <Tabs :value="currentTab" @update:value="onChangeTabs">
             <TabList>
                 <Tab class="flex  items-center gap-5" v-for="(item, index) in tabsList" :value="`${item.id}`" :key="index"><i v-if="item?.icon" :class="[item.icon]" style="font-size: 1.5rem"></i> <span>{{$t(`${item.label}`)}}</span></Tab>

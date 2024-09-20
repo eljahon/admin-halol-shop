@@ -272,7 +272,7 @@ function deleteActiveteTemplate (id) {
                             <span class="text-primary">{{ data.method }}</span>
                         </template>
                     </Column>
-                    <Column style="min-width: 10rem">
+                    <Column style="min-width: 10rem; display: flex; justify-content: end">
                         <template #header>
                             <div class="items-end">{{ $t('actions') }}</div>
                         </template>

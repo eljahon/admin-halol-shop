@@ -37,9 +37,10 @@ const router = createRouter({
         {
             path: '/',
             component: AppLayout,
+            redirect: '/dashboard',
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'Dashboard',
                     component: () => import('@/views/pages/dashboard/Dashboard.vue'),
                     meta: { requiresAuth: true, role: ['admin'] }
@@ -120,7 +121,7 @@ const router = createRouter({
                         // {
                         //     path: 'info',
                         //     name: 'crops-info',
-                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     component: () => import('@/views/pages/crops/crops-Crop-Info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
                     ]
@@ -304,7 +305,7 @@ const router = createRouter({
                         // {
                         //     path: 'info',
                         //     name: 'crops-info',
-                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     component: () => import('@/views/pages/crops/crops-Crop-Info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
                     ]
@@ -330,7 +331,7 @@ const router = createRouter({
                         // {
                         //     path: 'info',
                         //     name: 'activitytypes-info',
-                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     component: () => import('@/views/pages/crops/crops-Crop-Info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
                     ]
@@ -356,7 +357,7 @@ const router = createRouter({
                         // {
                         //     path: 'info',
                         //     name: 'activitytypes-info',
-                        //     component: () => import('@/views/pages/crops/crops-info.vue'),
+                        //     component: () => import('@/views/pages/crops/crops-Crop-Info.vue'),
                         //     meta: { requiresAuth: true, role: ['admin'] }
                         // }
                     ]

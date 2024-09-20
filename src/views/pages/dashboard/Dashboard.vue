@@ -77,7 +77,7 @@ function getDashboard() {
                     icon: 'pi pi-spin pi-stop-circle',
                     slug: allLand,
                     title: t('allFieldsArea'),
-                    count: items.allFieldsArea
+                    count: (items.allFieldsArea/10000).toFixed(2)
                 },
 
                 {
@@ -146,12 +146,10 @@ function getDashboard() {
 function getRegionStatick() {
     isRegion.value = true;
     const _query={...route.query}
-  return   getRegionStatistics({ region: 12, ..._query })
+  return getRegionStatistics({ region: 12, ..._query })
         .then((res) => {
             reagions.value = res.data;
-            res.data.forEach(el => {
-                allPlice.value+=el.amount
-            })
+            allPlice.value = res.data.reduce((acc,el) =>acc+el.amount ,0)
             isRegion.value = false;
         })
         .catch((err) => {
@@ -240,7 +238,7 @@ onMounted(()=> {
             <div class="col-span-12 xl:col-span-4">
                 <div class="card overflow-hidden">
                     <div class="flex justify-between items-center">{{ isDisdtirct ? $t('areas') :$t('districts') }} <i v-if="isDisdtirct" class="pi pi-arrow-left text-primary cursor-pointer" @click="handleDistrict"></i></div>
-                    <span class="text-primary">{{allPlice?.toFixed(2)}}:{{$t('hectare')}}</span>
+                    <span class="text-primary">{{(allPlice/10000)?.toFixed(2)}}:{{$t('hectare')}}</span>
                     <div v-if="!isRegion" class="overflow-y-auto mt-2 p-2 h-full" style="max-height: 400px" id="scroll">
                         <section class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 p-4 rounded shadow-custom max-h-2xl cursor-pointer" v-for="(item, index) in reagions" :key="index" @click="isDisdtirct? ()=>{} :handleClick(item)">
                             <span class="">

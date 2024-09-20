@@ -21,13 +21,17 @@ const toast = useToast();
 const { t } = useI18n();
 const farmersList = ref();
 const isPoligonAdd = ref(false);
+const deleteCropDialog = ref(false);
 const isSubmit = ref(false);
 const plantingDialog = ref(false);
+const task = ref(undefined)
 const taskDialog = ref(false);
 const plantingLoading = ref(false);
 const tasksLoading = ref(false);
 const itemFild = ref(undefined);
 const polygon = ref(undefined);
+const updataValueTasks = ref(undefined);
+const updataValuePlating = ref(undefined);
 const locationList = ref(undefined);
 const centerInline = ref([]);
 const plantingList = ref([]);
@@ -52,7 +56,7 @@ const sendData = ref({
     hectar: 0,
     center: []
 });
-const { getFields, getByIdFields, getPlantings, getTasks, postSevenday } = actions(['fields', 'tasks', 'plantings', 'sevenday'], { get: true, post: true, put: true, getById: true });
+const {getByIdFields, getPlantings, getTasks, postSevenday, deleteTasks, deletePlantings } = actions(['fields', 'tasks', 'plantings', 'sevenday'], { get: true, post: true, put: true, getById: true, remove: true });
 function getFarmers() {
     const filters = { farmer: route.query?.fid ?? undefined };
     const sort = { id: 'desc' };
@@ -62,9 +66,7 @@ function getFarmers() {
         farmersList.value = res.data;
         locationList.value ={lat: res.data.center[1], long: res.data.center[0]}
         postSevenday({...locationList.value})
-            .then(res => {
-                console.log('wether ', res);
-            })
+            .then(() => {})
     });
 }
 function openNew() {
@@ -106,8 +108,41 @@ function newPlatingAdd() {
 function newTaskAdd() {
     taskDialog.value = true;
 }
+function updataTasksValue(value) {
+    const _data = JSON.parse(JSON.stringify(value))
+    _data.employee = _data.employee.id;
+    _data.field = _data.field.id
+    taskDialog.value = true
+
+    setTimeout(() =>{
+        updataValueTasks.value = _data;
+    } ,0)
+}
 function onChangePage(value) {
     getPlatingList();
+}
+function confirmDeleteProduct(prod) {
+    task.value = prod;
+    deleteCropDialog.value = true;
+}
+function deleteTask() {
+    deleteCropDialog.value = false;
+    tasksLoading.value = true;
+    deleteTasks(task.value.id)
+        .then((res) => {
+            task.value = {};
+            toast.add({ severity: 'success', summary: 'Successful', detail: t('task')+' '+t('delete'), life: 3000 });
+            getTaskList()
+        })
+        .catch((err) => {
+            toast.add({ severity: 'error', summary: t('task'), detail: t('task')+' '+t('delete'), life: 3000 });
+            tasksLoading.value = false;
+        });
+}
+function getStatusLabel(status) {
+    if (status) return 'success';
+
+    return 'danger';
 }
 Promise.allSettled([getFarmers(), getPlatingList(), getTaskList()]);
 </script>
@@ -125,6 +160,22 @@ Promise.allSettled([getFarmers(), getPlatingList(), getTaskList()]);
                 </div>
             </div>
         </div>
+        <Dialog v-model:visible="deleteCropDialog" :style="{ width: '450px' }" :modal="true">
+            <template #header>
+                <h1 class="text-3xl text-center">{{ $t('remove') }}</h1>
+            </template>
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="crop"
+                >{{ $t('you-want-to-delete') }} <b>{{ task.title }}</b
+                >?</span
+                >
+            </div>
+            <template #footer>
+                <Button severity="Danger" outlined :label="$t('no')" icon="pi pi-times" text @click="deleteCropDialog = false" />
+                <Button :label="$t('yes')" icon="pi pi-check" @click="deleteTask" />
+            </template>
+        </Dialog>
         <Dialog v-model:visible="plantingDialog" :style="{ width: '450px' }" :modal="true">
             <template #header>
                 <h1 class="text-3xl text-center">{{ $t('add_planting') }}</h1>
@@ -135,7 +186,7 @@ Promise.allSettled([getFarmers(), getPlatingList(), getTaskList()]);
             <template #header>
                 <h1 class="text-3xl text-center">{{ $t('task-add') }}</h1>
             </template>
-            <TasksForm :location="locationList" :hideTitle="false" :field-id="+route.query.id" @refetch="getTaskList" @cloes-modal="taskDialog = false" />
+            <TasksForm :location="locationList" :hideTitle="false" :field-id="+route.query.id" @refetch="getTaskList" @cloes-modal="taskDialog = false" :update-value="updataValueTasks" />
         </Dialog>
         <div class="mt-2 card">
             <div class="flex justify-end">
@@ -206,7 +257,7 @@ Promise.allSettled([getFarmers(), getPlatingList(), getTaskList()]);
                 </Column>
                 <Column field="area_amount" :header="$t('area_amount')">
                     <template #body="{ data }">
-                        <span class="text-primary">{{ data?.field.hectar ?? '-' }} {{$t('hectare')}}</span>
+                        <span class="text-primary">{{ (data?.field.hectar/10000).toFixed(2) ?? '-' }} {{$t('hectare')}}</span>
                     </template>
                 </Column>
                 <Column :header="$t('start_date')">
@@ -217,6 +268,18 @@ Promise.allSettled([getFarmers(), getPlatingList(), getTaskList()]);
                 <Column :header="$t('end_date')">
                     <template #body="{ data }">
                         <span>{{ dayjs(data?.end_date).format('YYYY-MM-DD') }}</span>
+                    </template>
+                </Column>
+                <Column :header="$t('confir')">
+                    <template #body="{data}">
+                        <Tag  :icon="data.isDone ? 'pi pi-check':'pi pi-times'" :value="data.isDone ? $t('done') : $t('is_done')" :severity="getStatusLabel(data.isDone)" />
+                    </template>
+                </Column>
+                <Column :header="$t('actions')" :frozen="actions" align-frozen="left" style="min-width: 6rem; display: flex; justify-content: end">
+                    <template #body="{ data }">
+<!--                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'crops-info', query: { id: data.id } })" />-->
+                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="updataTasksValue(data)" />
+                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
                     </template>
                 </Column>
                 <template #footer>

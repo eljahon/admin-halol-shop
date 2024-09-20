@@ -222,6 +222,7 @@ const store = createStore({
         farmers: CRUD('farmers', isCrudGenerator),
         chatStatistics: CRUD('chatStatistics', isGet, '/chat/statistics'),
         companies: CRUD('companies', isGet),
+        regionStatistics: CRUD('regionStatistics', isGet, '/region/statistics'),
         plantingStatistics: CRUD('plantingStatistics', isGet, '/planting/statistics'),
         relations: CRUD('relations', isGet),
         treatments: CRUD('treatments', isCrudGenerator),

@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, toRef, watch } from 'vue';
 import { actions } from '@/utils/Store_Schema';
 import { useStore } from 'vuex';
 import { useToast } from 'primevue/usetoast';
@@ -21,8 +21,9 @@ const {getEmployees, getTasks, postTasks, putTasks} = actions(['employees', 'tas
 const feilds = ref([
     { label: 'title', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
     { label: 'employee', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'fullname', optionValue: 'id' } },
-    { label: 'start_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    { label: 'end_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
+    { label: 'start_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'yy-mm-dd' } },
+    { label: 'end_date', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'yy-mm-dd' } },
+    { label: 'isDone', schema: { type: 'boolean', required: false }, renderElement: 'ToggleSwitch', prop: { } },
 ]);
 const isUpdate = ref(false);
 function getEmpoyessList () {
@@ -66,6 +67,9 @@ function updateEditor(value) {
     console.log(value);
 }
 getEmpoyessList()
+watch(()=> props.updateValue , (value) => {
+    console.log(value);
+})
 </script>
 
 <template>

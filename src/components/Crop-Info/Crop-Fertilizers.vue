@@ -85,21 +85,8 @@ let onSearch = debounce(function (value) {
 
 <template>
     <div>
-        <TheBreadcrumb />
+<!--        <TheBreadcrumb />-->
         <div class="card">
-            <div class="flex gap-2 justify-between">
-                <div>
-                    <IconField>
-                        <InputIcon>
-                            <i class="pi pi-search" />
-                        </InputIcon>
-                        <InputText v-model="search" :placeholder="$t('name')" @input="onSearch" />
-                    </IconField>
-                </div>
-                <div class="flex gap-2 justify-end">
-                    <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
-                </div>
-            </div>
             <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
@@ -119,12 +106,12 @@ let onSearch = debounce(function (value) {
 
                 <Column field="fertilizer_category.name" :header="$t('fertilizer-category')" style="min-width: 12rem"></Column>
 
-                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">
-                    <template #body="{ data }">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'fertilizers-create', params: { id: data.id } })" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
-                    </template>
-                </Column>
+<!--                <Column :header="$t('actions')" :frozen="actions" style="min-width: 8rem">-->
+<!--                    <template #body="{ data }">-->
+<!--                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'fertilizers-create', params: { id: data.id } })" />-->
+<!--                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />-->
+<!--                    </template>-->
+<!--                </Column>-->
                 <template #footer>
                     <PaginatorCustom :meta="meta" @on-change-page="onChangePage" />
                 </template>
@@ -137,8 +124,8 @@ let onSearch = debounce(function (value) {
             <div class="flex items-center gap-4">
                 <i class="pi pi-exclamation-triangle !text-3xl" />
                 <span v-if="crop"
-                    >{{ $t('you-want-to-delete') }} <b>{{ crop.name }}</b
-                    >?</span
+                >{{ $t('you-want-to-delete') }} <b>{{ crop.name }}</b
+                >?</span
                 >
             </div>
             <template #footer>
