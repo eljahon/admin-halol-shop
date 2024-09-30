@@ -1,26 +1,17 @@
 <script setup>
-import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
-import { reactive, ref, watch } from 'vue';
+import { ref } from 'vue';
 import TheBreadcrumb from '@/components/The-Breadcrumb.vue';
 import { useStore } from 'vuex';
 import { actions } from '@/utils/Store_Schema';
 import { useRoute, useRouter } from 'vue-router';
-import PaginatorCustom from '@/components/Paginator-Custom.vue';
 import { useI18n } from 'vue-i18n';
 import Ymaps from '@/components/Ymaps/ymaps.vue';
 import { Hudud } from '@/assets/svg';
-const tabList = ref([
-    { label: 'users', id: 0, key: 'users', icon: 'pi pi-users' },
-    { label: 'consultants', id: 1, key: 'consultants', icon: 'pi pi-user-edit' }
-]);
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
-const toast = useToast();
 let polygon = ref([]);
-let center = ref([]);
 let zoom = ref(undefined);
 let isLoading = ref(false);
 const regions = ref(undefined);

@@ -34,7 +34,7 @@ const galleria = ref([{
     thumbnailImageSrc: "https://primefaces.org/cdn/primevue/images/galleria/galleria1s.jpg",
     title: "Title 1"
 }])
-const { getByIdProducts,deleteProducts,deleteActivityTemplates,postProducts, putProducts } = actions(['products', 'activityTemplates'], { post: true, put: true, getById: true, remove: true });
+const { getByIdProducts,deleteActivityTemplates } = actions(['products', 'activityTemplates'], { post: true, put: true, getById: true, remove: true });
 async function getByIdCrop() {
     isLoading.value=true
     return await getByIdProducts({ id: route.query.id, query:{populate: '*'} }).then((res) => {

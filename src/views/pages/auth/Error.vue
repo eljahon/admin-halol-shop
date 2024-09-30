@@ -1,5 +1,12 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const handleRouter =() => {
+    const role = localStorage.getItem('role');
+    if(role === 'consultant') router.push('/chat')
+    else router.push('/')
+}
 </script>
 
 <template>
@@ -16,7 +23,7 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
                         <span class="text-muted-color mb-8">Requested resource is not available.</span>
                         <img src="/demo/images/error/asset-error.svg" alt="Error" class="mb-8" width="80%" />
                         <div class="col-span-12 mt-8 text-center">
-                            <Button as="router-link" label="Go to Dashboard" to="/" severity="danger" />
+                            <Button label="Go to Dashboard" @click="handleRouter" severity="danger" />
                         </div>
                     </div>
                 </div>

@@ -25,8 +25,8 @@ const { errors, defineField, handleSubmit } = useForm({
     validationSchema,
     initialValues
 });
-const [identifier, identifierAttrs] = defineField('identifier');
-const [password, passwordAttrs] = defineField('password');
+const [identifier] = defineField('identifier');
+const [password] = defineField('password');
 const handleSubmitFrom = handleSubmit(async (value) => {
     isSubmit.value = true;
     postLogin({ ...value })
@@ -35,9 +35,10 @@ const handleSubmitFrom = handleSubmit(async (value) => {
             store
                 .dispatch('getUserMe')
                 .then((res) => {
-                    localStorage.setItem('role', res?.role?.type)
-                    router.push('/');
+                    localStorage.setItem('role', res?.role?.description)
                     isSubmit.value = false;
+                    if(res?.role?.description === 'consultant') router.push('/chat');
+                    else router.push('/');
                 })
                 .catch((err) => {
                     isSubmit.value = false;

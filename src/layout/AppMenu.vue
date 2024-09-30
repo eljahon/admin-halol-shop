@@ -14,7 +14,7 @@ const model = ref([
             { label: 'crops', icon: 'pi pi-fw pi-list', to: '/crops', roles: ['admin'] },
             { label: 'products', icon: 'pi pi-fw pi-table', to: '/products', roles: ['admin'] },
             { label: 'chat_statictik', icon: 'pi pi-fw pi-send', to: '/chat-statictik', roles: ['admin'] },
-            { label: 'chat', icon: 'pi pi-fw pi-send', to: '/chat', roles: ['admin'] }
+            { label: 'chat', icon: 'pi pi-fw pi-send', to: '/chat', roles: ['consultant'] }
         ]
     },
     {
@@ -249,7 +249,7 @@ function checkRole(arr) {
         if (item.items) {
             item.items = checkRole(item.items);
         }
-        return hasAccess || (item.items && item.items.length > 0);
+        return hasAccess;
     });
 }
 const filteredModel = model.value
@@ -258,8 +258,13 @@ const filteredModel = model.value
             ...group,
             items: checkRole(group.items)
         };
+    }).filter((el,index) => {
+        const hashRole = el.items.length && el.items[0].roles?.length;
+        if(hashRole) return el;
+        const hasItems = el?.items.length&&!el.items[index].roles?.length&&el?.items[index]?.items?.length;
+        // console.log(el,'element');
+      return hasItems;
     })
-    .filter((group) => group.items.length > 0);
 </script>
 
 <template>

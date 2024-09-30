@@ -22,12 +22,6 @@ const icon = ref({ id: undefined, url: undefined });
 
 const feilds = ref([
     { label: 'name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    // { label: 'biology_name', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    // { label: 'planting_time_start', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    // { label: 'planting_time_end', schema: { type: 'date', required: true }, renderElement: 'DatePicker', prop: { showIcon: true, fluid: true, iconDisplay: 'input', dateFormat: 'dd-mm-yy' } },
-    // { label: 'crop_code', schema: { type: 'string', required: true }, renderElement: 'InputText', prop: {} },
-    // { label: 'harvest_duration', schema: { type: 'number', required: true }, renderElement: 'InputText', prop: { type: 'number' } },
-    // { label: 'crop_category', schema: { type: 'string', required: true }, renderElement: 'Select', prop: { options: cropsCategory, optionLabel: 'name', optionValue: 'id' } },
     { label: 'description', schema: { type: 'string', required: false }, renderElement: 'Textarea', prop: { class: '' } }
 ]);
 const onImageUpload = (value) => {

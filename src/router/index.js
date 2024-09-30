@@ -73,7 +73,7 @@ const router = createRouter({
                     path: '/chat',
                     name: 'chat',
                     component: () => import('@/views/pages/chat/chat-list.vue'),
-                    meta: { requiresAuth: true, role: ['admin'] }
+                    meta: { requiresAuth: true, role: ['consultant'] }
                 },
                 {
                     path: '/crops',
@@ -781,7 +781,7 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Access.vue')
         },
         {
-            path: '/Auth/error',
+            path: '/:pathMatch(.*)*',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
         }

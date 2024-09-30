@@ -4,20 +4,30 @@ import { ref, toRef, watch } from 'vue';
 import { actions } from '@/utils/Store_Schema';
 import { camelize } from '@/utils';
 import { debounce } from 'lodash';
-import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { isFunction, unionBy } from 'lodash';
 const props = defineProps({
     filterName: {
         type: String,
         required: true,
         default: () => 'name'
     },
+    initialValues:{
+        type: Array,
+        required: false,
+        default: () => []
+    },
+    customFilter:{
+        type: Function,
+        required: false,
+        default: (value) => value
+    },
     placeholder:{
         type: String,
         required: false
     },
     modelValue: {
-        type: [String],
+        type: [String, Number],
         required: false
     },
     actionName: {
@@ -34,11 +44,11 @@ const emit = defineEmits(['update:modelValue']);
 const {actionName}=toRef(props)
 const action = actions([`${actionName}`], { get: true });
 const pageSize = 25;
-let items = ref([]);
+let items = ref(props.initialValues? [props.initialValues] :[]);
 const page = ref(1);
 const loading = ref(false);
 const search = ref(undefined);
-const selected = ref();
+const selected = ref(props.modelValue ?? undefined);
 let pages = {};
 let _items = ref([]);
 
@@ -52,26 +62,20 @@ let searchFilter = function (event) {
     };
     search.value = value;
     page.value = 1;
-    _items = [];
+    _items.value = [];
     getOptions({ filters });
 
     console.log(filters.value);
 };
-const checkDublicat = async (arr) => {
-    let set=new Set([_items[0]?.id]);
-    let arrary = []
-    arr.forEach(el => {
-        if(!set.has(el.id)) arrary.push(el)
-    })
-
-    return await arrary
-}
 searchFilter = debounce(searchFilter, 1500);
 async function getOptions(params) {
-    await store.dispatch(`${camelize(`get ${props.actionName}`)}`,{ ...params, pagination: { page: page.value, pageSize } })
+    // console.log(props.customFilter(params), 'props.customFilter(params)');
+    const _params = isFunction(props.customFilter) ? props.customFilter(params) : params;
+    await store.dispatch(`${camelize(`get ${props.actionName}`)}`,{ ..._params,
+            pagination: { page: page.value, pageSize } })
         .then(async (res) => {
             const { data, meta } = res;
-            const itemCheck = await checkDublicat(data)
+            const itemCheck = await unionBy([props.initialValues, ...data], 'id');
             let _data = [..._items.value, ...itemCheck];
             itemCheck.forEach(el=> {_items.value.push(el)})
             items.value = _data;
@@ -109,14 +113,15 @@ const {modelValue} = toRef(props)
 watch(
     () =>modelValue?.value,
     (newvalue) => {
-        if (typeof newvalue === 'object') {
-            const checkIncludes = items.value.filter((el) => el.id === newvalue.id);
-            if (!checkIncludes.length) {
-                items.value.push(newvalue);
-                _items.push(newvalue)
-                selected.value = newvalue.id;
-            }
-        }
+        selected.value = newvalue
+        // if (typeof newvalue === 'object') {
+        //     const checkIncludes = items.value.filter((el) => el.id === newvalue.id);
+        //     if (!checkIncludes.length) {
+        //         items.value.push(newvalue);
+        //         _items.push(newvalue)
+        //         selected.value = newvalue.id;
+        //     }
+        // }
     }
 );
 watch(()=> props.actionName ,() => {
@@ -127,7 +132,7 @@ watch(()=> props.actionName ,() => {
 </script>
 
 <template>
-    <div class="flex justify-center">
+    <div class="w-full">
         <Select
             v-model="selected"
             :options="items"

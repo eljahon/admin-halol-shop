@@ -63,14 +63,12 @@ function itemEdit(item) {
     isHash.value[item.id] = {id: item.id, key: item.key, value: item.value, isOpen: true};
 }
 function itemEditSend(item) {
-    console.log(isHash.value[item.id]);
     putLangItems({ id: item.id, data: { value: isHash.value[item.id].value } }).then((res) => {
         toast.add({ severity: 'success', summary: t('lang-item'), detail: t('lang-item-update'), life: 3000 });
         getLangItemsList();
     });
 }
 function copyText(item) {
-    console.log(isHash.value[item.id]);
     navigator.clipboard
         .writeText(isHash.value[item.id].key)
         .then(function () {

@@ -1,9 +1,9 @@
-import { Abouts } from '@/store/modules';
+import { Abouts, Chats } from '@/store/modules';
 import CRUD from '@/utils/dynamickCrud';
 import request from '@/utils/request';
 import { createStore } from 'vuex';
-import { useToast } from 'primevue/usetoast';
-import { useI18n } from 'vue-i18n';
+// import { useToast } from 'primevue/usetoast';
+// import { useI18n } from 'vue-i18n';
 
 const isPost = { post: true };
 const isGet = { get: true };
@@ -59,7 +59,8 @@ const store = createStore({
                                 'Content-Type': 'multipart/form-data'
                             },
                             params: {
-                                folder: payload.folder
+                                folder: payload.folder,
+                                type: payload?.type ?? undefined
                             }
                         }
                     )
@@ -213,6 +214,7 @@ const store = createStore({
     },
     modules: {
         Abouts,
+        Chats,
         login: CRUD('login', isPost, '/auth/local'),
         aboutUs: CRUD('aboutUs', isCrudGenerator, '/aboutus'),
         products: CRUD('products', isCrudGenerator),
@@ -225,6 +227,7 @@ const store = createStore({
         regionStatistics: CRUD('regionStatistics', isGet, '/region/statistics'),
         plantingStatistics: CRUD('plantingStatistics', isGet, '/planting/statistics'),
         relations: CRUD('relations', isGet),
+        // newChats: CRUD('newChats', isGet, '/new/chats'),
         treatments: CRUD('treatments', isCrudGenerator),
         fertilizations: CRUD('fertilizations', isCrudGenerator),
         diseases: CRUD('diseases', isCrudGenerator),
