@@ -1,33 +1,23 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-
-// function  Gouard(from, to , next) {
-//     console.log(from , to);
-//     const token = localStorage.getItem('token');
-//     const userRole = localStorage.getItem('role');
-//     const requiredRole = to.meta.role;
-//     next();
-// }
 function guard(to, from, next) {
     try {
-        const token = localStorage.getItem('token');
-        const userRole = localStorage.getItem('role');
-        const requiredRole = to.meta.role;
+        // const token = localStorage.getItem('token');
+        // const userRole = localStorage.getItem('role');
+        // const requiredRole = to.meta.role;
 
-        if (to.meta.requiresAuth) {
-            if (!token) {
-                return next({ name: 'AuthLogin' });
-            } else if (requiredRole.includes(userRole)) {
-                return next();
-                // return next();
-            } else {
-                return next({ name: 'accessDenied' });
-            }
-        }
+        // if (to.meta.requiresAuth) {
+        //     if (!token) {
+        //         return next({ name: 'AuthLogin' });
+        //     } else if (requiredRole.includes(userRole)) {
+        //         return next();
+        //         // return next();
+        //     } else {
+        //         return next({ name: 'accessDenied' });
+        //     }
+        // }
         next();
     } catch (err) {
-        console.log(err);
-        err;
         next();
     }
 }
@@ -225,41 +215,41 @@ const router = createRouter({
                     ]
                     // meta: { requiresAuth: true, role: 'admin' }
                 },
+                // {
+                //     path: '/user',
+                //     name: 'user',
+                //     component: () => import('@/views/pages/index.vue'),
+                //     children: [
+                //         {
+                //             path: '',
+                //             name: 'user-list',
+                //             component: () => import('@/views/pages/users/users-list.vue'),
+                //             meta: { requiresAuth: true, role: ['admin'] }
+                //         },
+                //         {
+                //             path: 'forms/:id',
+                //             name: 'user-create',
+                //             component: () => import('@/views/pages/users/users-create.vue'),
+                //             meta: { requiresAuth: true, role: ['admin'] }
+                //         }
+                //     ]
+                //     // meta: { requiresAuth: true, role: 'admin' }
+                // },
                 {
-                    path: '/user',
-                    name: 'user',
+                    path: '/users',
+                    name: 'users',
                     component: () => import('@/views/pages/index.vue'),
                     children: [
                         {
                             path: '',
-                            name: 'user-list',
-                            component: () => import('@/views/pages/users/users-list.vue'),
+                            name: 'users-list',
+                            component: () => import('@/views/pages/users/user/user-list.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         },
                         {
                             path: 'forms/:id',
-                            name: 'user-create',
-                            component: () => import('@/views/pages/users/users-create.vue'),
-                            meta: { requiresAuth: true, role: ['admin'] }
-                        }
-                    ]
-                    // meta: { requiresAuth: true, role: 'admin' }
-                },
-                {
-                    path: '/employees',
-                    name: 'employees',
-                    component: () => import('@/views/pages/index.vue'),
-                    children: [
-                        {
-                            path: '',
-                            name: 'employees-list',
-                            component: () => import('@/views/pages/users/employees/employees-list.vue'),
-                            meta: { requiresAuth: true, role: ['admin'] }
-                        },
-                        {
-                            path: 'forms/:id',
-                            name: 'employees-create',
-                            component: () => import('@/views/pages/users/employees/employees-create.vue'),
+                            name: 'users-create',
+                          component: () => import('@/views/pages/users/user/user-create.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
                     ]
@@ -345,7 +335,7 @@ const router = createRouter({
                         {
                             path: '',
                             name: 'companies-list',
-                            component: () => import('@/views/pages/management/companies/companie-list.vue'),
+                            component: () => import('@/views/pages/companies/companie-list.vue'),
                             meta: { requiresAuth: true, role: ['admin'] }
                         }
                         // {

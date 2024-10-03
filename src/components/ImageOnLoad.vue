@@ -1,7 +1,28 @@
 <script setup>
 import { ref } from 'vue';
 
-const props = defineProps(['width', 'height', 'src','styles']);
+const props = defineProps({
+    src: {
+        type: String,
+        default: ''
+    },
+    width: {
+        type: Number,
+        default: 100
+    },
+    height: {
+        type: Number,
+        default: 100
+    },
+    styles: {
+        type: Object,
+        default: () => ({})
+    },
+    rounded: {
+        type: Boolean,
+        default: false
+    }
+})
 const loading = ref(true);
 const error = ref(false);
 const url = import.meta.env.VITE_APP_AWS_PATH;
@@ -23,8 +44,15 @@ if (!props.src) onError();
         <div class="absolute w-full h-full flex items-center justify-center">
             <div v-if="loading" class="spinner"></div>
         </div>
-        <Image :style="styles" v-if="src" :src="url + src" alt="Image"  @load="onLoad" @error="onError" preview />
-        <!--        <img :src="url + src" alt="" />-->
+        <Image v-if="rounded&&src"  :style="{...styles, borderRadius: '100px'}"  alt="Image"  preview>
+            <template #image>
+        <img style="border-radius: 100px; height: 70px; width: 70px" :src="url + src" alt="image"  @load="onLoad" @error="onError" />
+    </template>
+    <template #preview="slotProps">
+        <img style="height: 400px; width: 400px" :src="url + src" alt="preview" :style="slotProps.style" @click="slotProps.onClick" />
+    </template>
+        </Image>
+               <!-- <img :src="url + src" alt="" @load="onLoad" @error="onError" /> -->
         <div v-if="error" class="error-placeholder">{{ $t('image-not') }}</div>
     </div>
 </template>

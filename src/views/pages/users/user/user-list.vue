@@ -1,5 +1,4 @@
 <script setup>
-import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
 import { ref, watch } from 'vue';
 import TheBreadcrumb from '@/components/The-Breadcrumb.vue';
@@ -31,7 +30,7 @@ const areas = ref();
 const area = ref(route.query.area ? +route.query.area : undefined);
 const meta = ref({});
 
-const { getEmployees, deleteEmployees } = actions(['employees'], { get: true, remove: true });
+const { getUser, deleteUser } = actions(['user'], { get: true, remove: true });
 // console.log(action, 'list');
 function openNew() {
     router.push({ name: 'employees-create', params: { id: 'new' } });
@@ -67,18 +66,17 @@ function getCropsList() {
     isLoading.value = true;
     const _query = { ...route.query };
     const filters = {
-        populate: '*',
-        sort: 'createdAt:desc',
-        pagination:{
-            page: _query?.page ? +_query?.page : 1,
-            pageSize: _query.pageSize ? +_query.pageSize : 25 ,
-        }
+       role: 'customer',
+        // pagination:{
+        //     page: _query?.page ? +_query?.page : 1,
+        //     pageSize: _query.pageSize ? +_query.pageSize : 25 ,
+        // }
     };
-    return getEmployees(filters)
+    return getUser(filters)
         .then((res) => {
             console.log(res);
-            crops.value = res.data;
-            meta.value = res.meta;
+            crops.value = res?.data?.users;
+            meta.value = res.data.meta;
             isLoading.value = false;
             return res;
         })
@@ -100,48 +98,44 @@ getCropsList();
     <div>
         <TheBreadcrumb />
         <div class="card">
-            <div class="flex gap-2 justify-end">
+            <!-- <div class="flex gap-2 justify-end">
                 <div class="flex gap-2">
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
-            </div>
+            </div> -->
             <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
+                    <template #body="{ data, index }">
+                        <span class="text-primary">{{index+1}}</span>
+                    </template>
+                </Column>
+                <Column field="image" :header="$t('image')">
+                    <!-- <template #body="{ data, index }"> -->
+                        <template #body="{ data }">
+                        <ImageOnLoad width="90" :src="data?.image" />
+                    </template>
+                    <!-- </template> -->
                 </Column>
 
-                <Column field="fullname" :header="$t('fullname')"></Column>
-                <Column field="about" :header="$t('about')"></Column>
+                <Column field="first_name" :header="$t('first_name')"></Column>
+                <Column field="last_name" :header="$t('last_name')"></Column>
+                <Column field="username" :header="$t('username')"></Column>
+                <Column field="role" :header="$t('role')"></Column>
                 <Column field="phone" :header="$t('phone')"></Column>
-
-
-                <Column  :frozen="actions" align-frozen="left">
-                    <template #header>
-                        <div>{{$t('employee_roles')}}</div>
-                    </template>
-                    <template #body="{ data }">
-                       <span class="text-primary">{{data.employee_role?.name}}</span>
-                    </template>
-                </Column>  <Column  :frozen="actions" align-frozen="left">
-                    <template #header>
-                        <div>{{$t('farmer')}}</div>
-                    </template>
-                    <template #body="{ data }">
-                       <span class="text-primary">{{data.farmer.username}}</span>
-                    </template>
-                </Column>
-                <Column  :frozen="actions" align-frozen="left" style="min-width: 1rem" class="flex justify-end">
+                <Column field="telegram_id" :header="$t('telegram_id')"></Column>
+                <Column  :frozen="actions" align-frozen="left" style="max-width: 4rem">
                     <template #header>
                         <div>{{$t('actions')}}</div>
                     </template>
                     <template #body="{ data }">
-                        <!--                        <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'farmers-info', query: { id: data.id } })" />-->
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'employees-create', params: { id: data.id } })" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" />
+                                               <Button icon="pi pi-eye" outlined rounded severity="info" class="mr-2" @click="router.push({ name: 'farmers-info', query: { id: data.id } })" />
+                        <!-- <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="router.push({ name: 'employees-create', params: { id: data.id } })" /> -->
+                        <!-- <Button icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteProduct(data)" /> -->
                     </template>
                 </Column>
                 <template #footer>
-                    <PaginatorCustom :meta="meta" @on-change-page="onChangePage" />
+                    <PaginatorCustom v-if="meta?.total > 0" :meta="meta" @on-change-page="onChangePage" />
                 </template>
             </DataTable>
         </div>

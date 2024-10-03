@@ -14,14 +14,19 @@ const isCrudGenerator = { ...isGet, ...isGetById, ...isPost, ...isPut, ...isDele
 const store = createStore({
     namespaced: true,
     state: {
-        errorStatus: null
+        errorStatus: null,
+        configSettings: null,
     },
     getters: {
-        getErrorStatus: (state) => state.errorStatus
+        getErrorStatus: (state) => state.errorStatus,
+        getConfigSettings: (state) => state.configSettings
     },
     mutations: {
         ERROR(state, payload) {
             state.errorStatus = payload;
+        },
+        SET_CONFIG_SETTINGS(state, payload) {
+            state.configSettings = payload;
         }
     },
     actions: {
@@ -197,7 +202,7 @@ const store = createStore({
         getUserMe() {
             return new Promise((resolve, reject) => {
                 request
-                    .get('/users/me')
+                    .get('/me')
                     .then((res) => {
                         resolve(res);
                     })
@@ -210,60 +215,29 @@ const store = createStore({
             const roles = await request.get('/users-permissions/roles');
             // console.log(roles);
             return roles.roles;
+        },
+        async getConfig({ commit }) {
+            const data = await request.get('/json/config');
+            commit('SET_CONFIG_SETTINGS', data)
+            // console.log(roles);
+            return data
         }
     },
     modules: {
         Abouts,
         Chats,
-        login: CRUD('login', isPost, '/auth/local'),
+        login: CRUD('login', isPost, '/auth/login/regular'),
         aboutUs: CRUD('aboutUs', isCrudGenerator, '/aboutus'),
-        products: CRUD('products', isCrudGenerator),
-        cropAdmin: CRUD('cropAdmin', isGet, '/admin/crops'),
-        cropsCategory: CRUD('cropsCategory', isCrudGenerator, '/crop-categories'),
-        activityTypes: CRUD('activityTypes', isCrudGenerator, '/activity-types'),
-        farmers: CRUD('farmers', isCrudGenerator),
-        chatStatistics: CRUD('chatStatistics', isGet, '/chat/statistics'),
-        companies: CRUD('companies', isGet),
-        regionStatistics: CRUD('regionStatistics', isGet, '/region/statistics'),
-        plantingStatistics: CRUD('plantingStatistics', isGet, '/planting/statistics'),
-        relations: CRUD('relations', isGet),
+        products: CRUD('products', isCrudGenerator, '/product'),
+        companies: CRUD('companies', isCrudGenerator, '/company'),
+        category: CRUD('category', isCrudGenerator, '/category'),
+        staticsBasic: CRUD('staticsBasic',isGet, `/statics/basic`),
+        // category: CRUD('staticsBasic',isGet, `/category`),
+        user: CRUD('user',isGet, `/user`),
+        configSettings: CRUD('configSettings',isGet, `/json/config`),
+        // cropAdmin: CRUD('cropAdmin', isGet, '/admin/crops'),
         // newChats: CRUD('newChats', isGet, '/new/chats'),
-        treatments: CRUD('treatments', isCrudGenerator),
-        fertilizations: CRUD('fertilizations', isCrudGenerator),
-        diseases: CRUD('diseases', isCrudGenerator),
-        drugCategories: CRUD('drugCategories', isCrudGenerator, '/drug-categories'),
-        diseasesType: CRUD('diseasesType', isCrudGenerator, '/diseases/type'),
-        diseasesCategoriesTree: CRUD('diseasesCategoriesTree', isCrudGenerator, '/disease-categories', 'tree'),
-        diseasesCategories: CRUD('diseasesCategories', isCrudGenerator, '/disease-categories'),
-        genders: CRUD('genders', isCrudGenerator),
-        districts: CRUD('districts', isCrudGenerator),
-        areas: CRUD('areas', isCrudGenerator),
-        reels: CRUD('reels', isCrudGenerator),
-        areaManagers: CRUD('areaManagers', isCrudGenerator, '/area-managers'),
-        drugs: CRUD('drugs', isCrudGenerator),
-        distributors: CRUD('distributors', isCrudGenerator),
-        crops: CRUD('crops', isCrudGenerator),
-        plantings: CRUD('plantings', isCrudGenerator),
-        fields: CRUD('fields', isCrudGenerator),
-        employeeRoles: CRUD('employeeRoles', isCrudGenerator, '/employee-roles'),
-        news: CRUD('news', isCrudGenerator),
-        langs: CRUD('langs', isCrudGenerator),
-        langItems: CRUD('langItems', isCrudGenerator, '/lang-items'),
-        fertilizers: CRUD('fertilizers', isCrudGenerator),
-        fertilizerCategories: CRUD('fertilizerCategories', isCrudGenerator, '/fertilizer-categories'),
-        questions: CRUD('questions', isCrudGenerator),
-        questionsType: CRUD('questionsType', isCrudGenerator, '/question-types'),
-        mainInfo: CRUD('mainInfo', isCrudGenerator, '/main-info'),
-        activityTemplates: CRUD('activityTemplates', isCrudGenerator, '/activity-templates'),
-        activityYears: CRUD('activityYears', isGet, '/activity/years'),
-        employees: CRUD('employees', isCrudGenerator),
-        regions: CRUD('regions', isCrudGenerator),
-        tasks: CRUD('tasks', isCrudGenerator),
-        sevenday: CRUD('sevenday', isPost, '/weather/sevenday'),
-        seasons: CRUD('seasons', isCrudGenerator),
-        units: CRUD('units', isCrudGenerator),
-        usefullinfos: CRUD('usefullinfos', { ...isGet, ...isDelete }),
-        type: CRUD('type', { ...isGet, ...isDelete })
+
     }
 });
 store.hasAction = function (actionName) {

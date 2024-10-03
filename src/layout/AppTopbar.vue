@@ -18,7 +18,7 @@ const  logout =  () => {
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
-                <img width="30" height="30" :src="Logo" alt="">
+                <!-- <img width="30" height="30" :src="Logo" alt=""> -->
                     <span>{{$t('logo-title')}}</span>
             </router-link>
         </div>

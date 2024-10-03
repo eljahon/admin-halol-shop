@@ -12,10 +12,25 @@ const props = defineProps({
         required: true,
         default: () => 'name'
     },
+    getKey: {
+        type: String,
+        required: false,
+        default: () => 'data'
+    },
     initialValues:{
         type: Array,
         required: false,
         default: () => []
+    },
+    optionLabel:{
+        type: String,
+        required: false,
+        default: () => 'name'
+    },
+    optionValue:{
+        type: String,
+        required: false,
+        default: () => 'id'
     },
     customFilter:{
         type: Function,
@@ -71,11 +86,10 @@ searchFilter = debounce(searchFilter, 1500);
 async function getOptions(params) {
     // console.log(props.customFilter(params), 'props.customFilter(params)');
     const _params = isFunction(props.customFilter) ? props.customFilter(params) : params;
-    await store.dispatch(`${camelize(`get ${props.actionName}`)}`,{ ..._params,
-            pagination: { page: page.value, pageSize } })
+    await store.dispatch(`${camelize(`get ${props.actionName}`)}`,{ ..._params})
         .then(async (res) => {
             const { data, meta } = res;
-            const itemCheck = await unionBy([props.initialValues, ...data], 'id');
+            const itemCheck = data[props.getKey];
             let _data = [..._items.value, ...itemCheck];
             itemCheck.forEach(el=> {_items.value.push(el)})
             items.value = _data;
@@ -106,13 +120,17 @@ function scroll(event) {
 function handleSelected(event) {
     console.log(event);
     const value = event;
-    emit('update:modelValue', value);
     selected.value = value;
+    const item = items.value.find(el=>el[props.optionValue] === value)
+    console.log(item, 'item');
+    emit('update:modelValue',{value, item});
+    // selected.value = item;
 }
 const {modelValue} = toRef(props)
 watch(
-    () =>modelValue?.value,
+    () =>modelValue,
     (newvalue) => {
+        console.log(newvalue, 'newvalue');
         selected.value = newvalue
         // if (typeof newvalue === 'object') {
         //     const checkIncludes = items.value.filter((el) => el.id === newvalue.id);
@@ -129,6 +147,11 @@ watch(()=> props.actionName ,() => {
     _items.value =[]
     page.value =1;
 })
+watch(()=> props.initialValues, (newvalue) => {
+    console.log(newvalue, 'newvalue');
+    // items.value = [...newvalue]
+    // _items.value = [...newvalue]
+})
 </script>
 
 <template>
@@ -138,11 +161,13 @@ watch(()=> props.actionName ,() => {
             :options="items"
             @filter="searchFilter"
             @before-show="beforeShow"
-            :optionLabel="'name'"
+            :optionLabel="optionLabel"
+            variant="filled"
             class="w-full"
+            checkmark
             :invalid="invalid"
             @update:modelValue="handleSelected"
-            optionValue="id"
+            :optionValue="optionValue"
             showClear
             :placeholder="placeholder"
             :virtualScrollerOptions="{ lazy: true, showLoader: true, loading: loading, itemSize: 38, lazy: true, onLazyLoad: scroll }"

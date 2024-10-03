@@ -1,256 +1,349 @@
 <script setup>
-import { useStore } from 'vuex';
-
 import { useLayout } from '@/layout/composables/layout';
-import {onMounted, ref } from 'vue';
-import Uzbmap from '@/components/UZmap/uzbmap.vue';
-import { useI18n } from 'vue-i18n';
-import { Viloyat, Tumalar, Hudud, Farmers, Maydon, allLand, consultand, areaManger, agranom, kasalik, Osimliklar, Zarar, kassaliklar, dori } from '@/assets/svg';
-import { useRoute, useRouter } from 'vue-router';
+import { ProductService } from '@/service/ProductService';
 import { actions } from '@/utils/Store_Schema';
-const { getRegionStatistics } = actions(['regionStatistics'], { get: true });
+import { onMounted, ref, watch } from 'vue';
+
 const { getPrimary, getSurface, isDarkTheme } = useLayout();
-const store = useStore();
-const { t } = useI18n();
-const analiticList = ref(null);
-const router = useRouter();
-const route = useRoute();
-const isLoading = ref(false);
-const isDisdtirct = ref(route.query.district ?? false);
-const reagions = ref();
-const allPlice = ref(0);
-const districtName = ref(undefined);
-const isRegion = ref(false);
-const id = ref(route.query?.id ?? undefined);
-function getDashboard() {
-    isLoading.value = true;
-    store
-        .dispatch('getAnalytics')
-        .then((items) => {
-            isLoading.value = false;
-            analiticList.value = [
-                {
-                    icon: 'pi pi-image',
-                    avatarColor: 'success',
-                    slug: Viloyat,
-                    title: t('regions'),
-                    count: items.regions
-                },
-                {
-                    icon: 'pi pi-clipboard',
-                    avatarColor: 'success',
-                    slug: Tumalar,
-                    title: t('districts'),
-                    count: items.districts
-                },
-                {
-                    icon: 'mdi-home-assistant',
-                    avatarColor: 'success',
-                    slug: Hudud,
-                    title: t('areas'),
-                    count: items.areas
-                },
-                // {
-                //   slug: 'orders',
-                //   title: 'Orders',
-                //   avatarColor: 'info',
-                //   icon: 'mdi-cube-outline',
-                //   count: 43
 
-                // },
-                {
-                    icon: 'pi pi-users',
-                    slug: Farmers,
-                    avatarColor: 'primary',
-                    title: t('farmers'),
-                    count: items.farmers
-                },
-                {
-                    slug: Maydon,
-                    title: t('fields'),
-                    avatarColor: 'warning',
-                    count: items.fields,
-                    icon: 'pi pi-spin pi-stop-circle'
-                },
-                {
-                    avatarColor: 'error',
-                    icon: 'pi pi-spin pi-stop-circle',
-                    slug: allLand,
-                    title: t('allFieldsArea'),
-                    count: (items.allFieldsArea/10000).toFixed(2)
-                },
+const products = ref(null);
+const chartData = ref(null);
+const chartOptions = ref(null);
+const {getStaticsBasic} = actions(['staticsBasic'], {get: true})
 
-                {
-                    icon: 'pi pi-users',
-                    slug: consultand,
-                    avatarColor: 'primary',
-                    title: t('consultations'),
-                    count: items.consultations
-                },
-                {
-                    icon: 'pi pi-users',
-                    slug: areaManger,
-                    // avatarColor: ,
-                    title: t('areaManagers'),
-                    count: items.areaManagers
-                },
-                {
-                    icon: 'pi pi-user',
-                    slug: agranom,
-                    avatarColor: 'primary',
-                    title: t('agronomists'),
-                    count: items.agronomists
-                },
+const items = ref([
+    { label: 'Add New', icon: 'pi pi-fw pi-plus' },
+    { label: 'Remove', icon: 'pi pi-fw pi-trash' }
+]);
 
-                {
-                    slug: kasalik,
-                    title: t('diseases'),
-                    // avatarColor: ,
-                    count: items.diseases,
-                    icon: 'mdi-biohazard'
+onMounted(() => {
+    ProductService.getProductsSmall().then((data) => (products.value = data));
+    chartData.value = setChartData();
+    chartOptions.value = setChartOptions();
+    getStaticsBasic()
+    .then(res => {
+        console.log(res, 'res dashboard');
+    })  
+});
+
+function setChartData() {
+    const documentStyle = getComputedStyle(document.documentElement);
+
+    return {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [
+            {
+                type: 'bar',
+                label: 'Subscriptions',
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-400'),
+                data: [4000, 10000, 15000, 4000],
+                barThickness: 32
+            },
+            {
+                type: 'bar',
+                label: 'Advertising',
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-300'),
+                data: [2100, 8400, 2400, 7500],
+                barThickness: 32
+            },
+            {
+                type: 'bar',
+                label: 'Affiliate',
+                backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
+                data: [4100, 5200, 3400, 7400],
+                borderRadius: {
+                    topLeft: 8,
+                    topRight: 8
                 },
-                {
-                    slug: Osimliklar,
-                    title: t('plants'),
-                    avatarColor: 'warning',
-                    count: items.crops,
-                    icon: 'mdi-leaf'
+                borderSkipped: true,
+                barThickness: 32
+            }
+        ]
+    };
+}
+
+function setChartOptions() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const borderColor = documentStyle.getPropertyValue('--surface-border');
+    const textMutedColor = documentStyle.getPropertyValue('--text-color-secondary');
+
+    return {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        scales: {
+            x: {
+                stacked: true,
+                ticks: {
+                    color: textMutedColor
                 },
-                {
-                    slug: Zarar,
-                    title: t('pests'),
-                    avatarColor: 'primary',
-                    count: items.pests,
-                    icon: 'mdi-bug'
-                },
-                {
-                    slug: kassaliklar,
-                    title: t('treatments'),
-                    avatarColor: 'primary',
-                    count: items.treatments,
-                    icon: 'mdi-hospital-box-outline'
-                },
-                {
-                    slug: dori,
-                    title: t('drugs'),
-                    avatarColor: 'primary',
-                    count: items.drugs,
-                    icon: 'mdi-pill'
+                grid: {
+                    color: 'transparent',
+                    borderColor: 'transparent'
                 }
-            ];
-        })
-        .catch((err) => {
-            isLoading.value = false;
-        });
-}
-function getRegionStatick() {
-    isRegion.value = true;
-    const _query={...route.query}
-  return getRegionStatistics({ region: 12, ..._query })
-        .then((res) => {
-            reagions.value = res.data;
-            allPlice.value = res.data.reduce((acc,el) =>acc+el.amount ,0)
-            isRegion.value = false;
-        })
-        .catch((err) => {
-            isRegion.value = false;
-        });
+            },
+            y: {
+                stacked: true,
+                ticks: {
+                    color: textMutedColor
+                },
+                grid: {
+                    color: borderColor,
+                    borderColor: 'transparent',
+                    drawTicks: false
+                }
+            }
+        }
+    };
 }
 
-getDashboard();
-getRegionStatick();
-async function routerPush(param) {
-    const _query = { ...route.query, ...param };
-    await router.replace({ query: _query });
-    await await getRegionStatick()
-}
-async function handelItem(item) {
-    id.value = item.id;
-    districtName.value = item;
-    routerPush({region: item.id})
+const formatCurrency = (value) => {
+    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+};
 
-}
-async function handleClick(item) {
-    // districtName.value = item
-    isDisdtirct.value = true
-    await routerPush({district: item.id})
-}
-async function handleDistrict () {
-    isDisdtirct.value = false;
-    await routerPush({district: undefined})
-}
-function  handleScroll (event) {
-    console.log(event);
-    const scrollTop = event.target.scrollTop;
-    const scrollHeight = event.target.scrollHeight;
-    const clientHeight = event.target.clientHeight;
-
-    // Quyidagi holatda scroll oxiriga yetganini tekshirish
-    if (scrollTop + clientHeight >= scrollHeight) {
-        console.log('Scroll bottom reached');
-    } else {
-        console.log('Current scroll position:', scrollTop);
-    }
-}
-onMounted(()=> {
-    setTimeout(() =>{
-        const scroll = document.getElementById('scroll');
-        scroll?.addEventListener('scroll', handleScroll)
-    }, 0)
-
-})
+watch([getPrimary, getSurface, isDarkTheme], () => {
+    chartData.value = setChartData();
+    chartOptions.value = setChartOptions();
+});
 </script>
 
 <template>
-    <div>
-        <div class="grid grid-cols-12 gap-4">
-            <template v-for="item in 15" :key="item" v-if="isLoading">
-                <div class="col-span-12 lg:col-span-6 xl:col-span-3">
-                    <Skeleton width="100%" height="7rem" />
-                </div>
-            </template>
-            <template v-else>
-                <div class="col-span-12 lg:col-span-6 xl:col-span-3" v-for="(item, index) in analiticList" :key="index">
-                    <div class="bg-white dark:bg-blue-400/10 p-4 rounded mb-0">
-                        <div class="flex justify-between mb-4">
-                            <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded" style="width: 2rem; height: 2rem">
-                                <img width="25" height="25" :src="item.slug" alt="" />
-                            </div>
-                            <div>
-                                <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ item.count }}</div>
-
-                                <span class="block font-medium mb-4 dark:text-white text-primary">{{ item.title }}</span>
-                            </div>
-                        </div>
+    <div class="grid grid-cols-12 gap-8">
+        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <span class="block text-muted-color font-medium mb-4">Orders</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">152</div>
+                    </div>
+                    <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                        <i class="pi pi-shopping-cart text-blue-500 !text-xl"></i>
                     </div>
                 </div>
-            </template>
-        </div>
-        <div class="grid grid-cols-12 gap-4 mt-8">
-            <div class="col-span-12 xl:col-span-8">
-                <div class="card">
-                    <span>{{ $t('region') }}: {{ districtName?.name }}</span>
-                    <div class="mt-4">
-                        <Uzbmap @handelItem="handelItem" :id="id" />
-                    </div>
-                </div>
+                <span class="text-primary font-medium">24 new </span>
+                <span class="text-muted-color">since last visit</span>
             </div>
-            <div class="col-span-12 xl:col-span-4">
-                <div class="card overflow-hidden">
-                    <div class="flex justify-between items-center">{{ isDisdtirct ? $t('areas') :$t('districts') }} <i v-if="isDisdtirct" class="pi pi-arrow-left text-primary cursor-pointer" @click="handleDistrict"></i></div>
-                    <span class="text-primary">{{(allPlice/10000)?.toFixed(2)}}:{{$t('hectare')}}</span>
-                    <div v-if="!isRegion" class="overflow-y-auto mt-2 p-2 h-full" style="max-height: 400px" id="scroll">
-                        <section class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 p-4 rounded shadow-custom max-h-2xl cursor-pointer" v-for="(item, index) in reagions" :key="index" @click="isDisdtirct? ()=>{} :handleClick(item)">
-                            <span class="">
-                                <img :src="Hudud" alt="Hudud image" />
-                            </span>
-                            <span class="dark:text-white text-primary">{{ item.name }}</span>
-                        </section>
+        </div>
+        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <span class="block text-muted-color font-medium mb-4">Revenue</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">$2.100</div>
                     </div>
-                    <section v-else class="flex gap-4 mt-2 items-center dark:bg-blue-400/10 rounded" v-for="item in 8" :key="item">
-                        <Skeleton width="100%" height="4rem" />
-                    </section>
+                    <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                        <i class="pi pi-dollar text-orange-500 !text-xl"></i>
+                    </div>
                 </div>
+                <span class="text-primary font-medium">%52+ </span>
+                <span class="text-muted-color">since last week</span>
+            </div>
+        </div>
+        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <span class="block text-muted-color font-medium mb-4">Customers</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">28441</div>
+                    </div>
+                    <div class="flex items-center justify-center bg-cyan-100 dark:bg-cyan-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                        <i class="pi pi-users text-cyan-500 !text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-primary font-medium">520 </span>
+                <span class="text-muted-color">newly registered</span>
+            </div>
+        </div>
+        <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+            <div class="card mb-0">
+                <div class="flex justify-between mb-4">
+                    <div>
+                        <span class="block text-muted-color font-medium mb-4">Comments</span>
+                        <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">152 Unread</div>
+                    </div>
+                    <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
+                        <i class="pi pi-comment text-purple-500 !text-xl"></i>
+                    </div>
+                </div>
+                <span class="text-primary font-medium">85 </span>
+                <span class="text-muted-color">responded</span>
+            </div>
+        </div>
+
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <div class="font-semibold text-xl mb-4">Recent Sales</div>
+                <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
+                    <Column style="width: 15%" header="Image">
+                        <template #body="slotProps">
+                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" width="50" class="shadow" />
+                        </template>
+                    </Column>
+                    <Column field="name" header="Name" :sortable="true" style="width: 35%"></Column>
+                    <Column field="price" header="Price" :sortable="true" style="width: 35%">
+                        <template #body="slotProps">
+                            {{ formatCurrency(slotProps.data.price) }}
+                        </template>
+                    </Column>
+                    <Column style="width: 15%" header="View">
+                        <template #body>
+                            <Button icon="pi pi-search" type="button" class="p-button-text"></Button>
+                        </template>
+                    </Column>
+                </DataTable>
+            </div>
+            <div class="card">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="font-semibold text-xl">Best Selling Products</div>
+                    <div>
+                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu2.toggle($event)"></Button>
+                        <Menu ref="menu2" :popup="true" :model="items" class="!min-w-40"></Menu>
+                    </div>
+                </div>
+                <ul class="list-none p-0 m-0">
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Space T-Shirt</span>
+                            <div class="mt-1 text-muted-color">Clothing</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-orange-500 h-full" style="width: 50%"></div>
+                            </div>
+                            <span class="text-orange-500 ml-4 font-medium">%50</span>
+                        </div>
+                    </li>
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Portal Sticker</span>
+                            <div class="mt-1 text-muted-color">Accessories</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-cyan-500 h-full" style="width: 16%"></div>
+                            </div>
+                            <span class="text-cyan-500 ml-4 font-medium">%16</span>
+                        </div>
+                    </li>
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Supernova Sticker</span>
+                            <div class="mt-1 text-muted-color">Accessories</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-pink-500 h-full" style="width: 67%"></div>
+                            </div>
+                            <span class="text-pink-500 ml-4 font-medium">%67</span>
+                        </div>
+                    </li>
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Wonders Notebook</span>
+                            <div class="mt-1 text-muted-color">Office</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-green-500 h-full" style="width: 35%"></div>
+                            </div>
+                            <span class="text-primary ml-4 font-medium">%35</span>
+                        </div>
+                    </li>
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Mat Black Case</span>
+                            <div class="mt-1 text-muted-color">Accessories</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-purple-500 h-full" style="width: 75%"></div>
+                            </div>
+                            <span class="text-purple-500 ml-4 font-medium">%75</span>
+                        </div>
+                    </li>
+                    <li class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <div>
+                            <span class="text-surface-900 dark:text-surface-0 font-medium mr-2 mb-1 md:mb-0">Robots T-Shirt</span>
+                            <div class="mt-1 text-muted-color">Clothing</div>
+                        </div>
+                        <div class="mt-2 md:mt-0 ml-0 md:ml-20 flex items-center">
+                            <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-24" style="height: 8px">
+                                <div class="bg-teal-500 h-full" style="width: 40%"></div>
+                            </div>
+                            <span class="text-teal-500 ml-4 font-medium">%40</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-span-12 xl:col-span-6">
+            <div class="card">
+                <div class="font-semibold text-xl mb-4">Revenue Stream</div>
+                <Chart type="bar" :data="chartData" :options="chartOptions" class="h-80" />
+            </div>
+            <div class="card">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="font-semibold text-xl">Notifications</div>
+                    <div>
+                        <Button icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded" @click="$refs.menu1.toggle($event)"></Button>
+                        <Menu ref="menu1" :popup="true" :model="items" class="!min-w-40"></Menu>
+                    </div>
+                </div>
+
+                <span class="block text-muted-color font-medium mb-4">TODAY</span>
+                <ul class="p-0 mx-0 mt-0 mb-6 list-none">
+                    <li class="flex items-center py-2 border-b border-surface">
+                        <div class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-dollar !text-xl text-blue-500"></i>
+                        </div>
+                        <span class="text-surface-900 dark:text-surface-0 leading-normal"
+                            >Richard Jones
+                            <span class="text-surface-700 dark:text-surface-100">has purchased a blue t-shirt for <span class="text-primary font-bold">$79.00</span></span>
+                        </span>
+                    </li>
+                    <li class="flex items-center py-2">
+                        <div class="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-download !text-xl text-orange-500"></i>
+                        </div>
+                        <span class="text-surface-700 dark:text-surface-100 leading-normal">Your request for withdrawal of <span class="text-primary font-bold">$2500.00</span> has been initiated.</span>
+                    </li>
+                </ul>
+
+                <span class="block text-muted-color font-medium mb-4">YESTERDAY</span>
+                <ul class="p-0 m-0 list-none mb-6">
+                    <li class="flex items-center py-2 border-b border-surface">
+                        <div class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-dollar !text-xl text-blue-500"></i>
+                        </div>
+                        <span class="text-surface-900 dark:text-surface-0 leading-normal"
+                            >Keyser Wick
+                            <span class="text-surface-700 dark:text-surface-100">has purchased a black jacket for <span class="text-primary font-bold">$59.00</span></span>
+                        </span>
+                    </li>
+                    <li class="flex items-center py-2 border-b border-surface">
+                        <div class="w-12 h-12 flex items-center justify-center bg-pink-100 dark:bg-pink-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-question !text-xl text-pink-500"></i>
+                        </div>
+                        <span class="text-surface-900 dark:text-surface-0 leading-normal"
+                            >Jane Davis
+                            <span class="text-surface-700 dark:text-surface-100">has posted a new questions about your product.</span>
+                        </span>
+                    </li>
+                </ul>
+                <span class="block text-muted-color font-medium mb-4">LAST WEEK</span>
+                <ul class="p-0 m-0 list-none">
+                    <li class="flex items-center py-2 border-b border-surface">
+                        <div class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-arrow-up !text-xl text-green-500"></i>
+                        </div>
+                        <span class="text-surface-900 dark:text-surface-0 leading-normal">Your revenue has increased by <span class="text-primary font-bold">%25</span>.</span>
+                    </li>
+                    <li class="flex items-center py-2 border-b border-surface">
+                        <div class="w-12 h-12 flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-full mr-4 shrink-0">
+                            <i class="pi pi-heart !text-xl text-purple-500"></i>
+                        </div>
+                        <span class="text-surface-900 dark:text-surface-0 leading-normal"><span class="text-primary font-bold">12</span> users have added your products to their wishlist.</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

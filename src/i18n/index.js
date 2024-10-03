@@ -3,8 +3,8 @@ import ru from '@/i18n/locales/ru.json';
 import en from '@/i18n/locales/en.json';
 import uz from '@/i18n/locales/uz.json';
 const i18n = createI18n({
-    locale: localStorage.getItem('lang')||'uz',
-    fallbackLocale: 'uz',
+    locale: localStorage.getItem('lang')||'en',
+    fallbackLocale: 'en',
     legacy: false,
     globalInjection: true,
     allowComposition: true,

@@ -2,9 +2,10 @@ import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import { useRouter } from 'vue-router';
 import store from '@/store';
+const urlSub=localStorage.getItem('role')||'shared'
 
 let config = {
-    baseURL: import.meta.env.VITE_APP_API_URL,
+    baseURL: import.meta.env.VITE_APP_API_URL+'/'+urlSub,
 
 };
 

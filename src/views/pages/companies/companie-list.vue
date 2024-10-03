@@ -6,8 +6,8 @@ import TheBreadcrumb from '@/components/The-Breadcrumb.vue';
 import { useStore } from 'vuex';
 import { actions } from '@/utils/Store_Schema';
 import { useRoute, useRouter } from 'vue-router';
+import dayjs from 'dayjs';
 import PaginatorCustom from '@/components/Paginator-Custom.vue';
-import SelectsIndex from '@/components/Selects/Selects-index.vue';
 import ImageOnLoad from '@/components/ImageOnLoad.vue';
 import Exceljs from 'exceljs';
 import { useI18n } from 'vue-i18n';
@@ -21,7 +21,6 @@ const dt = ref();
 const crops = ref();
 const crop = ref();
 const companiyList =ref(undefined)
-const categories = ref(route.query?.categoryId ? [{id: route.query?.categoryId, name: route.query?.categoryName}] : [])
 const url = import.meta.env.VITE_APP_AWS_PATH;
 const deleteCropDialog = ref(false);
 const isLoading = ref(false);
@@ -31,7 +30,7 @@ const confirmedList = ref([
     { name: t('not_confirmed'), id: 'false' }
 ]);
 
-const filters = ref({categoryId: route.query?.categoryId ?? '', company: route.query?.comp ?? ''});
+const cropsFilter = ref(route.query?.confirmed ?? 'all');
 const companyFilter = ref(route.query?.comp ? +route.query.comp :undefined);
 const search = ref(route.query?.search ?? '');
 const meta = ref({});
@@ -62,25 +61,25 @@ function deleteProduct() {
         });
 }
 
-const excelDownload = async () => {
-    const workbook = new Exceljs.Workbook();
-    const worksheet = workbook.addWorksheet('Data');
-    worksheet.addRow(['Id', 'Name', 'Biology name', 'Description', 'Details', 'Diseases', 'Season', 'Drugs', 'Fertilizers']);
-    for (let i = 0; i < crops.value.length; i++) {
-        worksheet.columns = [{ width: 5 }, { width: 16 }, { width: 16 }, { width: 48 }, { width: 48 }, { width: 16 }, { width: 16 }, { width: 16 }, { width: 16 }];
-        const { id, name, biology_name, description, details, diseases, season, drugs, fertilizers } = crops.value[i];
-        worksheet.addRow([id, name, biology_name, description, details, diseases?.name, season?.title, drugs?.name, fertilizers?.name]);
-    }
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'crops.xlsx');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
+// const excelDownload = async () => {
+//     const workbook = new Exceljs.Workbook();
+//     const worksheet = workbook.addWorksheet('Data');
+//     worksheet.addRow(['Id', 'Name', 'Biology name', 'Description', 'Details', 'Diseases', 'Season', 'Drugs', 'Fertilizers']);
+//     for (let i = 0; i < crops.value.length; i++) {
+//         worksheet.columns = [{ width: 5 }, { width: 16 }, { width: 16 }, { width: 48 }, { width: 48 }, { width: 16 }, { width: 16 }, { width: 16 }, { width: 16 }];
+//         const { id, name, biology_name, description, details, diseases, season, drugs, fertilizers } = crops.value[i];
+//         worksheet.addRow([id, name, biology_name, description, details, diseases?.name, season?.title, drugs?.name, fertilizers?.name]);
+//     }
+//     const buffer = await workbook.xlsx.writeBuffer();
+//     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//     const url = URL.createObjectURL(blob);
+//     const link = document.createElement('a');
+//     link.href = url;
+//     link.setAttribute('download', 'crops.xlsx');
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+// };
 async function routerPush(param) {
     console.log(route.query, '==>>', param);
     const _query = { ...route.query, ...param };
@@ -89,15 +88,9 @@ async function routerPush(param) {
     await getCropsList();
 }
 
-function onChangeSelect({value, item}) {
-    console.log(value, item.name);  
-    
-    if(value)   {
-        routerPush({ categoryId: value, page: 1, categoryName: item.name });
-        filters.value.categoryId = value;
-        categories.value = [{id: value, name: item.name}]
-    }
-    else  routerPush({ categoryId: undefined,categoryName: undefined, page: 1 });
+function onChangeSelect(value) {
+    if(value !== 'all')   routerPush({ confirmed: value, page: 1 });
+    else  routerPush({ confirmed: undefined, page: 1 });
 
 }
 function onChangeSelectCom(value) {
@@ -122,9 +115,9 @@ function getCropsList() {
         //     }
         // }
     };
-    getProducts(filters)
+    getCompanies(filters)
         .then((res) => {
-            crops.value = res.data.products            ;
+            crops.value = res.data.companies            ;
             meta.value = res.meta;
             isLoading.value = false;
         })
@@ -166,10 +159,7 @@ function productConfirmed(item, data, text) {
 }
 
 getCropsList();
-// getCompanies({pagination:{page: 1,pageSize: 100}})
-//     .then(res => {
-//         companiyList.value = res.data
-//     })
+
 
 function onChangePage(value) {
     getCropsList();
@@ -180,31 +170,10 @@ function onChangePage(value) {
     <div>
         <TheBreadcrumb />
         <div class="card">
-        <div class="flex gap-2 justify-between">
-        
+            <!-- <div class="flex gap-2 justify-between">
                 <div>
                     <div class="flex flex-wrap gap-2 items-center justify-between">
-<SelectsIndex 
-:placeholder="$t('company')" 
-:getKey="'companies'" 
-action-name="companies"
-:modelValue="filters.company" 
-option-label="name"
-option-value="_id"
-class="w-full md:w-56"
-@update:modelValue="onChangeSelect"/>
-
-<SelectsIndex 
-:placeholder="$t('category')" 
-:getKey="'categories'" 
-action-name="category"
-option-label="name"
-option-value="_id"
-class="w-full md:w-56"
-:modelValue="filters.categoryId"
-:initialValues="categories"
-@update:modelValue="onChangeSelect"/>
-                        <!-- <Select
+                        <Select
                             class="w-full md:w-56"
                             v-model="cropsFilter"
                             :placeholder="$t('all')"
@@ -213,31 +182,31 @@ class="w-full md:w-56"
                             showClear
                             @update:modelValue="onChangeSelect"
                             :options="confirmedList"
-                        > -->
-                            <!-- </Select>     <Select
-                                class="w-full md:w-56"
-                                v-model="companyFilter"
-                                :placeholder="$t('company')"
-                                optionLabel="name"
-                                optionValue="id"
-                                showClear
-                                @update:modelValue="onChangeSelectCom"
-                                :options="companiyList"
-                            >
-                            </Select> -->
-                        <!-- <IconField>
+                        >
+                        </Select>     <Select
+                            class="w-full md:w-56"
+                            v-model="companyFilter"
+                            :placeholder="$t('company')"
+                            optionLabel="name"
+                            optionValue="id"
+                            showClear
+                            @update:modelValue="onChangeSelectCom"
+                            :options="companiyList"
+                        >
+                        </Select>
+                        <IconField>
                             <InputIcon>
                                 <i class="pi pi-search" />
                             </InputIcon>
                             <InputText v-model="search" :placeholder="$t('search-by-name')" @input="onSearch" />
-                        </IconField> -->
+                        </IconField>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <!-- <Button label="Export" icon="pi pi-upload" severity="success" @click="excelDownload" /> -->
+                    <Button label="Export" icon="pi pi-upload" severity="success" @click="excelDownload" />
                     <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" />
                 </div>
-            </div>
+            </div> -->
             <DataTable ref="dt" :value="crops" dataKey="id" :loading="isLoading">
                 <template #header> </template>
                 <Column field="id" :header="$t('id')">
@@ -283,42 +252,9 @@ class="w-full md:w-56"
                         {{ data?.company?.name ?? '-' }}
                     </template>
                 </Column>
-                <Column field="rating" :header="$t('is_new')" style="min-width: 9rem">
-                    <template #body="{ data }" >
-                        <div @click="productConfirmed(data, {is_new: false}, 'is_not_new')" v-if="data?.is_new" v-tooltip.top="$t('update')+ ' '+$t('is_not_new')" class="cursor-pointer" >
-                            <Tag><i class="pi pi-check-circle"></i>{{ $t('is_new') }}</Tag>
-                        </div>
-                        <div v-tooltip.top="$t('update')+ ' '+$t('is_new')" v-else @click="productConfirmed(data,{is_new: true}, 'is_new')" class="cursor-pointer">
-                            <Tag severity="warn"><i class="pi pi-times-circle"></i>{{ $t('is_not_new') }}</Tag>
-                        </div>
-
-                        <!--                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />-->
-                    </template>
-                </Column>
-                <Column field="rating" :header="$t('is_popular')" style="min-width: 10rem">
-                    <template #body="{ data }" >
-                        <div @click="productConfirmed(data, {is_popular: false}, 'is_not_popular')" v-if="data?.is_popular" v-tooltip.top="$t('update')+ ' '+$t('is_not_popular')" class="cursor-pointer" >
-                            <Tag><i class="pi pi-check-circle"></i>{{ $t('is_popular') }}</Tag>
-                        </div>
-                        <div v-tooltip.top="$t('update')+ ' '+$t('is_new_popular')" v-else @click="productConfirmed(data,{is_popular: true}, 'is_new')" class="cursor-pointer">
-                            <Tag severity="warn"><i class="pi pi-times-circle"></i>{{ $t('is_not_popular') }}</Tag>
-                        </div>
-
-                        <!--                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />-->
-                    </template>
-                </Column>
-                <Column field="rating" :header="$t('is_hot')" style="min-width: 10rem">
-                    <template #body="{ data }" >
-                        <div @click="productConfirmed(data, {is_hot: false}, 'is_not_hot')" v-if="data?.is_hot" v-tooltip.top="$t('update')+ ' '+$t('is_not_hot')" class="cursor-pointer" >
-                            <Tag><i class="pi pi-check-circle"></i>{{ $t('is_hot') }}</Tag>
-                        </div>
-                        <div v-tooltip.top="$t('update')+ ' '+$t('is_new_popular')" v-else @click="productConfirmed(data,{is_hot: true}, 'is_hot')" class="cursor-pointer">
-                            <Tag severity="warn"><i class="pi pi-times-circle"></i>{{ $t('is_not_hot') }}</Tag>
-                        </div>
-
-                        <!--                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />-->
-                    </template>
-                </Column>
+              
+           
+        
                 <Column field="rating" :header="$t('is_hide')" style="min-width: 10rem">
                     <template #body="{ data }" >
                         <div @click="productConfirmed(data, {is_hide: false}, 'is_not_hide')" v-if="data?.is_hide" v-tooltip.top="$t('update')+ ' '+$t('is_not_hide')" class="cursor-pointer" >

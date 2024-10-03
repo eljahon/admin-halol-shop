@@ -156,8 +156,9 @@ export default function (param, isStoreAndMethods, url) {
         fullStore['actions'][camelize(`put ${_param}`)] = function ({ commit, dispatch }, payload) {
             // commit(_mutations.pending, true);
             return new Promise((resolve, reject) => {
+                console.log(payload, 'payload');
                 axios_init
-                    .put(`${url ?? param}/${payload.id}`, { data: payload.data })
+                    .put(`${url ?? param}/${payload.id}`, {...payload.data })
                     .then((res) => {
                         // dispatch('success_alert', {
                         //     title: `${_param.slice(0, 1).toUpperCase() + _param.slice(1)} updated successfully`

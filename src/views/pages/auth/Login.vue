@@ -14,31 +14,32 @@ const store = useStore();
 const { postLogin } = actions('login', { post: true });
 const isSubmit = ref(false);
 let validationSchema = yup.object({
-    identifier: yup.string().required(t('login') + ' ' + t('required-field')),
+    username: yup.string().required(t('username') + ' ' + t('required-field')),
     password: yup.string().required(t('password') + ' ' + t('required-field'))
 });
 const initialValues = {
-    identifier: '',
+    username: '',
     password: ''
 };
 const { errors, defineField, handleSubmit } = useForm({
     validationSchema,
     initialValues
 });
-const [identifier] = defineField('identifier');
+const [username] = defineField('username');
 const [password] = defineField('password');
 const handleSubmitFrom = handleSubmit(async (value) => {
     isSubmit.value = true;
     postLogin({ ...value })
         .then((res) => {
-            localStorage.setItem('token', res.jwt);
+            debugger
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('role', res?.role)
             store
                 .dispatch('getUserMe')
                 .then((res) => {
-                    localStorage.setItem('role', res?.role?.description)
                     isSubmit.value = false;
-                    if(res?.role?.description === 'consultant') router.push('/chat');
-                    else router.push('/');
+                    localStorage.setItem('user', JSON.stringify(res))
+                    router.push('/');
                 })
                 .catch((err) => {
                     isSubmit.value = false;
@@ -62,20 +63,20 @@ onMounted(() => {
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                     <div class="text-center mb-8">
                         <div class="flex justify-center items-center gap-2">
-                            <img width="60" height="60" :src="logo" alt="logo image" />
-                            <h1 class="text-6xl font-bold">{{ $t('logo-title') }}</h1>
+<!--                            <img width="60" height="60" :src="logo" alt="logo image" />-->
+<!--                            <h1 class="text-6xl font-bold">{{ $t('logo-title') }}</h1>-->
                         </div>
-                        <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4 mt-2">{{ $t('welcome-to-growz-admin') }}</div>
-                        <span class="text-muted-color font-medium">{{ $t('sign-continue') }}</span>
+                        <div class="text-surface-900 dark:text-surface-0 text-xl font-medium mb-4 mt-2">{{ $t('welcome-to-halol-shop-admin') }}</div>
+<!--                        <span class="text-muted-color font-medium">{{ $t('sign-continue') }}</span>-->
                     </div>
 
                     <div>
                         <div>
-                            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ $t('login') }}</label>
-                            <InputText :invalid="errors.login" id="email1" type="text" :placeholder="$t('login')" class="w-full md:w-[30rem]" v-model="identifier" />
+                            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">{{ $t('username') }}</label>
+                            <InputText :invalid="errors.username" id="email1" type="text" :placeholder="$t('username')" class="w-full md:w-[30rem]" v-model="username" />
                         </div>
                         <small id="title-help" class="p-error text-red-500">
-                            {{ errors.login }}
+                            {{ errors.username }}
                         </small>
 
                         <div>
